@@ -1,2 +1,2 @@
 # ECE 468 Compilers Project
-### Mahesh Gorantla & Rahul Patnix
+### Mahesh Gorantla & Rahul Patni
