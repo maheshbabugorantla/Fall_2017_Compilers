@@ -1,13 +1,11 @@
 
-team:   $(info )
-	$(info Team: Just-In-Time Droids)
-	$(info )
-	$(info Rahul Patni)
-	$(info patnir)
-	$(info )
-	$(info Mahesh Babu Gorantla)
-	$(info maheshbabugorantla)
-	$(info )
+team:
+
+	@echo -e "\n Team: Just-In-Time Droids\n"
+	@echo -e " Rahul Patni"
+	@echo -e " patnir\n"
+	@echo " Mahesh Babu Gorantla"
+	@echo -e " maheshbabugorantla\n"
 
 clean:
 	rm *~
