@@ -8,3 +8,6 @@ team:   $(info )
 	$(info Mahesh Babu Gorantla)
 	$(info maheshbabugorantla)
 	$(info )
+
+clean:
+	rm *~
