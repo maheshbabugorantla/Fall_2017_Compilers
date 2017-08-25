@@ -1,4 +1,4 @@
-# ECE 468 Compilers Project
+# ECE 468 Compilers Project Fall 2017
 ### Mahesh Gorantla & Rahul Patni
 
 - [ ] ***Step 0: Test submission***
