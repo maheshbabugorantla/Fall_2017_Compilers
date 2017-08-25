@@ -1,11 +1,13 @@
 
 team:
-
-	@echo "\n Team: Just-In-Time Droids\n"
+	@echo ""
+	@echo " Team: Just-In-Time Droids"
+	@echo ""
 	@echo " Rahul Patni"
-	@echo " patnir\n"
+	@echo " patnir"
+	@echo ""
 	@echo " Mahesh Babu Gorantla"
-	@echo " maheshbabugorantla\n"
-
+	@echo " maheshbabugorantla"
+	@echo ""
 clean:
 	rm *~
