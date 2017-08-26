@@ -6,8 +6,6 @@ import java.lang.Exception;
 public class Micro {
     public static void main(String[] args) throws Exception {
 
-        System.out.println("Hello World");
-
         try {
             ANTLRFileStream tokenStream = new ANTLRFileStream(args[0]);
             MicroLexer microLexer = new MicroLexer(tokenStream);
@@ -17,19 +15,22 @@ public class Micro {
             commonTokenStream.fill();
             String[] tokenNames = microLexer.getTokenNames();
 
-            for(String tokenName: tokenNames) {
-                System.out.println("Token Name: " + tokenName);
-            }
+//            for(String tokenName: tokenNames) {
+//                System.out.println("Token Name: " + tokenName);
+//            }
 
             List<Token> tokenList = commonTokenStream.getTokens();
 
             for(Token token: tokenList) {
-                System.out.println(token.getType());
+                if (token.getType() != -1) {
+                    System.out.println("Token Type: " + tokenNames[token.getType()]);
+                    System.out.println("Value: " + token.getText());
+                }
             }
         }
 
         catch(Exception e) {
             System.out.println(e.getMessage());
         }
-  }
+    }
 }
