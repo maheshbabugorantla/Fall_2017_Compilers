@@ -29,4 +29,4 @@ WHITESPACE      :   (' ' | '\n' | '\t' | '\r' | '\f' )+ -> skip; // Doubtful
 STRINGLITERAL   :   '"'~["]*'"'; // Doubtful
 
 // Pattern for Float-Point Numbers
-FLOATLITERAL    :   DIGITS+'.'DIGITS+ | '.'DIGITS+;
+FLOATLITERAL    :   DIGITS*'.'DIGITS+; // | '.'DIGITS+;
