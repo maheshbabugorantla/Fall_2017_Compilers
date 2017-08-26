@@ -17,7 +17,10 @@ Which means that the scanner only loops through the whole code (recursion is not
 
 <p>Secondary Task is to ignore the whitespaces (such as spaces, tabs and newline character in the source) and comments.Another task is to keep track of the line numbers so meaningful error messages can be generated</p>
 
-
 ### ***Token Definitions***
 
 ### ***How-to-submit-the-code***
+
+
+### ***Helpful Links***
+[ANTLR Lexer with DFA](http://web.mit.edu/dmaze/school/6.824/antlr-2.7.0/doc/lexer.html#dfacompare)

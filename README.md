@@ -3,7 +3,7 @@
 ## ***Team***
 > Mahesh Gorantla & Rahul Patni
 
-### ***How to Use***
+### ***How to Use ANTLR***
 Please put your antlr.jar file in "lib" directory
 and submit it with other files.
 
@@ -15,8 +15,8 @@ Edit the Makefile with actual group member names.
 Micro.g4 is the grammar file that you should edit and Micro.java will be your main java program after you edit it.
 
 ### ***Progress***
-- [x] [***Step 0: Test submission***](https://github.com/ECE468/468project-just-in-time-droids/tree/step0-submission)&nbsp;&nbsp;&nbsp;(Awaiting Grading)
-- [ ] ***Step 1: Scanner***
+- [x] [***Step 0: Test submission***](https://github.com/ECE468/468project-just-in-time-droids/tree/step0-submission)&nbsp;&nbsp;&nbsp;&nbsp;(Awaiting Grading)
+- [ ] ***Step 1: Scanner***&nbsp;&nbsp;&nbsp;&nbsp;(Due Date: September 6, 2017)
 - [ ] ***Step 2:***
 - [ ] ***Step 3:***
 - [ ] ***Step 4:***
