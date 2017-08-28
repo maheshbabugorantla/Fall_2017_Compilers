@@ -22,11 +22,10 @@ INTLITERAL      :   DIGITS+; // One or more integers
 // Operators
 OPERATOR        :   (':=' | '+' | '-' | '*' | '/' | '=' | '!=' | '<' | '>' | '(' | ')' | ';' | ',' | '<=' | '>=') ;
 
-WHITESPACE      :   (' ' | '\n' | '\t' | '\r' | '\f' )+ -> skip; // Doubtful
-                    // { $setType(Token.SKIP); }; // Doubtful
+WHITESPACE      :   (' ' | '\n' | '\t' | '\r' | '\f' )+ -> skip;
 
 // Pattern String
-STRINGLITERAL   :   '"'~["]*'"'; // Doubtful
+STRINGLITERAL   :   '"'~["]*'"';
 
 // Pattern for Float-Point Numbers
 FLOATLITERAL    :   DIGITS*'.'DIGITS+; // | '.'DIGITS+;
