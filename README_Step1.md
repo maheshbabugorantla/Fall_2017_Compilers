@@ -62,9 +62,12 @@ NOT((a | b)*) // Doubtful
 // Valid Integer in C doesnot start with Zero and can be signed or unsigned
 (- | lambda)([1-9][0-9]*| 0) // here (- | lambda) => -? (in RegEx)
 
+// Regex for Comments
+[\/\/]
+
 ```
 
-Scanner is not responsible for making sure that the input tokens
+Scanner is not responsible for making sure that the input tokens are precise enough to be stored. Its main job is to just identify the patterns and classify a specific detected pattern into a specific token type
 
 ### ***How-to-submit-the-code***
 
