@@ -5,16 +5,16 @@ make clean && make compiler # Might have to remove it
 cd classes
 
 # Testing the fibonacci.micro
-java Micro ../input/fibonacci.micro > ../my_output/fibonacci.out
+java -cp ../lib/antlr.jar:. Micro ../input/fibonacci.micro > ../my_output/fibonacci.out
 
 # Testing the loop.micro
-java Micro ../input/loop.micro > ../my_output/loop.out
+java -cp ../lib/antlr.jar:. Micro ../input/loop.micro > ../my_output/loop.out
 
 # Testing the nested.micro
-java Micro ../input/nested.micro > ../my_output/nested.out
+java -cp ../lib/antlr.jar:. Micro ../input/nested.micro > ../my_output/nested.out
 
 # Testing the sqrt.micro
-java Micro ../input/sqrt.micro > ../my_output/sqrt.out
+java -cp ../lib/antlr.jar:. Micro ../input/sqrt.micro > ../my_output/sqrt.out
 
 cd ..
 
