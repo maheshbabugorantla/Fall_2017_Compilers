@@ -9,15 +9,62 @@ A scanner is an implementation of a deterministic finite automaton (DFA, Finite 
 
 Which means that the scanner only loops through the whole code (recursion is not allowed)
 
+Scanner once it parses the code it generates the tokens, and these tokens are input to the Parser to generate the Abstract Syntax Tree. This syntax tree is converted to IR (Intermediate Representation) code which is machine and architecture independent
+
+C++ llvm, Java JVM
+
 #### ***Job of Scanner***
 
-<p>In simple terms, The Job of the scanner is to scan the code written by the user and analyze the lexical abnormalities in the code. Hence, the Scanner can also be called as a Lexical Analyzer </p>
+In simple terms, The Job of the scanner is to scan the code written by the user and analyze the lexical abnormalities in the code. Hence, the Scanner can also be called as a Lexical Analyzer (or Lexer)
 
-<p>It's main task is to read the input characters (or code) and produce a sequence of tokens that in turn will be used by the Syntax Analyzer. Scanner is generally implemented as a subroutine, which is utilized by the syntax analyzer as needed i.e. whenever it wants a next token. </p>
+It's main task is to read the input characters (or code) and produce a sequence of tokens which can be classified as
+* Identifiers
+* Reserved Words
+* Literals, etc
 
-<p>Secondary Task is to ignore the whitespaces (such as spaces, tabs and newline character in the source) and comments.Another task is to keep track of the line numbers so meaningful error messages can be generated</p>
+that in turn will be used by the Syntax Analyzer. Scanner is generally implemented as a subroutine, which is utilized by the syntax analyzer as needed i.e. whenever it wants a next token.
+
+Secondary Task is to ignore the whitespaces (such as spaces, tabs and newline character in the source) and comments.Another task is to keep track of the line numbers so meaningful error messages can be generated
 
 ### ***Token Definitions***
+Different types of tokens are defined using Regular Expressions
+
+For Example
+```g4
+INTEGERLITERAL  : [0-9]+
+FLOATLITERAL    : [0-9]*.[0-9]+
+.
+.
+.
+```
+
+```regex
+First set of valid strings {"a"} and Second Set of valid strings {"b"}
+
+{"a"} + {"b"} => {"a b"}
+
+Form words with letter from one set and a letter from another statements
+{a, b} + {c, d} => {"ac", "ad", "bc", "bd"}
+
+Empty String is defined using lambda
+
+// Collection of strings that contain just 'a' or 'b' or empty string (lambda)
+(a | b)* => {lambda, "a", "b", "aa", "ab", "bb", "aba", ...}
+
+// NOT: Give me the set of strings that are not 'a' or 'b'
+NOT((a | b)*) // Doubtful
+
+(a|b)+ // Collection of strings that have one or more 'a's or 'b's
+
+// Valid Identifiers in C
+(_ | [A-Za-z])( _ |[A-Za-z]|[0-9])*
+
+// Valid Integer in C doesnot start with Zero and can be signed or unsigned
+(- | lambda)([1-9][0-9]*| 0) // here (- | lambda) => -? (in RegEx)
+
+```
+
+Scanner is not responsible for making sure that the input tokens
 
 ### ***How-to-submit-the-code***
 
