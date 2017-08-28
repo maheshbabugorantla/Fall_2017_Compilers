@@ -1,6 +1,8 @@
 # !/usr/bin/sh
 
 make clean && make compiler # Might have to remove it
+rm -rf my_output
+mkdir my_output
 
 cd classes
 
