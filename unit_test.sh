@@ -23,7 +23,7 @@ cd ..
 # Comparing the Program Outputs with the given outputs
 
 # fibonacci.micro
-diff -w -B my_output/fibonacci.out output/fibonacci.out > diff.out
+diff -w my_output/fibonacci.out output/fibonacci.out > diff.out
 
 if ! [[ -s diff.out ]]; then
   #statements
@@ -31,21 +31,21 @@ if ! [[ -s diff.out ]]; then
 fi
 
 # loop.micro
-diff -w -B my_output/loop.out output/loop.out > diff.out
+diff -w my_output/loop.out output/loop.out > diff.out
 
 if ! [[ -s diff.out ]]; then
   printf '\nloop.micro is parsed sucessfully\n';
 fi
 
 # nested.micro
-diff -w -B my_output/nested.out output/nested.out > diff.out
+diff -w my_output/nested.out output/nested.out > diff.out
 
 if ! [[ -s diff.out ]]; then
   printf '\nnested.micro is parsed sucessfully\n';
 fi
 
 # sqrt.micro
-diff -w -B my_output/sqrt.out output/sqrt.out > diff.out
+diff -w my_output/sqrt.out output/sqrt.out > diff.out
 
 if ! [[ -s diff.out ]]; then
   printf '\nsqrt.micro is parsed sucessfully\n\n';
