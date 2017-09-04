@@ -17,7 +17,7 @@ Micro.g4 is the grammar file that you should edit and Micro.java will be your ma
 ### ***Progress***
 - [x] [***Step 0: Test submission***](https://github.com/ECE468/468project-just-in-time-droids/tree/step0-submission)&nbsp;&nbsp;&nbsp;&nbsp;(Awaiting Grading)
 - [ ] ***Step 1: Scanner***&nbsp;&nbsp;&nbsp;&nbsp;(Due Date: September 6, 2017)
-- [ ] ***Step 2:***
+- [ ] ***Step 2: Scanner***&nbsp;&nbsp;&nbsp;&nbsp;(Due Date: September 15, 2017)
 - [ ] ***Step 3:***
 - [ ] ***Step 4:***
 - [ ] ***Step 5:***
