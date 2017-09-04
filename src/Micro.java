@@ -7,22 +7,27 @@ public class Micro {
     public static void main(String[] args) throws Exception {
 
         try {
-            ANTLRFileStream tokenStream = new ANTLRFileStream(args[0]);
-            MicroLexer microLexer = new MicroLexer(tokenStream);
+            	ANTLRFileStream tokenStream = new ANTLRFileStream(args[0]);
+            	MicroLexer microLexer = new MicroLexer(tokenStream);
+	    	//ExpLexer expLexer = new ExpLexer(tokenStream);
 
-            CommonTokenStream commonTokenStream = new CommonTokenStream(microLexer);
+            	CommonTokenStream commonTokenStream = new CommonTokenStream(microLexer);
 
-            commonTokenStream.fill();
+            	commonTokenStream.fill();
 
             // MicroParser accepts the TokenStream which implemented by CommonTokenStream
             /**
              * TokenStream Documentation: http://www.antlr.org/api/Java/org/antlr/v4/runtime/TokenStream.html
             * */
-            MicroParser microParser = new MicroParser(commonTokenStream);
+            
+	    	MicroParser microParser = new MicroParser(commonTokenStream);
+	    	//microParser.removeErrorListeners();
+		microParser.setErrorHandler(new BailErrorStrategy());
+            	microParser.program();
+		//microParser.addErrorListener(new ANTLRErrorStrategy);
+	 	System.out.println("No.of Syntax Errors: " + Integer.toString(microParser.getNumberOfSyntaxErrors()));
 
-            System.out.println("No.of Syntax Errors: " + Integer.toString(microParser.getNumberOfSyntaxErrors));
-
-            /*String[] tokenNames = microLexer.getTokenNames();
+	    /*String[] tokenNames = microLexer.getTokenNames();
 
 //            for(String tokenName: tokenNames) {
 //                System.out.println("Token Name: " + tokenName);
@@ -40,6 +45,11 @@ public class Micro {
 
 
         }
+	
+	/*catch (ParseCancellationException parseException) {
+		System.out.println("Parse Exception");
+		System.out.println(parseException.getMessage());
+	}*/
 
         catch(Exception e) {
             System.out.println(e.getMessage());

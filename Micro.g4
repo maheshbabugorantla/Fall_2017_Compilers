@@ -24,7 +24,7 @@ param_decl_tail     : ',' param_decl param_decl_tail | ;
 
 /* Function Declarations */
 func_declarations   :   func_decl func_declarations | ;
-func_decl           :   'FUNCTION' any_type id (param_decl_list) 'BEGIN' func_body 'END';
+func_decl           :   'FUNCTION' any_type id '('param_decl_list')' 'BEGIN' func_body 'END';
 func_body           :   decl stmt_list;
 
 /* Statement List */
@@ -33,8 +33,8 @@ stmt                : base_stmt | if_stmt | for_stmt;
 base_stmt           : assign_stmt | read_stmt | write_stmt | return_stmt;
 
 /* Basic Statements */
-assign_stmt         : assign_expr ';';
-assign_expr         : id ':=' expr;
+assign_stmt         : assign_expr';';
+assign_expr         : id':='expr;
 read_stmt           : 'READ' '(' id_list ')'';';
 write_stmt          : 'WRITE' '(' id_list ')'';';
 return_stmt         : 'RETURN' expr ';';
