@@ -12,6 +12,8 @@ public class Micro {
 
             CommonTokenStream commonTokenStream = new CommonTokenStream(microLexer);
 
+            ExpParser parser = new ExpParser(tokens);
+
             commonTokenStream.fill();
             String[] tokenNames = microLexer.getTokenNames();
 
