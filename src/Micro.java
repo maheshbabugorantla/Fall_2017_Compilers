@@ -12,10 +12,17 @@ public class Micro {
 
             CommonTokenStream commonTokenStream = new CommonTokenStream(microLexer);
 
-            ExpParser parser = new ExpParser(tokens);
-
             commonTokenStream.fill();
-            String[] tokenNames = microLexer.getTokenNames();
+
+            // MicroParser accepts the TokenStream which implemented by CommonTokenStream
+            /**
+             * TokenStream Documentation: http://www.antlr.org/api/Java/org/antlr/v4/runtime/TokenStream.html
+            * */
+            MicroParser microParser = new MicroParser(commonTokenStream);
+
+            System.out.println("No.of Syntax Errors: " + Integer.toString(microParser.getNumberOfSyntaxErrors));
+
+            /*String[] tokenNames = microLexer.getTokenNames();
 
 //            for(String tokenName: tokenNames) {
 //                System.out.println("Token Name: " + tokenName);
@@ -28,7 +35,10 @@ public class Micro {
                     System.out.println("Token Type: " + tokenNames[token.getType()]);
                     System.out.println("Value: " + token.getText());
                 }
-            }
+            }*/
+
+
+
         }
 
         catch(Exception e) {
