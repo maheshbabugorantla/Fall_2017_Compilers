@@ -22,3 +22,11 @@ Micro.g4 is the grammar file that you should edit and Micro.java will be your ma
 - [ ] ***Step 4:***
 - [ ] ***Step 5:***
 - [ ] ***Step 6:***
+
+
+### ***Helpful Links***
+[ANTLR Lexer with DFA](http://web.mit.edu/dmaze/school/6.824/antlr-2.7.0/doc/lexer.html#dfacompare)
+
+[ANTLR: Is there a simple example?](https://stackoverflow.com/questions/1931307/antlr-is-there-a-simple-example)
+
+[Pull Test Cases From Directory on the Internet](https://stackoverflow.com/questions/273743/using-wget-to-recursively-fetch-a-directory-with-arbitrary-files-in-it)
