@@ -34,7 +34,7 @@ base_stmt           : assign_stmt | read_stmt | write_stmt | return_stmt;
 
 /* Basic Statements */
 assign_stmt         : assign_expr';';
-assign_expr         : id':='expr;
+assign_expr         : id ':=' expr;
 read_stmt           : 'READ' '(' id_list ')'';';
 write_stmt          : 'WRITE' '(' id_list ')'';';
 return_stmt         : 'RETURN' expr ';';
