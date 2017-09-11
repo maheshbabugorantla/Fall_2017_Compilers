@@ -22,7 +22,7 @@ public class Micro {
             
 	    	MicroParser microParser = new MicroParser(commonTokenStream);
 	    	//microParser.removeErrorListeners();
-		microParser.setErrorHandler(new BailErrorStrategy());
+		//microParser.setErrorHandler(new BailErrorStrategy());
             	microParser.program();
 		//microParser.addErrorListener(new ANTLRErrorStrategy);
 	 	System.out.println("No.of Syntax Errors: " + Integer.toString(microParser.getNumberOfSyntaxErrors()));
