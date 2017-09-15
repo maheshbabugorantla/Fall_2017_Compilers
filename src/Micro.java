@@ -12,7 +12,7 @@ public class Micro {
 
             	CommonTokenStream commonTokenStream = new CommonTokenStream(microLexer);
 
-            	commonTokenStream.fill();
+            	// commonTokenStream.fill();
 
             // MicroParser accepts the TokenStream which implemented by CommonTokenStream
             /**
@@ -20,7 +20,8 @@ public class Micro {
             * */
             
 	    	MicroParser microParser = new MicroParser(commonTokenStream);
-           	microParser.program();
+           	microParser.removeErrorListeners();
+		microParser.program();
 
            	if(microParser.getNumberOfSyntaxErrors() < 1) {
                 System.out.println("Accepted");
