@@ -9,7 +9,6 @@ public class Micro {
         try {
             	ANTLRFileStream tokenStream = new ANTLRFileStream(args[0]);
             	MicroLexer microLexer = new MicroLexer(tokenStream);
-	    	//ExpLexer expLexer = new ExpLexer(tokenStream);
 
             	CommonTokenStream commonTokenStream = new CommonTokenStream(microLexer);
 
@@ -21,38 +20,18 @@ public class Micro {
             * */
             
 	    	MicroParser microParser = new MicroParser(commonTokenStream);
-	    	//microParser.removeErrorListeners();
-		//microParser.setErrorHandler(new BailErrorStrategy());
-            	microParser.program();
-		//microParser.addErrorListener(new ANTLRErrorStrategy);
-	 	System.out.println("No.of Syntax Errors: " + Integer.toString(microParser.getNumberOfSyntaxErrors()));
+           	microParser.program();
 
-	    /*String[] tokenNames = microLexer.getTokenNames();
-
-//            for(String tokenName: tokenNames) {
-//                System.out.println("Token Name: " + tokenName);
-//            }
-
-            List<Token> tokenList = commonTokenStream.getTokens();
-
-            for(Token token: tokenList) {
-                if (token.getType() != -1) {
-                    System.out.println("Token Type: " + tokenNames[token.getType()]);
-                    System.out.println("Value: " + token.getText());
-                }
-            }*/
-
-
-
+           	if(microParser.getNumberOfSyntaxErrors() < 1) {
+                System.out.println("Accepted");
+            }
+            else {
+                System.out.println("Not Accepted");
+            }
         }
-	
-	/*catch (ParseCancellationException parseException) {
-		System.out.println("Parse Exception");
-		System.out.println(parseException.getMessage());
-	}*/
-
         catch(Exception e) {
-            System.out.println(e.getMessage());
+            // System.out.println(e.getMessage());
+            System.out.println("Not Accepted");
         }
     }
 }
