@@ -27,12 +27,12 @@ public class Micro {
                 System.out.println("Accepted");
             }
             else {
-                System.out.println("Not Accepted");
+                System.out.println("Not accepted");
             }
         }
         catch(Exception e) {
             // System.out.println(e.getMessage());
-            System.out.println("Not Accepted");
+            System.out.println("Not accepted");
         }
     }
 }
