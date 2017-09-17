@@ -1,5 +1,5 @@
-# LIB_ANTLR := lib/antlr-4.4-complete.jar
-LIB_ANTLR := lib/antlr.jar
+LIB_ANTLR := lib/antlr-4.4-complete.jar
+# LIB_ANTLR := lib/antlr.jar
 ANTLR_SCRIPT := Micro.g4
 
 all: team compile
