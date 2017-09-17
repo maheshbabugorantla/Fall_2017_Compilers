@@ -48,10 +48,10 @@ public class Symbol {
 
         // If the Symbol type is STRING
         if(getSymbolType().equals("STRING")) {
-            System.out.println("name " + this.getSymbolName() + " type " + this.getSymbolType() + " value \"" + this.getSymbolValue() + "\"");
+            return("name " + this.getSymbolName() + " type " + this.getSymbolType() + " value \"" + this.getSymbolValue() + "\"");
         }
         else {
-            System.out.println("name " + this.getSymbolName() + " type " + this.getSymbolType());
+            return("name " + this.getSymbolName() + " type " + this.getSymbolType());
         }
     }
 }
