@@ -12,7 +12,8 @@ E.g.,
 ParseTreeWalker walker = new ParseTreeWalker();
 walker.walk(myParseTreeListener, myParseTree);
 
-// In the place of the myParseTree I am not sure what needs to be used, but what I understand from the source code pattern is that we can use the output of the microParser.program() (in Micro.java) and also I have created the Micro468Listener.java which implements MicroBaseListener (which implements ParseTreeListener) an instance of the Micro468Listener can be used in the place of myParseTreeListener
+// In the place of the myParseTree I am not sure what needs to be used, // but what I understand from the source code pattern is that we can use // the output of the microParser.program() (in Micro.java) and also I  // have created the Micro468Listener.java which implements
+// MicroBaseListener (which implements ParseTreeListener) an instance of // the Micro468Listener can be used in the place of myParseTreeListener
 ```
 The above triggers events in your listener If you want to trigger events in multiple listeners during a single tree walk
 
