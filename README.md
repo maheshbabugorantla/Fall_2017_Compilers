@@ -15,10 +15,10 @@ Edit the Makefile with actual group member names.
 Micro.g4 is the grammar file that you should edit and Micro.java will be your main java program after you edit it.
 
 ### ***Progress***
-- [x] [***Step 0: Test submission***](https://github.com/ECE468/468project-just-in-time-droids/tree/step0-submission)&nbsp;&nbsp;&nbsp;&nbsp;(Grade: 100)
-- [x] [***Step 1: Scanner***](https://github.com/ECE468/468project-just-in-time-droids/tree/step1-submission)&nbsp;&nbsp;&nbsp;&nbsp;(Due Date: September 6, 2017) (Grade: 100)
-- [x] [***Step 2: Scanner***](https://github.com/ECE468/468project-just-in-time-droids/tree/step2-submission)&nbsp;&nbsp;&nbsp;&nbsp;(Due Date: September 15, 2017) (Grade: 100)
-- [ ] ***Step 3: Symbol Table*** &nbsp;&nbsp;&nbsp;&nbsp;(Due Date: September 29, 2017) (In Progress)
+- [x] [***Step 0: Test submission***](https://github.com/ECE468/468project-just-in-time-droids/tree/step0-submission)&nbsp;&nbsp;&nbsp;&nbsp;(Grade: 100) [![Endpoint coverage](http://progressed.io/bar/100?title=done)](#progress)
+- [x] [***Step 1: Scanner***](https://github.com/ECE468/468project-just-in-time-droids/tree/step1-submission)&nbsp;&nbsp;&nbsp;&nbsp;(Due Date: September 6, 2017) (Grade: 100) [![Endpoint coverage](http://progressed.io/bar/100?title=done)](#progress)
+- [x] [***Step 2: Scanner***](https://github.com/ECE468/468project-just-in-time-droids/tree/step2-submission)&nbsp;&nbsp;&nbsp;&nbsp;(Due Date: September 15, 2017) (Grade: 100) [![Endpoint coverage](http://progressed.io/bar/100?title=done)](#progress)
+- [ ] ***Step 3: Symbol Table*** &nbsp;&nbsp;&nbsp;&nbsp;(Due Date: September 29, 2017) (In Progress) [![Endpoint coverage](http://progressed.io/bar/10?title=progress)](#progress)
 - [ ] ***Step 4:***
 - [ ] ***Step 5:***
 - [ ] ***Step 6:***
