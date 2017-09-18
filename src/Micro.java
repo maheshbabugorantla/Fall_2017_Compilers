@@ -1,6 +1,4 @@
 import org.antlr.v4.runtime.*;
-import java.io.*;
-import java.util.*;
 import java.lang.Exception;
 
 public class Micro {
@@ -9,7 +7,6 @@ public class Micro {
         try {
             	ANTLRFileStream tokenStream = new ANTLRFileStream(args[0]);
             	MicroLexer microLexer = new MicroLexer(tokenStream);
-
             	CommonTokenStream commonTokenStream = new CommonTokenStream(microLexer);
 
             	// commonTokenStream.fill();
