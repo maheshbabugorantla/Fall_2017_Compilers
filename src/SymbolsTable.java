@@ -1,6 +1,8 @@
 import java.io.*;
-import java.util.*;
-import java.lang.Exception;
+import java.util.HashSet;
+import java.util.ArrayList;
+//import java.lang.Exception;
+import java.lang.IllegalArgumentException;
 
 /**
  *  Symbols Table is a dataStructure that keeps information about non-keyword symbols that appear in source programs
@@ -14,17 +16,103 @@ public class SymbolsTable {
 
     // TODO: Have to think of how to implement the DataStructure
 
-    private String symbolScope = null;
+    private String blockScope; // Used to store the scope Name such as "GLOBAL" or "Local Scope No."
+    private SymbolsTable globalParent; // This is used to refer to the parent of a child
+    private ArrayList<SymbolsTable> childList; // List of child Scopes
+    private ArrayList<Symbol> symbolsList; // List of all the Symbols
+    // Search for the Symbols in the Local Scope in O(1). Usually used to check if
+    private HashSet<String> symbolSet;
 
-    public void SymbolsTable() {
+    /**
+     * Constructor to create the SymbolsTable
+     * @param scope_name: Name of the Scope
+     *                  example: 'GLOBAL' or FunctionName or BlockNumber (IF, ELSE, FOR)
+     * */
+    public SymbolsTable(String scope_name) {
+        this.blockScope = scope_name;
+        this.globalParent = null;
+        this.childList = new ArrayList<SymbolsTable>();
+        this.symbolsList = new ArrayList<Symbol>();
+        this.symbolSet = new HashSet<String>();
+    }
 
+    /**
+     * Helper Function to add the Symbol to the SymbolTable
+     * @param symbol: This is the symbol that needs to be added to the SymbolTable
+     * */
+    public void addSymbol(Symbol symbol) throws IllegalArgumentException {
+
+        // If the symbol already exists in the symbolSet then it is illegal to declare the variable again
+        String variableName = symbol.getSymbolName();
+
+        // Checks to see if the symbol already exists in the current Scope
+        if(symbolSet.contains(variableName)) {
+            throw new IllegalArgumentException("\nVariable DECLARATION ERROR: " + variableName + ".\n");
+        }
+        else {
+            // First Checks if the symbol exists in the Parent(s) scope.
+            // If yes, then prints a Shadow Variable warning message
+            checkShadowVariable(variableName);
+            symbolSet.add(variableName); // Adding to the Set of Unique Symbol Names
+            symbolsList.add(symbol); // Adding to the List of Symbols for the currentScope
+        }
+    }
+
+    /**
+     * Helper Function to check if the given variable is a shadow variable
+     * @param variableName: Name of the Variable that is already a shadow Variable
+     * */
+    public void checkShadowVariable(String variableName) {
+
+        // Get the ParentScope of the Current Scope
+        SymbolsTable parentScope = globalParent;
+
+        // First check if the parentScope is Null. It it is null then we have reached the end of the search
+        // This is top-to-bottom search until we reach the 'GLOBAL' Scope
+        while(parentScope != null) {
+
+            // This works similar to 'gcc -Wshadow -Werror -g -Wall hello.c -o hello', -Wshadow flag0
+            if(parentScope.getSymbolSet().contains(variableName)) {
+                System.out.println("WARNING: Shadow Variable " + variableName);
+                return;
+            }
+
+            parentScope = globalParent.getParentScope();
+        }
+
+        return;
+    }
+
+    public void addChild(SymbolsTable child) {
+        childList.add(child);
+    }
+
+    public SymbolsTable getParentScope() {
+        return globalParent;
+    }
+
+    public HashSet<String> getSymbolSet() {
+        return symbolSet;
     }
 
     public void setSymbolScope(String symbolScope) {
-        this.symbolScope = symbolScope;
+        this.blockScope = symbolScope;
     }
 
     public String getSymbolScope() {
-        return symbolScope;
+        return blockScope;
+    }
+
+    public void printSymbolTable() {
+
+        System.out.println("Symbol table " + blockScope);
+
+        for(Symbol symbol: symbolsList) {
+            System.out.println(symbol);
+        }
+
+        for(SymbolsTable child: childList) {
+            child.printSymbolTable();
+        }
     }
 }
