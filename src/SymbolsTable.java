@@ -47,7 +47,7 @@ public class SymbolsTable {
 
         // Checks to see if the symbol already exists in the current Scope
         if(symbolSet.contains(variableName)) {
-            throw new IllegalArgumentException("\nVariable DECLARATION ERROR: " + variableName + ".\n");
+            throw new IllegalArgumentException("\nDECLARATION ERROR " + variableName + "\n");
         }
         else {
             // First Checks if the symbol exists in the Parent(s) scope.
@@ -105,7 +105,7 @@ public class SymbolsTable {
 
     public void printSymbolTable() {
 
-        System.out.println("Symbol table " + blockScope);
+        System.out.println("\nSymbol table " + blockScope);
 
         for(Symbol symbol: symbolsList) {
             System.out.println(symbol);

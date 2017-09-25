@@ -62,7 +62,7 @@ public class Symbol {
 
         // If the Symbol type is STRING
         if(getSymbolType().equals("STRING")) {
-            return("name " + this.getSymbolName() + " type " + this.getSymbolType() + " value \"" + this.getSymbolValue() + "\"");
+            return("name " + this.getSymbolName() + " type " + this.getSymbolType() + " value " + this.getSymbolValue());
         }
         else {
             return("name " + this.getSymbolName() + " type " + this.getSymbolType());
