@@ -21,7 +21,7 @@ compiler:
 				java -cp $(LIB_ANTLR) org.antlr.v4.Tool -o build $(ANTLR_SCRIPT)
 				rm -rf classes
 				mkdir classes
-				javac -source 1.8 -target 1.8 -cp $(LIB_ANTLR) -d classes src/*.java build/*.java
+				javac -cp $(LIB_ANTLR) -d classes src/*.java build/*.java
 
 clean:
 	rm -rf build classes

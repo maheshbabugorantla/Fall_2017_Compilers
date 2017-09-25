@@ -14,6 +14,20 @@ public class Symbol {
 
     // Constructors
 
+    // This constructor is used for the INT and FLOAT Data Types
+    public Symbol(String symbolName, String symbolType) {
+        setSymbolName(symbolName);
+        setSymbolType(symbolType);
+        setSymbolValue(null);
+    }
+
+    // This Constructor is only used for STRING Data Type
+    public Symbol(String symbolType, String symbolName, String symbolValue) {
+        setSymbolName(symbolName);
+        setSymbolType(symbolType);
+        setSymbolValue(symbolValue);
+    }
+
     /**
      * Get and Set Methods
      * */
