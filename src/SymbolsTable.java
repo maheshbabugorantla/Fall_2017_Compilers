@@ -16,6 +16,7 @@ public class SymbolsTable {
 
     // TODO: Have to think of how to implement the DataStructure
 
+    private int printFlag = 0;
     private String blockScope; // Used to store the scope Name such as "GLOBAL" or "Local Scope No."
     private SymbolsTable globalParent; // This is used to refer to the parent of a child
     private ArrayList<SymbolsTable> childList; // List of child Scopes
@@ -47,7 +48,7 @@ public class SymbolsTable {
 
         // Checks to see if the symbol already exists in the current Scope
         if(symbolSet.contains(variableName)) {
-            throw new IllegalArgumentException("\nDECLARATION ERROR " + variableName + "\n");
+            throw new IllegalArgumentException("DECLARATION ERROR " + variableName);
         }
         else {
             // First Checks if the symbol exists in the Parent(s) scope.
@@ -105,7 +106,12 @@ public class SymbolsTable {
 
     public void printSymbolTable() {
 
-        System.out.println("\nSymbol table " + blockScope);
+        if(blockScope == "GLOBAL") {
+            System.out.println("Symbol table " + blockScope);
+        }
+        else {
+            System.out.println("\nSymbol table " + blockScope);
+        }
 
         for(Symbol symbol: symbolsList) {
             System.out.println(symbol);

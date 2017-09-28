@@ -112,6 +112,7 @@ public class Micro468Listener extends MicroBaseListener {
     public void exitPgm_body(MicroParser.Pgm_bodyContext ctx) {
         // Print the SymbolTable
         parentTree.printWholeTree();
+        //System.out.print("\n");
         // System.out.println(ctx.getChild(0).getText());
     }
 
