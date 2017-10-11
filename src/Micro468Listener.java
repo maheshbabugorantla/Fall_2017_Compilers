@@ -10,6 +10,7 @@ public class Micro468Listener extends MicroBaseListener {
 
     private SymbolsTree parentTree;
     private int blockNumber;
+    private int operationNumber;
 
     private SymbolsTable currentScope; // Used to refer to which functio is being parsed
 
@@ -20,6 +21,7 @@ public class Micro468Listener extends MicroBaseListener {
     public Micro468Listener() {
         this.parentTree = new SymbolsTree(); // Initializing the Symbol Tree to the GLOBAL Scope
         this.blockNumber = 1;
+        operationNumber = 1;
     }
 
     private String getBlockNumber() {
@@ -29,7 +31,7 @@ public class Micro468Listener extends MicroBaseListener {
     /**
      * This is used to push the Symbols to the Appropriate SymbolsTable
      * */
-   public void pushSymbol(String parameters, SymbolsTable symbolsTable) {
+    public void pushSymbol(String parameters, SymbolsTable symbolsTable) {
 
        // test1.micro Where there are no Global and Local Variables/Symbols
        if(parameters == null || parameters.equals("")) {
@@ -61,6 +63,7 @@ public class Micro468Listener extends MicroBaseListener {
                    for(String variable: variableNames) {
                        Symbol newVariable = new Symbol(variable, "FLOAT");
                        symbolsTable.addSymbol(newVariable);
+
                    }
                }
 
@@ -106,47 +109,143 @@ public class Micro468Listener extends MicroBaseListener {
     }
 
 
-//    /**
-//     * This gets called when the parser finds an assignment expression
-//     * */
-//    @Override
-//    public void enterAssign_expr(MicroParser.Assign_exprContext ctx) {
-//        System.out.println("expr " + ctx.getChild(0).getText() + " " + ctx.getChild(2).getText());
-//    }
-
-
     /**
      * This gets called when the parser finds an assignment statement
      * */
     @Override
     public void enterAssign_stmt(MicroParser.Assign_stmtContext ctx) {
-        //System.out.println("statement " + ctx.getChild(0).getText());
         String left = ctx.getChild(0).getChild(0).getText();
         String right = ctx.getChild(0).getChild(2).getText();
 
-        parseAssign_stmt(left, right, "$T1");
+        String postfix = InfixToPostfix.convertStringToPostfix(right);
 
+        System.out.println("\n\nPrinting postfix");
+        System.out.println(postfix);
 
-        System.out.println("printing postfix");
-        System.out.println(InfixToPostfix.convertStringToPostfix(right));
-
-        //InfixToPostfix.TestingSplit(right);
-
-        //System.out.println("statement " + ctx.getChild(0).getText() + " " + left);
-        //System.out.println("statement " + ctx.getChild(0).getText() + " " + right + " " + isInteger(right));
+        parsePostfix(right, left, postfix);
     }
 
-    @Override
-    public void enterAddop(MicroParser.AddopContext ctx) {
-        System.out.println("addop");
-
-        //System.out.println(ctx.getText());
-        //System.out.println(ctx.getChild(1).getText());
+    private static boolean isOperator(String c)
+    {
+        return c.equals("+") || c.equals("-") || c.equals("*") || c.equals("/") || c.equals("^") || c.equals("(") || c.equals(")");
     }
 
-    @Override public void enterMulop(MicroParser.MulopContext ctx) {
-        System.out.println("multop");
+    private void parsePostfix(String right, String left, String postfix) {
+        System.out.println("Parse Postfix");
+
+        Stack<String> stack = new Stack<String>();
+
+        String[] words = postfix.split(" ");
+
+        if (words.length == 1) {
+            String location = "$T" + this.operationNumber;
+            parseAssign_stmt(left, right, location);
+            this.operationNumber += 1;
+            return;
+        }
+
+        //stack.push(words[0]);
+        //stack.push(words[1]);
+
+        for (int i = 0; i < words.length; i++) {
+            String c = words[i];
+
+            boolean foundNumber = false;
+
+            if (isNumeric((c))) {
+                foundNumber = true;
+                String location = "$T" + this.operationNumber;
+                this.operationNumber += 1;
+
+                if (isInteger(c)) {
+                    parentTree.getCurrentScope().addRegister(location, "INT");
+                    stack.push(location);
+
+                    System.out.println(";STOREI " + c + " " + location);
+                }
+                else {
+                    parentTree.getCurrentScope().addRegister(location, "FLOAT");
+                    stack.push(location);
+
+                    System.out.println(";STOREF " + c + " " + location);
+                }
+            }
+
+            if (isOperator(c)) {
+                String val2 = stack.pop();
+                String val1 = stack.pop();
+                String location = "$T" + this.operationNumber;
+                this.operationNumber += 1;
+
+                String currentType = parentTree.getCurrentScope().variableMap.get(val1)[0];
+                parentTree.getCurrentScope().addRegister(location, currentType);
+
+                choose_operation(c, currentType, val1, val2, location);
+
+                stack.push(location);
+            }
+            else if (!foundNumber){
+                stack.push(c);
+            }
+        }
+
+        while (!stack.isEmpty()) {
+            String c = stack.pop();
+
+            if (isOperator(c)) {
+                String val2 = stack.pop();
+                String val1 = stack.pop();
+                String location = "$T" + this.operationNumber;
+                this.operationNumber += 1;
+
+                String currentType = parentTree.getCurrentScope().variableMap.get(val1)[0];
+                parentTree.getCurrentScope().addRegister(location, currentType);
+
+                choose_operation(c, currentType, val1, val2, location);
+
+                stack.push(location);
+            }
+            else {
+                String currentType = parentTree.getCurrentScope().variableMap.get(c)[0];
+
+                if (currentType.equals("INT")) {
+                    System.out.println(";STOREI " + " " + c + " " + left);
+                }
+                else {
+                    System.out.println(";STOREF " + " " + c + " " + left);
+                }
+            }
+        }
     }
+
+    private static void choose_operation(String symbol, String type, String str1, String str2, String location) {
+        if (symbol.equals("+")) {
+            operation_stmt("ADD", type, str1, str2, location);
+        }
+        else if (symbol.equals("*")) {
+            operation_stmt("MULT", type, str1, str2, location);
+        }
+        else if (symbol.equals("/")) {
+            operation_stmt("DIV", type, str1, str2, location);
+        }
+        else if (symbol.equals("-")) {
+            operation_stmt("SUB", type, str1, str2, location);
+        }
+        else {
+            System.out.println("None of the symbols...");
+        }
+    }
+
+    private static void operation_stmt(String operation, String type, String str1, String str2, String location) {
+        if (type.equals("INT")) {
+            System.out.println(";" + operation + "I " + str1 + " " + str2 + " " + location);
+        }
+        else {
+            System.out.println(";" + operation + "F " + str1 + " " + str2 + " " + location);
+        }
+
+    }
+
 
 
     private static void parseAssign_stmt(String left, String right, String location) {
@@ -216,6 +315,10 @@ public class Micro468Listener extends MicroBaseListener {
         // Create a new SymbolsTable for the Function
         SymbolsTable functionSymbolsTable = new SymbolsTable(functionName);
         currentScope = functionSymbolsTable; // Setting the current Scope to the Function Scope
+
+
+
+        // System.out.println(parentTree.getCurrentScope().variableMap.get("a")[0]);
 
         // Adding the New Function as a child to the Program
         parentTree.getCurrentScope().addChild(functionSymbolsTable);

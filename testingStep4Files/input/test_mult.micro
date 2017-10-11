@@ -6,12 +6,14 @@ BEGIN
 
 	FUNCTION VOID main()
 	BEGIN
-		a := 1;
-		b := 2;
+			a := 1;
+			b := 2;
 
           READ(c, d);
 
-          e := a * c + b * d;
+          e := (b*a)/a;
+          c := c + a*b + (a*b+c)/a + 20;
+
           
           WRITE(c, newline, d, newline, e, newline);
 

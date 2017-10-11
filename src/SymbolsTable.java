@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.HashSet;
+import java.util.HashMap;
 import java.util.ArrayList;
 //import java.lang.Exception;
 import java.lang.IllegalArgumentException;
@@ -24,6 +25,8 @@ public class SymbolsTable {
     // Search for the Symbols in the Local Scope in O(1). Usually used to check if
     private HashSet<String> symbolSet;
 
+    public HashMap<String, String[]> variableMap;
+
     /**
      * Constructor to create the SymbolsTable
      * @param scope_name: Name of the Scope
@@ -35,6 +38,7 @@ public class SymbolsTable {
         this.childList = new ArrayList<SymbolsTable>();
         this.symbolsList = new ArrayList<Symbol>();
         this.symbolSet = new HashSet<String>();
+        this.variableMap = new HashMap<String, String[]>();
     }
 
     /**
@@ -56,8 +60,22 @@ public class SymbolsTable {
             checkShadowVariable(variableName);
             symbolSet.add(variableName); // Adding to the Set of Unique Symbol Names
             symbolsList.add(symbol); // Adding to the List of Symbols for the currentScope
+
+            variableMap.put(variableName, new String[]{symbol.getSymbolType(), null} );
+            //System.out.println("name: " + variableName + " symbol: " + symbol.getSymbolType() + " " + variableMap.get(variableName)[0]);
         }
     }
+
+    public void addRegister(String name, String type) {
+        variableMap.put(name, new String[]{type, null} );
+    }
+
+//    public String getTypeFromTable(String name) {
+//        System.out.println("name: " + name);
+//        System.out.println("keys = " + this.variableMap.keySet());
+//
+//        return variableMap.get(name)[0];
+//    }
 
     /**
      * Helper Function to check if the given variable is a shadow variable
