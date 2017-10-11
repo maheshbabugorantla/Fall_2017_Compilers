@@ -1,0 +1,13 @@
+# !/usr/bin/sh
+
+make clean
+make compiler_mac
+
+echo "Running script"
+echo ""
+
+cd classes
+
+java -cp ../lib/antlr-4.4-complete.jar:. Micro ../testingStep4Files/input/$1
+
+cd ..

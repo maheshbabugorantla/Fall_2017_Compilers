@@ -105,13 +105,80 @@ public class Micro468Listener extends MicroBaseListener {
         pushSymbol(ctx.getChild(0).getText(), parentTree.getParentScope());
     }
 
+
+//    /**
+//     * This gets called when the parser finds an assignment expression
+//     * */
+//    @Override
+//    public void enterAssign_expr(MicroParser.Assign_exprContext ctx) {
+//        System.out.println("expr " + ctx.getChild(0).getText() + " " + ctx.getChild(2).getText());
+//    }
+
+
+    /**
+     * This gets called when the parser finds an assignment statement
+     * */
+    @Override
+    public void enterAssign_stmt(MicroParser.Assign_stmtContext ctx) {
+        //System.out.println("statement " + ctx.getChild(0).getText());
+        String left = ctx.getChild(0).getChild(0).getText();
+        String right = ctx.getChild(0).getChild(2).getText();
+
+        parseAssign_stmt(left, right, "$T1");
+
+
+        System.out.println("printing postfix");
+        System.out.println(InfixToPostfix.convertStringToPostfix(right));
+
+        //InfixToPostfix.TestingSplit(right);
+
+        //System.out.println("statement " + ctx.getChild(0).getText() + " " + left);
+        //System.out.println("statement " + ctx.getChild(0).getText() + " " + right + " " + isInteger(right));
+    }
+
+    @Override
+    public void enterAddop(MicroParser.AddopContext ctx) {
+        System.out.println("addop");
+
+        //System.out.println(ctx.getText());
+        //System.out.println(ctx.getChild(1).getText());
+    }
+
+    @Override public void enterMulop(MicroParser.MulopContext ctx) {
+        System.out.println("multop");
+    }
+
+
+    private static void parseAssign_stmt(String left, String right, String location) {
+        if (isNumeric(right) == false) {
+            return;
+        }
+
+        if (isInteger(right)) {
+            System.out.println(";STOREI " + right + " " + location);
+            System.out.println(";STOREI " + location + " " + left);
+        }
+        else {
+            System.out.println(";STOREF " + right + " " + location);
+            System.out.println(";STOREF " + location + " " + left);
+        }
+    }
+
+    private static boolean isNumeric(String str) {
+        return str.matches("-?\\d+(\\.\\d+)?");
+    }
+
+    private static boolean isInteger(String str) {
+        return str.matches("\\d+");
+    }
+
     /**
      * This gets called when the parser enters the Program
      * */
     @Override
     public void exitPgm_body(MicroParser.Pgm_bodyContext ctx) {
         // Print the SymbolTable
-        parentTree.printWholeTree();
+        //parentTree.printWholeTree();
         //System.out.print("\n");
         // System.out.println(ctx.getChild(0).getText());
     }
