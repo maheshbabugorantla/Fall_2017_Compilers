@@ -4,13 +4,11 @@ import java.lang.Exception;
 
 public class InfixToPostfix {
 
-    private static boolean isOperator(String c)
-    {
+    private static boolean isOperator(String c) {
         return c.equals("+") || c.equals("-") || c.equals("*") || c.equals("/") || c.equals("^") || c.equals("(") || c.equals(")");
     }
 
-    private static boolean isLowerPrecedence(String op1, String op2)
-    {
+    private static boolean isLowerPrecedence(String op1, String op2) {
         switch (op1)
         {
             case "+":
@@ -43,8 +41,6 @@ public class InfixToPostfix {
 
         return str.split(regex);
     }
-
-
 
     public static String convertStringToPostfix2(String infix) {
 
@@ -186,6 +182,79 @@ public class InfixToPostfix {
 
 
         return postfix.toString();
+    }
+
+    public static int Prec(String ch)
+    {
+        switch (ch)
+        {
+            case "+":
+            case "-":
+                return 1;
+
+            case "*":
+            case "/":
+                return 2;
+
+            case "^":
+                return 3;
+        }
+        return -1;
+    }
+
+    static String infixToPostfix(String infix)
+    {
+        // initializing empty String for result
+        String result = new String("");
+
+        String[] words = SplittingInfix(infix);
+        //System.out.println(words.toString());
+
+        //System.out.println("what to parse: " + String.join(",", words));
+
+        Stack<String> stack = new Stack<String>();
+        String c = "";
+
+        for (int i = 0; i < words.length; i++)
+        {
+            c = words[i];
+
+            // If the scanned character is an operand, add it to output.
+            if (!isOperator(c))
+                result += c + " ";
+
+                // If the scanned character is an '(', push it to the stack.
+            else if (c.equals("("))
+                stack.push(c);
+
+                //  If the scanned character is an ')', pop and output from the stack
+                // until an '(' is encountered.
+            else if (c.equals(")"))
+            {
+                while (!stack.isEmpty() && !(stack.peek().equals("(")))
+                    result += stack.pop() + " ";
+
+                if (!stack.isEmpty() && !(stack.peek().equals("(")))
+                    return "Invalid Expression"; // invalid expression
+                else
+                    stack.pop();
+            }
+            else // an operator is encountered
+            {
+                while (!stack.isEmpty() && Prec(c) <= Prec(stack.peek()))
+                    result += stack.pop() + " ";
+                stack.push(c);
+            }
+
+        }
+
+        // pop all the operators from the stack
+        while (!stack.isEmpty())
+            result += stack.pop() + " ";
+
+
+        //System.out.println("second result: " + result);
+        return result;
     }
 
 }

@@ -117,10 +117,12 @@ public class Micro468Listener extends MicroBaseListener {
         String left = ctx.getChild(0).getChild(0).getText();
         String right = ctx.getChild(0).getChild(2).getText();
 
-        String postfix = InfixToPostfix.convertStringToPostfix(right);
+        //String postfix = InfixToPostfix.convertStringToPostfix(right);
+        String postfix = InfixToPostfix.infixToPostfix(right);
 
-        System.out.println("\n\nPrinting postfix");
-        System.out.println(postfix);
+        //System.out.println("\n\nPrinting postfix");
+        //System.out.println(postfix);
+        //System.out.println(postfix2);
 
         parsePostfix(right, left, postfix);
     }
@@ -131,7 +133,7 @@ public class Micro468Listener extends MicroBaseListener {
     }
 
     private void parsePostfix(String right, String left, String postfix) {
-        System.out.println("Parse Postfix");
+        //System.out.println("Parse Postfix");
 
         Stack<String> stack = new Stack<String>();
 
