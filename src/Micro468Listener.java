@@ -108,6 +108,50 @@ public class Micro468Listener extends MicroBaseListener {
         pushSymbol(ctx.getChild(0).getText(), parentTree.getParentScope());
     }
 
+    @Override public void enterRead_stmt(MicroParser.Read_stmtContext ctx) {
+        String right = ctx.getChild(2).getText();
+        String[] words = right.split(",");
+        //System.out.println("when reading: " + String.join(" ", words));
+
+        for (int i = 0; i < words.length; i++) {
+            String currentType = parentTree.getCurrentScope().variableMap.get(words[i])[0];
+
+            if (currentType == "INT") {
+                System.out.println(";READI " + words[i]);
+            }
+            else if (currentType == "FLOAT") {
+                System.out.println(";READF " + words[i]);
+            }
+            else {
+                System.out.println(";READS " + words[i]);
+            }
+        }
+    }
+
+
+
+    @Override public void enterWrite_stmt(MicroParser.Write_stmtContext ctx) {
+        String right = ctx.getChild(2).getText();
+        String[] words = right.split(",");
+        //System.out.println("when writing: " + String.join(" ", words));
+
+        for (int i = 0; i < words.length; i++) {
+            String currentType = parentTree.getCurrentScope().variableMap.get(words[i])[0];
+
+            if (currentType == "INT") {
+                System.out.println(";WRITEI " + words[i]);
+            }
+            else if (currentType == "FLOAT") {
+                System.out.println(";WRITEF " + words[i]);
+            }
+            else {
+                System.out.println(";WRITES " + words[i]);
+            }
+        }
+    }
+
+
+
 
     /**
      * This gets called when the parser finds an assignment statement
@@ -298,6 +342,8 @@ public class Micro468Listener extends MicroBaseListener {
     @Override
     public void exitFunc_body(MicroParser.Func_bodyContext ctx) {
         // System.out.println(ctx.getChild(0).getText());
+        System.out.println(";RET");
+        System.out.println(";tiny code");
     }
 
     /**
@@ -326,6 +372,8 @@ public class Micro468Listener extends MicroBaseListener {
         parentTree.getCurrentScope().addChild(functionSymbolsTable);
 
         readFunctionParameters(functionParameters, functionSymbolsTable);
+
+
     }
 
     /**
