@@ -1,5 +1,7 @@
 import java.io.*;
 import java.util.*;
+import java.lang.StringBuilder;
+import java.lang.String;
 import java.lang.Exception;
 
 public class InfixToPostfix {
@@ -33,7 +35,13 @@ public class InfixToPostfix {
     public static String[] SplittingInfix(String infix) {
         //System.out.println("expression: " + infix);
         String[] words = infix.split(" ");
-        String str = String.join("", words);
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for(String word: words) {
+            stringBuilder.append(word);
+        }
+
+        String str = stringBuilder.toString();
         //System.out.println("without spaces: " + str);
 
         String regex = "((?<=\\+)|(?=\\+))|((?<=\\*)|(?=\\*))|((?<=\\/)|(?=\\/))|((?<=\\-)|(?=\\-))";
@@ -46,7 +54,7 @@ public class InfixToPostfix {
 
         String[] words = SplittingInfix(infix);
 
-        System.out.println(String.join(",", words));
+        // System.out.println(String.join(",", words));
 
         Stack<String> stack = new Stack<String>();
         StringBuffer postfix = new StringBuffer(infix.length());
@@ -56,7 +64,7 @@ public class InfixToPostfix {
         for (int i = 0; i < words.length; i++)
         {
             c = words[i];
-            System.out.println("main c: " + c);
+            // System.out.println("main c: " + c);
 
             if (!isOperator(c))
             {
@@ -69,7 +77,7 @@ public class InfixToPostfix {
                     while (!stack.isEmpty() && !(stack.peek().equals("(")))
                     {
                         String popped = stack.pop();
-                        System.out.println("pushed1: " + popped);
+                        // System.out.println("pushed1: " + popped);
                         postfix.append(popped + " ");
                     }
                     if (!stack.isEmpty())
@@ -88,16 +96,16 @@ public class InfixToPostfix {
                         while (!stack.isEmpty() && isLowerPrecedence(c, stack.peek()))
                         {
                             String pop = stack.pop();
-                            System.out.println("popped2: " + pop + "c: " + c);
+                            // System.out.println("popped2: " + pop + "c: " + c);
                             if (!c.equals("("))
                             {
-                                System.out.println("pushed2: " + pop);
+                                // System.out.println("pushed2: " + pop);
                                 postfix.append(pop + " ");
                             } else {
                                 c = pop;
                             }
                         }
-                        System.out.println("pushed3: " + c);
+                        // System.out.println("pushed3: " + c);
 
                         stack.push(c);
                     }
@@ -117,7 +125,7 @@ public class InfixToPostfix {
 
         String[] words = SplittingInfix(infix);
 
-        System.out.println(String.join(",", words));
+        // System.out.println(String.join(",", words));
 
         Stack<String> stack = new Stack<String>();
         StringBuffer postfix = new StringBuffer(infix.length());
@@ -127,7 +135,7 @@ public class InfixToPostfix {
         for (int i = 0; i < words.length; i++)
         {
             c = words[i];
-            System.out.println("main c: " + c);
+            // System.out.println("main c: " + c);
 
             if (!isOperator(c))
             {
@@ -140,7 +148,7 @@ public class InfixToPostfix {
                     while (!stack.isEmpty() && !(stack.peek().equals("(")))
                     {
                         String popped = stack.pop();
-                        System.out.println("pushed1: " + popped);
+                        // System.out.println("pushed1: " + popped);
                         postfix.append(popped + " ");
                     }
                     if (!stack.isEmpty())
@@ -159,16 +167,16 @@ public class InfixToPostfix {
                         while (!stack.isEmpty() && isLowerPrecedence(c, stack.peek()))
                         {
                             String pop = stack.pop();
-                            System.out.println("popped2: " + pop + "c: " + c);
+                            // System.out.println("popped2: " + pop + "c: " + c);
                             if (!c.equals("("))
                             {
-                                System.out.println("pushed2: " + pop);
+                                // System.out.println("pushed2: " + pop);
                                 postfix.append(pop + " ");
                             } else {
                                 c = pop;
                             }
                         }
-                        System.out.println("pushed3: " + c);
+                        // System.out.println("pushed3: " + c);
 
                         stack.push(c);
                     }
