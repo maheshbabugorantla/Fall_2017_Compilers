@@ -204,10 +204,9 @@ public class Micro468Listener extends MicroBaseListener {
         //System.out.println("split: " + Arrays.toString(words));
         if (words.length == 1) {
             String location = "$T" + this.operationNumber;
-            //parentTree.getCurrentScope().addRegister(location,  "INT", "r" + Integer.toString(this.operationNumber - 1));
-            parseAssign_stmt(left, right, location);
             this.operationNumber += 1;
 
+            parseAssign_stmt(left, right, location);
 
             return;
         }
@@ -232,6 +231,7 @@ public class Micro468Listener extends MicroBaseListener {
                     stack.push(location);
 
                     System.out.println(";STOREI " + c + " " + location);
+                    add_reg_operation_stmt_2("move", c, location);
                 }
                 else {
                     //parentTree.getCurrentScope().addRegister(location, "FLOAT");
@@ -240,6 +240,7 @@ public class Micro468Listener extends MicroBaseListener {
                     stack.push(location);
 
                     System.out.println(";STOREF " + c + " " + location);
+                    add_reg_operation_stmt_2("move", c, location);
                 }
             }
 
@@ -287,9 +288,11 @@ public class Micro468Listener extends MicroBaseListener {
 
                 if (currentType.equals("INT")) {
                     System.out.println(";STOREI " + " " + c + " " + left);
+                    add_reg_operation_stmt_2("move", c, left);
                 }
                 else {
                     System.out.println(";STOREF " + " " + c + " " + left);
+                    add_reg_operation_stmt_2("move", c, left);
                 }
             }
         }
@@ -400,6 +403,7 @@ public class Micro468Listener extends MicroBaseListener {
 
         if (isInteger(right)) {
             System.out.println(";STOREI " + right + " " + location);
+            parentTree.getCurrentScope().addRegister(location,  "INT", "r" + Integer.toString(this.operationNumber - 2));
             //tinyNodeArrayList.add(new TinyNode("move", right, "r" + Integer.toString(tinyRegisterNumber)));
             //add_reg_operation_stmt("move", right, location);
             System.out.println(";STOREI " + location + " " + left);
@@ -409,6 +413,7 @@ public class Micro468Listener extends MicroBaseListener {
         }
         else {
             System.out.println(";STOREF " + right + " " + location);
+            parentTree.getCurrentScope().addRegister(location,  "FLOAT", "r" + Integer.toString(this.operationNumber - 2));
             //tinyNodeArrayList.add(new TinyNode("move", right, "r" + Integer.toString(tinyRegisterNumber)));
             //add_reg_operation_stmt("move", right, location);
             System.out.println(";STOREF " + location + " " + left);
@@ -416,20 +421,25 @@ public class Micro468Listener extends MicroBaseListener {
             //add_reg_operation_stmt("move", location, left);
             tinyRegisterNumber += 1;
         }
-        //add_reg_operation_stmt_2("move", right, location);
-        //add_reg_operation_stmt_2("move", location, left);
+        add_reg_operation_stmt_2("move", right, location);
+        add_reg_operation_stmt_2("move", location, left);
     }
 
 
     private void add_reg_operation_stmt_2(String operation, String str1, String location) {
         String check1 = str1;
         String check2 = location;
-        if (parentTree.getCurrentScope().variableMap.get(check1)[1] != null) {
-            check1 = parentTree.getCurrentScope().variableMap.get(check1)[1];
+        if (parentTree.getCurrentScope().variableMap.containsKey(check1)) {
+            if (parentTree.getCurrentScope().variableMap.get(check1)[1] != null) {
+               check1 = parentTree.getCurrentScope().variableMap.get(check1)[1];
+            }
         }
-        if (parentTree.getCurrentScope().variableMap.get(check2)[1] != null) {
-            check2 = parentTree.getCurrentScope().variableMap.get(check2)[1];
+        if (parentTree.getCurrentScope().variableMap.containsKey(check2)) {
+            if (parentTree.getCurrentScope().variableMap.get(check2)[1] != null) {
+                check2 = parentTree.getCurrentScope().variableMap.get(check2)[1];
+            }
         }
+
         tinyNodeArrayList.add(new TinyNode(operation, check1, check2));
     }
 
