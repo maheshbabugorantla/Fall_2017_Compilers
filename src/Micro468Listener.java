@@ -165,7 +165,7 @@ public class Micro468Listener extends MicroBaseListener {
         String postfix = InfixToPostfix.infixToPostfix(right);
 
         //System.out.println("\n\nPrinting postfix");
-        //System.out.println(postfix);
+        //System.out.println("postfix " + postfix);
         //System.out.println(postfix2);
 
         parsePostfix(right, left, postfix);
@@ -182,7 +182,7 @@ public class Micro468Listener extends MicroBaseListener {
         Stack<String> stack = new Stack<String>();
 
         String[] words = postfix.split(" ");
-
+        //System.out.println("split: " + Arrays.toString(words));
         if (words.length == 1) {
             String location = "$T" + this.operationNumber;
             parseAssign_stmt(left, right, location);

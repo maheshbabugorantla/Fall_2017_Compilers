@@ -44,7 +44,7 @@ public class InfixToPostfix {
         String str = stringBuilder.toString();
         //System.out.println("without spaces: " + str);
 
-        String regex = "((?<=\\+)|(?=\\+))|((?<=\\*)|(?=\\*))|((?<=\\/)|(?=\\/))|((?<=\\-)|(?=\\-))";
+        String regex = "((?<=\\+)|(?=\\+))|((?<=\\*)|(?=\\*))|((?<=/)|(?=/))|((?<=-)|(?=-))";
         regex = regex + "|((?<=\\()|(?=\\())|((?<=\\))|(?=\\)))";
 
         return str.split(regex);
@@ -216,7 +216,7 @@ public class InfixToPostfix {
         String result = new String("");
 
         String[] words = SplittingInfix(infix);
-        //System.out.println(words.toString());
+        //System.out.println("printing combined " + Arrays.toString(words));
 
         //System.out.println("what to parse: " + String.join(",", words));
 
@@ -262,7 +262,7 @@ public class InfixToPostfix {
 
 
         //System.out.println("second result: " + result);
-        return result;
+        return result.trim();
     }
 
 }
