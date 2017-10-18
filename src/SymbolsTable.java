@@ -70,6 +70,10 @@ public class SymbolsTable {
         variableMap.put(name, new String[]{type, null} );
     }
 
+    public void addRegister(String name, String type, String reg) {
+        variableMap.put(name, new String[]{type, reg} );
+    }
+
 //    public String getTypeFromTable(String name) {
 //        System.out.println("name: " + name);
 //        System.out.println("keys = " + this.variableMap.keySet());

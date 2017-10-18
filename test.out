@@ -20,7 +20,69 @@
 ;DIVI $T14 a $T15
 ;STOREI  $T15 a
 ;WRITEI c
+;WRITES newline
 ;WRITEI b
+;WRITES newline
 ;WRITEI a
+;WRITES newline
+;STOREF 2.5 $T16
+;STOREF $T16 p
+;STOREF 1.2 $T17
+;STOREF $T17 s
+;STOREF 0.7 $T18
+;STOREF $T18 t
+;MULTF t p $T19
+;SUBF $T19 s $T20
+;MULTF p s $T21
+;ADDF $T20 $T21 $T22
+;STOREF  $T22 t
+;WRITEF t
+;WRITES newline
 ;RET
 ;tiny code
+var a
+var b
+var c
+var p
+var s
+var t
+str newline "\n"
+move a r3
+muli b r3
+move c r4
+addi r3 r4
+move a r5
+muli b r5
+move r5 r6
+addi c r6
+move r6 r7
+divi a r7
+move r4 r8
+addi r7 r8
+move r8 r10
+addi r9 r10
+move b r11
+muli b r11
+move r11 r12
+addi a r12
+move b r13
+muli a r13
+move r13 r14
+divi a r14
+sys writei c
+sys writes newline
+sys writei b
+sys writes newline
+sys writei a
+sys writes newline
+move t r18
+mulr p r18
+move r18 r19
+subr s r19
+move p r20
+mulr s r20
+move r19 r21
+addr r20 r21
+sys writef t
+sys writes newline
+sys halt
