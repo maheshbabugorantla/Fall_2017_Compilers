@@ -1,5 +1,7 @@
 import java.io.*;
 import java.util.*;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import java.lang.Exception;
 
 /**
@@ -11,10 +13,15 @@ public class Micro468Listener extends MicroBaseListener {
     private SymbolsTree parentTree;
     private int blockNumber;
     private int operationNumber;
+    private int labelNumber;
     private static int tinyRegisterNumber;
     private SymbolsTable currentScope; // Used to refer to which functio is being parsed
-
     private static ArrayList<TinyNode> tinyNodeArrayList = new ArrayList<TinyNode>();
+    private Stack<String> labelStack = new Stack<String>();
+
+    private String incr_stmt;
+
+    private boolean elsePresent; // An Indicator to find if there is an else following the If Statement
 
     /**
      * Constructor to detect the Parser Actions.
@@ -24,7 +31,10 @@ public class Micro468Listener extends MicroBaseListener {
         this.parentTree = new SymbolsTree(); // Initializing the Symbol Tree to the GLOBAL Scope
         this.blockNumber = 1;
         operationNumber = 1;
+        labelNumber = 1;
         tinyRegisterNumber = 0;
+        incr_stmt = "";
+        elsePresent = false;
     }
 
     private String getBlockNumber() {
@@ -121,6 +131,7 @@ public class Micro468Listener extends MicroBaseListener {
     @Override
     public void enterPgm_body(MicroParser.Pgm_bodyContext ctx) { // ParentScope or GLOBAL
         // Pushing the Symbols to the GLOBAL Symbol Table
+        System.out.println(";IR code");
         pushSymbol(ctx.getChild(0).getText(), parentTree.getParentScope());
     }
 
@@ -489,28 +500,25 @@ public class Micro468Listener extends MicroBaseListener {
     @Override public void enterFunc_decl(MicroParser.Func_declContext ctx) {
 
         // Function Name
-        // System.out.println("Function Name: " + ctx.getChild(2).getText());
+//         System.out.println("Function Name: " + ctx.getChild(2).getText());
 
         // Function Parameters
-        // System.out.println("Function Parameters: " + ctx.getChild(4).getText()); // Function Paramters
+//         System.out.println("Function Parameters: " + ctx.getChild(4).getText()); // Function Paramters
 
         String functionParameters = ctx.getChild(4).getText();
         String functionName = ctx.getChild(2).getText();
+
+//        System.out.println("Function Name: " + functionName);
+//        System.out.println("Function Parameters: " + functionParameters);
 
         // Create a new SymbolsTable for the Function
         SymbolsTable functionSymbolsTable = new SymbolsTable(functionName);
         currentScope = functionSymbolsTable; // Setting the current Scope to the Function Scope
 
-
-
-        // System.out.println(parentTree.getCurrentScope().variableMap.get("a")[0]);
-
         // Adding the New Function as a child to the Program
         parentTree.getCurrentScope().addChild(functionSymbolsTable);
 
         readFunctionParameters(functionParameters, functionSymbolsTable);
-
-
     }
 
     /**
@@ -519,6 +527,55 @@ public class Micro468Listener extends MicroBaseListener {
     @Override
     public void enterDecl(MicroParser.DeclContext ctx) {
         // System.out.println(ctx.getChild(0).getText());
+    }
+
+    private void printConditionalIR(String leftOp, String compOp, String rightOp) {
+
+        String IRreg = "$T" + this.operationNumber;
+        this.operationNumber += 1;
+
+        // Finding if the rightOperand is an INT or FLOAT
+        if(isInteger(rightOp)) { // rightOp is an INT
+            System.out.println(";STOREI " + rightOp + " " + IRreg);
+        } else {
+            System.out.println(";STOREF " + rightOp + " " + IRreg);
+        }
+
+        // Getting the Label
+        String labelName = "label" + this.labelNumber;
+        labelStack.push(labelName);
+        this.labelNumber += 1;
+
+        switch (compOp) {
+
+            case ">": // LE
+                System.out.println(";LE " + leftOp + " " + IRreg + " " + labelName);
+                break;
+
+            case "<": // GE
+                System.out.println(";GE " + leftOp + " " + IRreg + " " + labelName);
+                break;
+
+            case ">=": // LT
+                System.out.println(";LT " + leftOp + " " + IRreg + " " + labelName);
+                break;
+
+            case "<=": // GT
+                System.out.println(";GT " + leftOp + " " + IRreg + " " + labelName);
+                break;
+
+            case "=": // EQ
+                System.out.println(";NE " + leftOp + " " + IRreg + " " + labelName);
+                break;
+
+            case "!=": // NE
+                System.out.println(";EQ " + leftOp + " " + IRreg + " " + labelName);
+                break;
+        }
+
+        labelName = "label" + labelNumber;
+        this.labelNumber += 1;
+        labelStack.push(labelName);
     }
 
     /**
@@ -533,12 +590,73 @@ public class Micro468Listener extends MicroBaseListener {
         parentTree.getCurrentScope().addChild(ifBlock);
 
         /**
-         * TODO: Need to Check for Conditional Expr
+         * TODO: Need to Check for Conditional Expressions
          * */
+        String conditionExpr = ctx.getChild(2).getText();
+
+        // Regex to detect comparison operator in the condition expression
+        String regex = "([a-zA-Z])(<|>|=|!=|<=|>=)([0-9])";
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(conditionExpr);
+
+        while (matcher.find()) {
+            String leftOp = matcher.group(1);
+            String compOp = matcher.group(2);
+            String rightOp = matcher.group(3);
+
+            printConditionalIR(leftOp, compOp, rightOp); // Prints the appropriate IR Code for the Conditional Expression IF and FOR
+        }
 
         /**
-         * TODO: Need to Check for Local Parameters
+         * TODO: Need to Check for Declarations and Statements
          * */
+        String decl = ctx.getChild(4).getText();
+        String stmt_list = ctx.getChild(5).getText();
+
+        if(ctx.getChild(6) != null) {
+            elsePresent = true;
+        }
+        else {
+            elsePresent = false;
+        }
+    }
+
+    /**
+     * This gets called whenever parser exits an IF Statement
+     * */
+    @Override
+    public void exitIf_stmt(MicroParser.If_stmtContext ctx) {
+
+        String label2 = "";
+        String label1 = "";
+
+        if(!labelStack.empty()) {
+            label2 = labelStack.pop();
+        }
+
+        if(!labelStack.empty()) {
+            label1 = labelStack.pop();
+
+            if(elsePresent) {
+                System.out.println(";JUMP " + label2);
+                System.out.println(";LABEL " + label1);
+                labelStack.push(label2);
+            } else {
+                System.out.println(";JUMP " + label2);
+                System.out.println(";LABEL " + label1);
+                System.out.println(";LABEL " + label2);
+            }
+
+            return;
+        }
+
+        if(label1.isEmpty() && !label2.isEmpty()) {
+            System.out.println(";JUMP " + label2);
+            System.out.println(";LABEL " + label2);
+        }
+
+//        System.out.println("Exited the IF Part");
     }
 
     /**
@@ -553,18 +671,41 @@ public class Micro468Listener extends MicroBaseListener {
         parentTree.getCurrentScope().addChild(elseBlock);
 
         /**
-         * TODO: Need to Check for Conditional Expr
-         * */
-
-        /**
          * TODO: Need to Check for Local Parameters
          * */
+        if(ctx.getChild(1) != null) {
+            String localDecl = ctx.getChild(1).getText();
+            String localStmt = ctx.getChild(2).getText();
+        }
+    }
+
+    /**
+     * This gets called whenever parser exits an ELSE Part
+     */
+    @Override public void exitElse_part(MicroParser.Else_partContext ctx) {
+
+        String label2 = "";
+        String label1 = "";
+
+        if(!labelStack.empty()) {
+            label2 = labelStack.pop();
+        }
+
+        if(!labelStack.empty()) {
+            label1 = labelStack.pop();
+            System.out.println(";JUMP " + label2);
+            System.out.println(";LABEL " + label1);
+            System.out.println(";LABEL " + label2);
+        }
+
+//        System.out.println("Exited the ELSE part");
     }
 
     /**
      * This gets called whenever parser detects an FOR Statement
      * */
     @Override public void enterFor_stmt(MicroParser.For_stmtContext ctx) {
+
         SymbolsTable forBlock = new SymbolsTable(getBlockNumber());
         currentScope = forBlock; // Setting the Scope to the FOR Block
 
@@ -576,5 +717,121 @@ public class Micro468Listener extends MicroBaseListener {
         }
 
         pushSymbol(ctx.getChild(8).getText(), currentScope);
+
+        String init_stmt = ctx.getChild(2).getText();
+
+        /**
+         * IR Code for init_stmt
+         * */
+
+        String[] operands = init_stmt.trim().split(":=");
+
+        String left = operands[0].trim();
+        String right = operands[1].trim();
+
+        String postfix = InfixToPostfix.infixToPostfix(right);
+        parsePostfix(right, left, postfix);
+
+        /**
+         * IR Code for cond_stmt
+         * */
+        String cond_stmt = ctx.getChild(4).getText();
+
+        String labelName1 = "label" + this.labelNumber;
+        this.labelNumber += 1;
+
+        System.out.println(";LABEL " + labelName1);
+
+        // Regex to detect comparison operator in the condition expression
+        String regex = "([a-zA-Z])(<|>|=|!=|<=|>=)([0-9])";
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(cond_stmt);
+
+        while (matcher.find()) {
+            String leftOp = matcher.group(1);
+            String compOp = matcher.group(2);
+            String rightOp = matcher.group(3);
+
+            printForIR(leftOp, compOp, rightOp); // Prints the appropriate IR Code for the Conditional Expression IF and FOR
+        }
+
+        /**
+         * IR Code for incr_stmt
+         * */
+        incr_stmt = ctx.getChild(6).getText();
+
+        labelStack.push(labelName1);
+    }
+
+    private void printForIR(String leftOp, String compOp, String rightOp) {
+        String IRreg = "$T" + this.operationNumber;
+        this.operationNumber += 1;
+
+        // Finding if the rightOperand is an INT or FLOAT
+        if(isInteger(rightOp)) { // rightOp is an INT
+            System.out.println(";STOREI " + rightOp + " " + IRreg);
+        } else {
+            System.out.println(";STOREF " + rightOp + " " + IRreg);
+        }
+
+        // Getting the Label
+        String labelName = "label" + this.labelNumber;
+        labelStack.push(labelName);
+        this.labelNumber += 1;
+
+        switch (compOp) {
+
+            case ">": // LE
+                System.out.println(";LE " + leftOp + " " + IRreg + " " + labelName);
+                break;
+
+            case "<": // GE
+                System.out.println(";GE " + leftOp + " " + IRreg + " " + labelName);
+                break;
+
+            case ">=": // LT
+                System.out.println(";LT " + leftOp + " " + IRreg + " " + labelName);
+                break;
+
+            case "<=": // GT
+                System.out.println(";GT " + leftOp + " " + IRreg + " " + labelName);
+                break;
+
+            case "=": // EQ
+                System.out.println(";NE " + leftOp + " " + IRreg + " " + labelName);
+                break;
+
+            case "!=": // NE
+                System.out.println(";EQ " + leftOp + " " + IRreg + " " + labelName);
+                break;
+        }
+    }
+
+    @Override
+    public void exitFor_stmt(MicroParser.For_stmtContext ctx) {
+
+        if(!incr_stmt.isEmpty()) {
+            String[] operands = incr_stmt.split(":=");
+
+            String left = operands[0].trim();
+            String right = operands[1].trim();
+            String postfix = InfixToPostfix.infixToPostfix(right);
+            parsePostfix(right, left, postfix);
+        }
+
+        String label1 = "";
+        String label2 = "";
+
+        if(!labelStack.empty()) {
+            label1 = labelStack.pop();
+        }
+
+        if(!labelStack.empty()) {
+            label2 = labelStack.pop();
+
+            System.out.println(";JUMP " + label1);
+            System.out.println(";LABEL " + label2);
+        }
     }
 }
