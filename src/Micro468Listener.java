@@ -1,3 +1,5 @@
+import org.antlr.v4.runtime.misc.NotNull;
+
 import java.io.*;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -19,6 +21,8 @@ public class Micro468Listener extends MicroBaseListener {
     private static ArrayList<TinyNode> tinyNodeArrayList = new ArrayList<TinyNode>();
     private Stack<String> labelStack = new Stack<String>();
 
+    private boolean condFlag;
+
     private String incr_stmt;
 
     private boolean elsePresent; // An Indicator to find if there is an else following the If Statement
@@ -32,6 +36,7 @@ public class Micro468Listener extends MicroBaseListener {
         this.blockNumber = 1;
         operationNumber = 1;
         labelNumber = 1;
+        condFlag = false;
         tinyRegisterNumber = 0;
         incr_stmt = "";
         elsePresent = false;
@@ -192,12 +197,7 @@ public class Micro468Listener extends MicroBaseListener {
         String left = ctx.getChild(0).getChild(0).getText();
         String right = ctx.getChild(0).getChild(2).getText();
 
-        //String postfix = InfixToPostfix.convertStringToPostfix(right);
         String postfix = InfixToPostfix.infixToPostfix(right);
-
-        //System.out.println("\n\nPrinting postfix");
-        //System.out.println("postfix " + postfix);
-        //System.out.println(postfix2);
 
         parsePostfix(right, left, postfix);
     }
@@ -214,11 +214,7 @@ public class Micro468Listener extends MicroBaseListener {
         String[] words = postfix.split(" ");
         //System.out.println("split: " + Arrays.toString(words));
         if (words.length == 1) {
-            String location = "$T" + this.operationNumber;
-            this.operationNumber += 1;
-
-            parseAssign_stmt(left, right, location);
-
+            parseAssign_stmt(left, right);
             return;
         }
 
@@ -407,12 +403,26 @@ public class Micro468Listener extends MicroBaseListener {
         }
     }
 
-    private void parseAssign_stmt(String left, String right, String location) {
+    private void parseAssign_stmt(String left, String right) {
         if (isNumeric(right) == false) {
+            if (parentTree.getCurrentScope().variableMap.containsKey(left) && parentTree.getCurrentScope().variableMap.containsKey(right)) {
+                String dataType = parentTree.getCurrentScope().variableMap.get(left)[0];
+                if (dataType.equals("INT")) {
+                    System.out.println(";STOREI " + right + " " + left);
+                    //tinyNodeArrayList.add(new TinyNode("STOREI", left, right));
+                }
+                else {
+                    System.out.println(";STOREF " + right + " " + left);
+                    //tinyNodeArrayList.add(new TinyNode("STOREF", left, right));
+                }
+            }
             return;
         }
 
         if (isInteger(right)) {
+            String location = "$T" + this.operationNumber;
+            this.operationNumber += 1;
+
             System.out.println(";STOREI " + right + " " + location);
             parentTree.getCurrentScope().addRegister(location,  "INT", "r" + Integer.toString(this.operationNumber - 2));
             //tinyNodeArrayList.add(new TinyNode("move", right, "r" + Integer.toString(tinyRegisterNumber)));
@@ -421,8 +431,13 @@ public class Micro468Listener extends MicroBaseListener {
             //tinyNodeArrayList.add(new TinyNode("move", "r" + Integer.toString(tinyRegisterNumber), left));
             //add_reg_operation_stmt("move", location, left);
             tinyRegisterNumber += 1;
+            add_reg_operation_stmt_2("move", right, location);
+            add_reg_operation_stmt_2("move", location, left);
         }
         else {
+            String location = "$T" + this.operationNumber;
+            this.operationNumber += 1;
+
             System.out.println(";STOREF " + right + " " + location);
             parentTree.getCurrentScope().addRegister(location,  "FLOAT", "r" + Integer.toString(this.operationNumber - 2));
             //tinyNodeArrayList.add(new TinyNode("move", right, "r" + Integer.toString(tinyRegisterNumber)));
@@ -431,9 +446,9 @@ public class Micro468Listener extends MicroBaseListener {
             //tinyNodeArrayList.add(new TinyNode("move", "r" + Integer.toString(tinyRegisterNumber), left));
             //add_reg_operation_stmt("move", location, left);
             tinyRegisterNumber += 1;
+            add_reg_operation_stmt_2("move", right, location);
+            add_reg_operation_stmt_2("move", location, left);
         }
-        add_reg_operation_stmt_2("move", right, location);
-        add_reg_operation_stmt_2("move", location, left);
     }
 
 
@@ -573,9 +588,12 @@ public class Micro468Listener extends MicroBaseListener {
                 break;
         }
 
-        labelName = "label" + labelNumber;
-        this.labelNumber += 1;
-        labelStack.push(labelName);
+        // Only used for IF Statement
+        if(condFlag) {
+            labelName = "label" + labelNumber;
+            this.labelNumber += 1;
+            labelStack.push(labelName);
+        }
     }
 
     /**
@@ -589,13 +607,15 @@ public class Micro468Listener extends MicroBaseListener {
         // Adding the new Block as a Child to the Program
         parentTree.getCurrentScope().addChild(ifBlock);
 
+        condFlag = true;
+
         /**
          * TODO: Need to Check for Conditional Expressions
          * */
         String conditionExpr = ctx.getChild(2).getText();
 
-        // Regex to detect comparison operator in the condition expression
-        String regex = "([a-zA-Z])(<|>|=|!=|<=|>=)([0-9])";
+/*        // Regex to detect comparison operator in the condition expression
+        String regex = "([a-zA-Z]+)(<|>|=|!=|<=|>=)([0-9]+|[0-9]+.[0-9]+|[a-zA-Z]+)";
 
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(conditionExpr);
@@ -605,8 +625,12 @@ public class Micro468Listener extends MicroBaseListener {
             String compOp = matcher.group(2);
             String rightOp = matcher.group(3);
 
+            System.out.println("LeftOp: " + leftOp);
+            System.out.println("CompOp: " + compOp);
+            System.out.println("RightOp: " + rightOp);
+
             printConditionalIR(leftOp, compOp, rightOp); // Prints the appropriate IR Code for the Conditional Expression IF and FOR
-        }
+        }*/
 
         /**
          * TODO: Need to Check for Declarations and Statements
@@ -620,6 +644,20 @@ public class Micro468Listener extends MicroBaseListener {
         else {
             elsePresent = false;
         }
+    }
+
+    @Override
+    public void enterCond(MicroParser.CondContext ctx) {
+
+        String leftExpr = ctx.getChild(0).getText();
+        String compOp = ctx.getChild(1).getText();
+        String rightExpr = ctx.getChild(2).getText();
+
+//        System.out.println("LeftOp: " + leftExpr);
+//        System.out.println("CompOp: " + compOp);
+//        System.out.println("RightOp: " + rightExpr);
+
+        printConditionalIR(leftExpr, compOp, rightExpr); // Prints the appropriate IR Code for the Conditional Expression IF and FOR
     }
 
     /**
@@ -706,6 +744,8 @@ public class Micro468Listener extends MicroBaseListener {
      * */
     @Override public void enterFor_stmt(MicroParser.For_stmtContext ctx) {
 
+        condFlag = true;
+
         SymbolsTable forBlock = new SymbolsTable(getBlockNumber());
         currentScope = forBlock; // Setting the Scope to the FOR Block
 
@@ -735,15 +775,16 @@ public class Micro468Listener extends MicroBaseListener {
         /**
          * IR Code for cond_stmt
          * */
-        String cond_stmt = ctx.getChild(4).getText();
+/*        String cond_stmt = ctx.getChild(4).getText(); */
 
         String labelName1 = "label" + this.labelNumber;
         this.labelNumber += 1;
 
         System.out.println(";LABEL " + labelName1);
 
+/*
         // Regex to detect comparison operator in the condition expression
-        String regex = "([a-zA-Z])(<|>|=|!=|<=|>=)([0-9])";
+        String regex = "([a-zA-Z]+)(<|>|=|!=|<=|>=)([0-9])";
 
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(cond_stmt);
@@ -755,6 +796,7 @@ public class Micro468Listener extends MicroBaseListener {
 
             printForIR(leftOp, compOp, rightOp); // Prints the appropriate IR Code for the Conditional Expression IF and FOR
         }
+*/
 
         /**
          * IR Code for incr_stmt
