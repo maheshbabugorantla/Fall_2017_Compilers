@@ -292,7 +292,9 @@ public class Micro468Listener extends MicroBaseListener {
             }
             else {
                 String currentType = parentTree.getCurrentScope().variableMap.get(c)[0];
-
+                if (left == null) {
+                    return;
+                }
                 if (currentType.equals("INT")) {
                     System.out.println(";STOREI " + " " + c + " " + left);
                     add_reg_operation_stmt_2("move", c, left);
@@ -547,18 +549,25 @@ public class Micro468Listener extends MicroBaseListener {
     private void printConditionalIR(String leftOp, String compOp, String rightOp) {
 
         String IRreg = "$T" + this.operationNumber;
-        this.operationNumber += 1;
 
         // Finding if the rightOperand is an INT or FLOAT
-        if(isInteger(rightOp)) { // rightOp is an INT
+        if (parentTree.getCurrentScope().variableMap.containsKey(rightOp)) {
+            IRreg = rightOp;
+        }
+        else if(isInteger(rightOp)) { // rightOp is an INT
             System.out.println(";STOREI " + rightOp + " " + IRreg);
+            this.operationNumber += 1;
         } else {
             System.out.println(";STOREF " + rightOp + " " + IRreg);
+            this.operationNumber += 1;
         }
 
         // Getting the Label
+        //System.out.println("Here outside condFlag");
         String labelName = "label" + this.labelNumber;
+        //System.out.println("Label Name: " + labelName);
         labelStack.push(labelName);
+        printStack(labelStack);
         this.labelNumber += 1;
 
         switch (compOp) {
@@ -590,9 +599,11 @@ public class Micro468Listener extends MicroBaseListener {
 
         // Only used for IF Statement
         if(condFlag) {
+            // System.out.println("Here condFlag");
             labelName = "label" + labelNumber;
             this.labelNumber += 1;
             labelStack.push(labelName);
+            printStack(labelStack);
         }
     }
 
@@ -613,24 +624,6 @@ public class Micro468Listener extends MicroBaseListener {
          * TODO: Need to Check for Conditional Expressions
          * */
         String conditionExpr = ctx.getChild(2).getText();
-
-/*        // Regex to detect comparison operator in the condition expression
-        String regex = "([a-zA-Z]+)(<|>|=|!=|<=|>=)([0-9]+|[0-9]+.[0-9]+|[a-zA-Z]+)";
-
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(conditionExpr);
-
-        while (matcher.find()) {
-            String leftOp = matcher.group(1);
-            String compOp = matcher.group(2);
-            String rightOp = matcher.group(3);
-
-            System.out.println("LeftOp: " + leftOp);
-            System.out.println("CompOp: " + compOp);
-            System.out.println("RightOp: " + rightOp);
-
-            printConditionalIR(leftOp, compOp, rightOp); // Prints the appropriate IR Code for the Conditional Expression IF and FOR
-        }*/
 
         /**
          * TODO: Need to Check for Declarations and Statements
@@ -653,11 +646,19 @@ public class Micro468Listener extends MicroBaseListener {
         String compOp = ctx.getChild(1).getText();
         String rightExpr = ctx.getChild(2).getText();
 
-//        System.out.println("LeftOp: " + leftExpr);
-//        System.out.println("CompOp: " + compOp);
-//        System.out.println("RightOp: " + rightExpr);
-
-        printConditionalIR(leftExpr, compOp, rightExpr); // Prints the appropriate IR Code for the Conditional Expression IF and FOR
+        if (isNumeric(rightExpr) || parentTree.getCurrentScope().variableMap.containsKey(rightExpr)) {
+            //System.out.println("checking 1");
+            printConditionalIR(leftExpr, compOp, rightExpr); // Prints the appropriate IR Code for the Conditional Expression IF and FOR
+            //System.out.println("done checking 1");
+        }
+        else {
+        //    System.out.println("checking 2");
+            String postfix = InfixToPostfix.infixToPostfix(rightExpr);
+            parsePostfix(rightExpr, null, postfix);
+          //  System.out.println("middle checking 2");
+            printConditionalIR(leftExpr, compOp, "$T" + Integer.toString(this.operationNumber - 1)); // Prints the appropriate IR Code for the Conditional Expression IF and FOR
+            //System.out.println("done checking 2");
+        }
     }
 
     /**
@@ -671,15 +672,18 @@ public class Micro468Listener extends MicroBaseListener {
 
         if(!labelStack.empty()) {
             label2 = labelStack.pop();
+            printStack(labelStack);
         }
 
         if(!labelStack.empty()) {
             label1 = labelStack.pop();
+            printStack(labelStack);
 
             if(elsePresent) {
                 System.out.println(";JUMP " + label2);
                 System.out.println(";LABEL " + label1);
                 labelStack.push(label2);
+                printStack(labelStack);
             } else {
                 System.out.println(";JUMP " + label2);
                 System.out.println(";LABEL " + label1);
@@ -727,10 +731,12 @@ public class Micro468Listener extends MicroBaseListener {
 
         if(!labelStack.empty()) {
             label2 = labelStack.pop();
+            printStack(labelStack);
         }
 
         if(!labelStack.empty()) {
             label1 = labelStack.pop();
+            printStack(labelStack);
             System.out.println(";JUMP " + label2);
             System.out.println(";LABEL " + label1);
             System.out.println(";LABEL " + label2);
@@ -744,7 +750,7 @@ public class Micro468Listener extends MicroBaseListener {
      * */
     @Override public void enterFor_stmt(MicroParser.For_stmtContext ctx) {
 
-        condFlag = true;
+        condFlag = false;
 
         SymbolsTable forBlock = new SymbolsTable(getBlockNumber());
         currentScope = forBlock; // Setting the Scope to the FOR Block
@@ -772,82 +778,17 @@ public class Micro468Listener extends MicroBaseListener {
         String postfix = InfixToPostfix.infixToPostfix(right);
         parsePostfix(right, left, postfix);
 
-        /**
-         * IR Code for cond_stmt
-         * */
-/*        String cond_stmt = ctx.getChild(4).getText(); */
-
         String labelName1 = "label" + this.labelNumber;
         this.labelNumber += 1;
-
         System.out.println(";LABEL " + labelName1);
-
-/*
-        // Regex to detect comparison operator in the condition expression
-        String regex = "([a-zA-Z]+)(<|>|=|!=|<=|>=)([0-9])";
-
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(cond_stmt);
-
-        while (matcher.find()) {
-            String leftOp = matcher.group(1);
-            String compOp = matcher.group(2);
-            String rightOp = matcher.group(3);
-
-            printForIR(leftOp, compOp, rightOp); // Prints the appropriate IR Code for the Conditional Expression IF and FOR
-        }
-*/
-
+        labelStack.push(labelName1);
+        printStack(labelStack);
         /**
          * IR Code for incr_stmt
          * */
         incr_stmt = ctx.getChild(6).getText();
-
         labelStack.push(labelName1);
-    }
-
-    private void printForIR(String leftOp, String compOp, String rightOp) {
-        String IRreg = "$T" + this.operationNumber;
-        this.operationNumber += 1;
-
-        // Finding if the rightOperand is an INT or FLOAT
-        if(isInteger(rightOp)) { // rightOp is an INT
-            System.out.println(";STOREI " + rightOp + " " + IRreg);
-        } else {
-            System.out.println(";STOREF " + rightOp + " " + IRreg);
-        }
-
-        // Getting the Label
-        String labelName = "label" + this.labelNumber;
-        labelStack.push(labelName);
-        this.labelNumber += 1;
-
-        switch (compOp) {
-
-            case ">": // LE
-                System.out.println(";LE " + leftOp + " " + IRreg + " " + labelName);
-                break;
-
-            case "<": // GE
-                System.out.println(";GE " + leftOp + " " + IRreg + " " + labelName);
-                break;
-
-            case ">=": // LT
-                System.out.println(";LT " + leftOp + " " + IRreg + " " + labelName);
-                break;
-
-            case "<=": // GT
-                System.out.println(";GT " + leftOp + " " + IRreg + " " + labelName);
-                break;
-
-            case "=": // EQ
-                System.out.println(";NE " + leftOp + " " + IRreg + " " + labelName);
-                break;
-
-            case "!=": // NE
-                System.out.println(";EQ " + leftOp + " " + IRreg + " " + labelName);
-                break;
-        }
+        printStack(labelStack);
     }
 
     @Override
@@ -867,13 +808,19 @@ public class Micro468Listener extends MicroBaseListener {
 
         if(!labelStack.empty()) {
             label1 = labelStack.pop();
+            printStack(labelStack);
         }
 
         if(!labelStack.empty()) {
             label2 = labelStack.pop();
+            printStack(labelStack);
 
-            System.out.println(";JUMP " + label1);
-            System.out.println(";LABEL " + label2);
+            System.out.println(";JUMP " + label2);
+            System.out.println(";LABEL " + label1);
         }
+    }
+
+    private void printStack(Stack<String> labelStack) {
+        System.out.println(Arrays.toString(labelStack.toArray()));
     }
 }

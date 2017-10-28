@@ -2,7 +2,7 @@
 ;READF num
 ;STOREI 1 $T1
 ;STOREI $T1 j
-;STOREF num approx
+In here approx = num
 ;STOREI 100 $T2
 ;STOREI $T2 i
 ;LABEL label1
@@ -13,7 +13,7 @@
 ;ADDF approx $T5 $T6
 ;MULTF $T4 $T6 $T7
 ;STOREF  $T7 newapprox
-;STOREF newapprox approx
+In here approx = newapprox
 ;STOREI 1 $T8
 ;SUBI i $T8 $T9
 ;STOREI  $T9 i

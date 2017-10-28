@@ -7,7 +7,7 @@ BEGIN
 
 	FUNCTION VOID main()
 	BEGIN
-	
+
 --		num := 7.0;
         READ(num);
 		j := 1;
