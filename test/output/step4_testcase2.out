@@ -1,56 +1,56 @@
 ;*****Start Unoptimized IR Code*****
-;0>> STOREI 1 $T0
-;1>> STOREI $T0 b
-;2>> STOREI 1 $T1
-;3>> STOREI $T1 a
-;4>> LABEL FOR_START_L0
-;5>> STOREI 120 $T4
-;6>> GT a $T4 FOR_OUT_L0
-;7>> STOREI 1 $T5
-;8>> NE b $T5 IF_ELSE_L3
-;9>> STOREI 1 $T6
-;10>> MULTI $T6 a $T7
-;11>> STOREI $T7 g
-;12>> WRITEI g
-;13>> JUMP IF_END_L3
-;14>> LABEL IF_ELSE_L3
-;15>> STOREI 2 $T8
-;16>> NE b $T8 IF_ELSE_L2
-;17>> STOREI 2 $T9
-;18>> MULTI $T9 a $T10
-;19>> STOREI $T10 p
-;20>> WRITEI p
-;21>> JUMP IF_END_L2
-;22>> LABEL IF_ELSE_L2
-;23>> STOREI 3 $T11
-;24>> NE b $T11 IF_ELSE_L1
-;25>> STOREI 3 $T12
-;26>> MULTI $T12 a $T13
-;27>> STOREI $T13 k
-;28>> WRITEI k
-;29>> JUMP IF_END_L1
-;30>> LABEL IF_ELSE_L1
-;31>> STOREI 4 $T14
-;32>> NE b $T14 IF_ELSE_L0
-;33>> STOREI 4 $T15
-;34>> MULTI $T15 a $T16
-;35>> STOREI $T16 u
-;36>> WRITEI u
-;37>> JUMP IF_END_L0
-;38>> LABEL IF_ELSE_L0
-;39>> LABEL IF_END_L0
-;40>> LABEL IF_END_L1
-;41>> LABEL IF_END_L2
-;42>> LABEL IF_END_L3
-;43>> STOREI 1 $T17
-;44>> ADDI b $T17 $T18
-;45>> STOREI $T18 b
-;46>> LABEL FOR_INC_L0
-;47>> STOREI 20 $T2
-;48>> ADDI a $T2 $T3
-;49>> STOREI $T3 a
-;50>> JUMP FOR_START_L0
-;51>> LABEL FOR_OUT_L0
+;STOREI 1 $T0
+;STOREI $T0 b
+;STOREI 1 $T1
+;STOREI $T1 a
+;LABEL label1
+;STOREI 120 $T4
+;GT a $T4 label2
+;STOREI 1 $T5
+;NE b $T5 label3
+;STOREI 1 $T6
+;MULTI $T6 a $T7
+;STOREI $T7 g
+;WRITEI g
+;JUMP label4
+;LABEL label3
+;STOREI 2 $T8
+;NE b $T8 label5
+;STOREI 2 $T9
+;MULTI $T9 a $T10
+;STOREI $T10 p
+;WRITEI p
+;JUMP label6
+;LABEL label5
+;STOREI 3 $T11
+;NE b $T11 label7
+;STOREI 3 $T12
+;MULTI $T12 a $T13
+;STOREI $T13 k
+;WRITEI k
+;JUMP label8
+;LABEL label7
+;STOREI 4 $T14
+;NE b $T14 label9
+;STOREI 4 $T15
+;MULTI $T15 a $T16
+;STOREI $T16 u
+;WRITEI u
+;JUMP label10
+;LABEL label9
+;LABEL label10
+;LABEL label8
+;LABEL label6
+;LABEL label4
+;STOREI 1 $T17
+;ADDI b $T17 $T18
+;STOREI $T18 b
+;LABEL FOR_INC_L0 -- Not Required
+;STOREI 20 $T2
+;ADDI a $T2 $T3
+;STOREI $T3 a
+;JUMP label1
+;LABEL label2
 ;*****End Unoptimized IR Code*****
 ;*****Start Unoptimized Tiny Code*****
 ;var a
@@ -63,54 +63,54 @@
 ;move r0 b
 ;move 1 r1
 ;move r1 a
-;label FOR_START_L0
+;label label1
 ;move 120 r4
 ;cmpi a r4
-;jgt FOR_OUT_L0
+;jgt label2
 ;move 1 r5
 ;cmpi b r5
-;jne IF_ELSE_L3
+;jne label3
 ;move 1 r6
 ;move r6 r7
 ;muli a r7
 ;move r7 g
 ;sys writei g
-;jmp IF_END_L3
-;label IF_ELSE_L3
+;jmp label4
+;label label3
 ;move 2 r8
 ;cmpi b r8
-;jne IF_ELSE_L2
+;jne label5
 ;move 2 r9
 ;move r9 r10
 ;muli a r10
 ;move r10 p
 ;sys writei p
-;jmp IF_END_L2
-;label IF_ELSE_L2
+;jmp label6
+;label label5
 ;move 3 r11
 ;cmpi b r11
-;jne IF_ELSE_L1
+;jne label7
 ;move 3 r12
 ;move r12 r13
 ;muli a r13
 ;move r13 k
 ;sys writei k
-;jmp IF_END_L1
-;label IF_ELSE_L1
+;jmp label8
+;label label7
 ;move 4 r14
 ;cmpi b r14
-;jne IF_ELSE_L0
+;jne label9
 ;move 4 r15
 ;move r15 r16
 ;muli a r16
 ;move r16 u
 ;sys writei u
-;jmp IF_END_L0
-;label IF_ELSE_L0
-;label IF_END_L0
-;label IF_END_L1
-;label IF_END_L2
-;label IF_END_L3
+;jmp label10
+;label label9
+;label label10
+;label label8
+;label label6
+;label label4
 ;move 1 r17
 ;move b r18
 ;addi r17 r18
@@ -120,49 +120,49 @@
 ;move a r3
 ;addi r2 r3
 ;move r3 a
-;jmp FOR_START_L0
-;label FOR_OUT_L0
+;jmp label1
+;label label2
 ;sys halt
 ;end
 ;*****End Unoptimized Tiny Code*****
 ;*****Start Optimized IR Code*****
-;0>> STOREI 1 b
-;1>> STOREI 1 a
-;2>> LABEL FOR_START_L0
-;3>> GT a 120 FOR_OUT_L0
-;4>> NE b 1 IF_ELSE_L3
-;5>> STOREI a g
-;6>> WRITEI g
-;7>> JUMP IF_END_L3
-;8>> LABEL IF_ELSE_L3
-;9>> NE b 2 IF_ELSE_L2
-;10>> MULTI 2 a $T10
-;11>> STOREI $T10 p
-;12>> WRITEI p
-;13>> JUMP IF_END_L2
-;14>> LABEL IF_ELSE_L2
-;15>> NE b 3 IF_ELSE_L1
-;16>> MULTI 3 a $T13
-;17>> STOREI $T13 k
-;18>> WRITEI k
-;19>> JUMP IF_END_L1
-;20>> LABEL IF_ELSE_L1
-;21>> NE b 4 IF_ELSE_L0
-;22>> MULTI 4 a $T16
-;23>> STOREI $T16 u
-;24>> WRITEI u
-;25>> JUMP IF_END_L0
-;26>> LABEL IF_ELSE_L0
-;27>> LABEL IF_END_L0
-;28>> LABEL IF_END_L1
-;29>> LABEL IF_END_L2
-;30>> LABEL IF_END_L3
-;31>> ADDI b 1 $T18
-;32>> STOREI $T18 b
-;33>> ADDI a 20 $T3
-;34>> STOREI $T3 a
-;35>> JUMP FOR_START_L0
-;36>> LABEL FOR_OUT_L0
+;STOREI 1 b
+;STOREI 1 a
+;LABEL label1
+;GT a 120 label2
+;NE b 1 label3
+;STOREI a g
+;WRITEI g
+;JUMP label4
+;LABEL label3
+;NE b 2 label5
+;MULTI 2 a $T10
+;STOREI $T10 p
+;WRITEI p
+;JUMP label6
+;LABEL label5
+;NE b 3 label7
+;MULTI 3 a $T13
+;STOREI $T13 k
+;WRITEI k
+;JUMP label8
+;LABEL label7
+;NE b 4 label9
+;MULTI 4 a $T16
+;STOREI $T16 u
+;WRITEI u
+;JUMP label10
+;LABEL label9
+;LABEL label10
+;LABEL label8
+;LABEL label6
+;LABEL label4
+;ADDI b 1 $T18
+;STOREI $T18 b
+;ADDI a 20 $T3
+;STOREI $T3 a
+;JUMP label1
+;LABEL label2
 ;*****End Optimized IR Code*****
 ;*****Start Optimized Tiny Code*****
 var a
@@ -173,57 +173,57 @@ var p
 var u
 move 1 b
 move 1 a
-label FOR_START_L0
+label label1
 move 120 r19
 cmpi a r19
-jgt FOR_OUT_L0
+jgt label2
 move 1 r20
 cmpi b r20
-jne IF_ELSE_L3
+jne label3
 move a r21
 move r21 g
 sys writei g
-jmp IF_END_L3
-label IF_ELSE_L3
+jmp label4
+label label3
 move 2 r22
 cmpi b r22
-jne IF_ELSE_L2
+jne label5
 move 2 r10
 muli a r10
 move r10 p
 sys writei p
-jmp IF_END_L2
-label IF_ELSE_L2
+jmp label6
+label label5
 move 3 r23
 cmpi b r23
-jne IF_ELSE_L1
+jne label7
 move 3 r13
 muli a r13
 move r13 k
 sys writei k
-jmp IF_END_L1
-label IF_ELSE_L1
+jmp label8
+label label7
 move 4 r24
 cmpi b r24
-jne IF_ELSE_L0
+jne label9
 move 4 r16
 muli a r16
 move r16 u
 sys writei u
-jmp IF_END_L0
-label IF_ELSE_L0
-label IF_END_L0
-label IF_END_L1
-label IF_END_L2
-label IF_END_L3
+jmp label10
+label label9
+label label10
+label label8
+label label6
+label label4
 move b r18
 addi 1 r18
 move r18 b
 move a r3
 addi 20 r3
 move r3 a
-jmp FOR_START_L0
-label FOR_OUT_L0
+jmp label1
+label label2
 sys halt
 end
 ;*****End Optimized Tiny Code*****

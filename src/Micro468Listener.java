@@ -24,10 +24,13 @@ public class Micro468Listener extends MicroBaseListener {
 
     private Stack<String> labelStack1 = new Stack<String>();
     private Stack<String> labelStack2 = new Stack<String>();
+    private Stack<Boolean> elsePresentStack = new Stack<Boolean>();
 
     private boolean condFlag;
 
     private String incr_stmt;
+
+    private int randomTiny = 20;
 
     private boolean elsePresent; // An Indicator to find if there is an else following the If Statement
 
@@ -165,7 +168,7 @@ public class Micro468Listener extends MicroBaseListener {
             }
             else if (currentType == "FLOAT") {
                 System.out.println(";READF " + words[i]);
-                tinyNodeArrayList.add(new TinyNode("sys readf", words[i]));
+                tinyNodeArrayList.add(new TinyNode("sys readr", words[i]));
             }
             else {
                 System.out.println(";READS " + words[i]);
@@ -173,8 +176,6 @@ public class Micro468Listener extends MicroBaseListener {
             }
         }
     }
-
-
 
     @Override public void enterWrite_stmt(MicroParser.Write_stmtContext ctx) {
         String right = ctx.getChild(2).getText();
@@ -420,13 +421,17 @@ public class Micro468Listener extends MicroBaseListener {
         if (isNumeric(right) == false) {
             if (parentTree.getCurrentScope().variableMap.containsKey(left) && parentTree.getCurrentScope().variableMap.containsKey(right)) {
                 String dataType = parentTree.getCurrentScope().variableMap.get(left)[0];
-                if (dataType.equals("INT")) {
+                if (dataType.equals("INT")) { // TODO: Tiny
                     System.out.println(";STOREI " + right + " " + left);
-                    //tinyNodeArrayList.add(new TinyNode("STOREI", left, right));
+                    tinyNodeArrayList.add(new TinyNode("move", right, "r" + randomTiny));
+                    tinyNodeArrayList.add(new TinyNode("move", "r" + randomTiny, left));
+                    randomTiny += 1;
                 }
                 else {
                     System.out.println(";STOREF " + right + " " + left);
-                    //tinyNodeArrayList.add(new TinyNode("STOREF", left, right));
+                    tinyNodeArrayList.add(new TinyNode("move", right, "r" + randomTiny));
+                    tinyNodeArrayList.add(new TinyNode("move", "r" + randomTiny, left));
+                    randomTiny += 1;
                 }
             }
             return;
@@ -438,11 +443,7 @@ public class Micro468Listener extends MicroBaseListener {
 
             System.out.println(";STOREI " + right + " " + location);
             parentTree.getCurrentScope().addRegister(location,  "INT", "r" + Integer.toString(this.operationNumber - 2));
-            //tinyNodeArrayList.add(new TinyNode("move", right, "r" + Integer.toString(tinyRegisterNumber)));
-            //add_reg_operation_stmt("move", right, location);
             System.out.println(";STOREI " + location + " " + left);
-            //tinyNodeArrayList.add(new TinyNode("move", "r" + Integer.toString(tinyRegisterNumber), left));
-            //add_reg_operation_stmt("move", location, left);
             tinyRegisterNumber += 1;
             add_reg_operation_stmt_2("move", right, location);
             add_reg_operation_stmt_2("move", location, left);
@@ -453,11 +454,7 @@ public class Micro468Listener extends MicroBaseListener {
 
             System.out.println(";STOREF " + right + " " + location);
             parentTree.getCurrentScope().addRegister(location,  "FLOAT", "r" + Integer.toString(this.operationNumber - 2));
-            //tinyNodeArrayList.add(new TinyNode("move", right, "r" + Integer.toString(tinyRegisterNumber)));
-            //add_reg_operation_stmt("move", right, location);
             System.out.println(";STOREF " + location + " " + left);
-            //tinyNodeArrayList.add(new TinyNode("move", "r" + Integer.toString(tinyRegisterNumber), left));
-            //add_reg_operation_stmt("move", location, left);
             tinyRegisterNumber += 1;
             add_reg_operation_stmt_2("move", right, location);
             add_reg_operation_stmt_2("move", location, left);
@@ -557,75 +554,12 @@ public class Micro468Listener extends MicroBaseListener {
         // System.out.println(ctx.getChild(0).getText());
     }
 
-    private void printConditionalIR(String leftOp, String compOp, String rightOp) {
-
-        String IRreg = "$T" + this.operationNumber;
-
-        // Finding if the rightOperand is an INT or FLOAT
-        if (parentTree.getCurrentScope().variableMap.containsKey(rightOp)) {
-            IRreg = rightOp;
-        }
-        else if(isInteger(rightOp)) { // rightOp is an INT
-            System.out.println(";STOREI " + rightOp + " " + IRreg);
-            this.operationNumber += 1;
-        } else {
-            System.out.println(";STOREF " + rightOp + " " + IRreg);
-            this.operationNumber += 1;
-        }
-
-        // Getting the Label
-        //System.out.println("Here outside condFlag");
-        String labelName = "label" + this.labelNumber;
-        //System.out.println("Label Name: " + labelName);
-        labelStack.push(labelName);
-        // System.out.println("Pushed inside printConditionalIR");
-        // printStack(labelStack);
-        this.labelNumber += 1;
-
-        switch (compOp) {
-
-            case ">": // LE
-                System.out.println(";LE " + leftOp + " " + IRreg + " " + labelName);
-                break;
-
-            case "<": // GE
-                System.out.println(";GE " + leftOp + " " + IRreg + " " + labelName);
-                break;
-
-            case ">=": // LT
-                System.out.println(";LT " + leftOp + " " + IRreg + " " + labelName);
-                break;
-
-            case "<=": // GT
-                System.out.println(";GT " + leftOp + " " + IRreg + " " + labelName);
-                break;
-
-            case "=": // EQ
-                System.out.println(";NE " + leftOp + " " + IRreg + " " + labelName);
-                break;
-
-            case "!=": // NE
-                System.out.println(";EQ " + leftOp + " " + IRreg + " " + labelName);
-                break;
-        }
-
-        // Only used for IF Statement
-        if(condFlag) {
-            // System.out.println("Here condFlag");
-            labelName = "label" + labelNumber;
-            this.labelNumber += 1;
-            labelStack.push(labelName);
-            // System.out.println("Pushed inside printConditionalIR 1");
-            // printStack(labelStack);
-        }
-    }
-
     /**
      * This gets called whenever parser detects an IF Statement
      * */
     @Override public void enterIf_stmt(MicroParser.If_stmtContext ctx) {
 
-        System.out.println("enterIf");
+        // System.out.println("enterIf");
 
         SymbolsTable ifBlock = new SymbolsTable(getBlockNumber());
         currentScope = ifBlock; // Setting the Scope to the IF Block
@@ -646,11 +580,15 @@ public class Micro468Listener extends MicroBaseListener {
         String decl = ctx.getChild(4).getText();
         String stmt_list = ctx.getChild(5).getText();
 
-        if(ctx.getChild(6) != null) {
-            elsePresent = true;
+        if(!ctx.getChild(6).getText().equals("")) {
+            // System.out.println("ElsePresent: true");
+            // printElsePresentStack(elsePresentStack);
+            elsePresentStack.push(true);
         }
         else {
-            elsePresent = false;
+            // System.out.println("ElsePresent: false");
+            elsePresentStack.push(false);
+            // printElsePresentStack(elsePresentStack);
         }
     }
 
@@ -661,18 +599,18 @@ public class Micro468Listener extends MicroBaseListener {
         String compOp = ctx.getChild(1).getText();
         String rightExpr = ctx.getChild(2).getText();
 
-        if (isNumeric(rightExpr) || parentTree.getCurrentScope().variableMap.containsKey(rightExpr)) {
-            //System.out.println("checking 1");
-            printConditionalIR(leftExpr, compOp, rightExpr); // Prints the appropriate IR Code for the Conditional Expression IF and FOR
-            //System.out.println("done checking 1");
-        }
-        else {
-        //    System.out.println("checking 2");
+        labelStack1.push(getLabel());
+
+        if(condFlag) { // Entered If Statement
+            labelStack2.push(getLabel());
+        } // Enter If Statement
+
+        if (isNumeric(rightExpr) || parentTree.getCurrentScope().variableMap.containsKey(rightExpr)) { // Right Operand is either a number(INT or FLOAT or just a variable)
+            checkCompOp(compOp, leftExpr, rightExpr);
+        } else {
             String postfix = InfixToPostfix.infixToPostfix(rightExpr);
             parsePostfix(rightExpr, null, postfix);
-          //  System.out.println("middle checking 2");
-            printConditionalIR(leftExpr, compOp, "$T" + Integer.toString(this.operationNumber - 1)); // Prints the appropriate IR Code for the Conditional Expression IF and FOR
-            //System.out.println("done checking 2");
+            checkCompOp(compOp, leftExpr, "$T" + Integer.toString(this.operationNumber - 1));
         }
     }
 
@@ -682,43 +620,8 @@ public class Micro468Listener extends MicroBaseListener {
     @Override
     public void exitIf_stmt(MicroParser.If_stmtContext ctx) {
 
-        System.out.println("exitIf");
-
-        String label2 = "";
-        String label1 = "";
-
-        if(!labelStack.empty()) {
-            label2 = labelStack.pop();
-            // printStack(labelStack);
-        }
-
-        if(!labelStack.empty()) {
-            label1 = labelStack.pop();
-            // printStack(labelStack);
-
-            if(elsePresent) {
-                System.out.println(";JUMP " + label2);
-                System.out.println(";LABEL " + label1);
-                labelStack.push(label2);
-                System.out.println("Pushed inside exitIf_stmt elsePresent");
-                // printStack(labelStack);
-            } else {
-                System.out.println("Pushed inside exitIf_stmt elsePresent 1");
-                System.out.println(";JUMP " + label2);
-                System.out.println(";LABEL " + label1);
-                System.out.println(";LABEL " + label2);
-            }
-
-            return;
-        }
-
-        if(label1.isEmpty() && !label2.isEmpty()) {
-            System.out.println("Pushed inside exitIf_stmt Last");
-            System.out.println(";JUMP " + label2);
-            System.out.println(";LABEL " + label2);
-        }
-
-//        System.out.println("Exited the IF Part");
+        // System.out.println("exitIf");
+        // System.out.println("Exited the IF Part");
     }
 
     /**
@@ -726,7 +629,7 @@ public class Micro468Listener extends MicroBaseListener {
      * */
     @Override public void enterElse_part(MicroParser.Else_partContext ctx) {
 
-        System.out.println("enterElse");
+        // System.out.println("enterElse");
 
         SymbolsTable elseBlock = new SymbolsTable(getBlockNumber());
         currentScope = elseBlock; // Setting the Scope to the ELSE Block
@@ -741,6 +644,16 @@ public class Micro468Listener extends MicroBaseListener {
             String localDecl = ctx.getChild(1).getText();
             String localStmt = ctx.getChild(2).getText();
         }
+
+        // TODO: Tiny
+        if(elsePresentStack.peek()) {
+            // System.out.println("else Present");
+            System.out.println(";JUMP " + labelStack2.peek());
+            tinyNodeArrayList.add(new TinyNode("jmp", labelStack2.peek()));
+            String labelName = labelStack1.pop();
+            System.out.println(";LABEL " + labelName);
+            tinyNodeArrayList.add(new TinyNode("label", labelName));
+        }
     }
 
     /**
@@ -748,25 +661,32 @@ public class Micro468Listener extends MicroBaseListener {
      */
     @Override public void exitElse_part(MicroParser.Else_partContext ctx) {
 
-        System.out.println("exitElse");
+        // System.out.println("exitElse");
 
-        String label2 = "";
-        String label1 = "";
+        elsePresent = elsePresentStack.pop();
 
-        if(!labelStack.empty()) {
-            label2 = labelStack.pop();
-            // printStack(labelStack);
+        // TODO: Tiny
+
+        String labelName;
+
+        if(elsePresent) {
+            labelName = labelStack2.pop();
+            System.out.println(";LABEL " + labelName);
+            tinyNodeArrayList.add(new TinyNode("label", labelName));
+        } else {
+            System.out.println(";JUMP " + labelStack2.peek());
+            tinyNodeArrayList.add(new TinyNode("jmp", labelStack2.peek()));
+
+            labelName = labelStack1.pop();
+            System.out.println(";LABEL " + labelName);
+            tinyNodeArrayList.add(new TinyNode("label", labelName));
+
+            labelName = labelStack2.pop();
+            System.out.println(";LABEL " + labelName);
+            tinyNodeArrayList.add(new TinyNode("label", labelName));
         }
 
-        if(!labelStack.empty()) {
-            label1 = labelStack.pop();
-            // printStack(labelStack);
-            System.out.println(";JUMP " + label2);
-            System.out.println(";LABEL " + label1);
-            System.out.println(";LABEL " + label2);
-        }
-
-//        System.out.println("Exited the ELSE part");
+        // System.out.println("Exited the ELSE part");
     }
 
     /**
@@ -788,33 +708,30 @@ public class Micro468Listener extends MicroBaseListener {
 
         pushSymbol(ctx.getChild(8).getText(), currentScope);
 
-        String init_stmt = ctx.getChild(2).getText();
-
         /**
          * IR Code for init_stmt
          * */
 
-        String[] operands = init_stmt.trim().split(":=");
+        if(!ctx.getChild(2).getText().equals("")) {
+            String init_stmt = ctx.getChild(2).getText();
 
-        String left = operands[0].trim();
-        String right = operands[1].trim();
+            String[] operands = init_stmt.trim().split(":=");
 
-        String postfix = InfixToPostfix.infixToPostfix(right);
-        parsePostfix(right, left, postfix);
+            String left = operands[0].trim();
+            String right = operands[1].trim();
 
-        String labelName1 = "label" + this.labelNumber;
-        this.labelNumber += 1;
-        System.out.println(";LABEL " + labelName1);
-        labelStack.push(labelName1);
-        // System.out.println("pushed inside enterFor_stmt 1");
-        // printStack(labelStack);
+            String postfix = InfixToPostfix.infixToPostfix(right);
+            parsePostfix(right, left, postfix);
+        }
+
+        labelStack2.push(getLabel());
+        System.out.println(";LABEL " + labelStack2.peek()); // TODO: Tiny
+        tinyNodeArrayList.add(new TinyNode("label", labelStack2.peek()));
+
         /**
          * IR Code for incr_stmt
          * */
         incr_stmt = ctx.getChild(6).getText();
-        // labelStack.push(labelName1); // Here For
-        //System.out.println("pushed inside enterFor_stmt 2");
-        //// printStack(labelStack);
     }
 
     @Override
@@ -829,24 +746,83 @@ public class Micro468Listener extends MicroBaseListener {
             parsePostfix(right, left, postfix);
         }
 
-        String label1 = "";
-        String label2 = "";
+        // TODO: exit Labels
+        String labelName = labelStack2.pop();
+        System.out.println(";JUMP " + labelName); // TODO: Tiny
+        tinyNodeArrayList.add(new TinyNode("jmp", labelName));
 
-        if(!labelStack.empty()) {
-            label1 = labelStack.pop();
-            // // printStack(labelStack);
-        }
-
-        if(!labelStack.empty()) {
-            label2 = labelStack.pop();
-            // printStack(labelStack);
-
-            System.out.println(";JUMP " + label2);
-            System.out.println(";LABEL " + label1);
-        }
+        labelName = labelStack1.pop();
+        System.out.println(";LABEL " + labelName); // TODO: Tiny
+        tinyNodeArrayList.add(new TinyNode("label", labelName));
     }
 
     private void printStack(Stack<String> labelStack) {
         System.out.println(Arrays.toString(labelStack.toArray()));
+    }
+    private void printElsePresentStack(Stack<Boolean> elsePresentStack) {
+        System.out.println(Arrays.toString(elsePresentStack.toArray()));
+    }
+
+    public void checkCompOp(String compOp, String leftOp, String rightOp) {
+
+        // TODO: Tiny
+
+        String IRreg = "$T" + this.operationNumber;
+
+        String tinyReg = "r" + (this.operationNumber - 1);
+
+        // Finding if the rightOperand is an INT or FLOAT
+        if (parentTree.getCurrentScope().variableMap.containsKey(rightOp)) {
+
+            // if rightOp is a register
+
+
+            tinyNodeArrayList.add(new TinyNode("Blah:    ......", rightOp));
+            IRreg = rightOp;
+        }
+        else if(isInteger(rightOp)) { // rightOp is an INT
+            System.out.println(";STOREI " + rightOp + " " + IRreg);
+            add_reg_operation_stmt_2("move", rightOp, tinyReg);
+            tinyNodeArrayList.add(new TinyNode("cmpi", leftOp, tinyReg));
+            this.operationNumber += 1;
+        } else {
+            System.out.println(";STOREF " + rightOp + " " + IRreg);
+            add_reg_operation_stmt_2("move", rightOp, tinyReg);
+            tinyNodeArrayList.add(new TinyNode("cmpr", leftOp, tinyReg));
+            this.operationNumber += 1;
+        }
+
+        switch(compOp) {
+
+            case "<":
+                System.out.println(";GE " + leftOp + " " + IRreg + " " + labelStack1.peek());
+                tinyNodeArrayList.add(new TinyNode("jge", labelStack1.peek()));
+                break;
+
+            case ">":
+                System.out.println(";LE " + leftOp + " " + IRreg + " " + labelStack1.peek());
+                tinyNodeArrayList.add(new TinyNode("jle", labelStack1.peek()));
+                break;
+
+            case "<=":
+                System.out.println(";GT " + leftOp + " " + IRreg + " " + labelStack1.peek());
+                tinyNodeArrayList.add(new TinyNode("jgt", labelStack1.peek()));
+                break;
+
+            case ">=":
+                System.out.println(";LT " + leftOp + " " + IRreg + " " + labelStack1.peek());
+                tinyNodeArrayList.add(new TinyNode("jlt", labelStack1.peek()));
+                break;
+
+            case "=":
+                System.out.println(";NE " + leftOp + " " + IRreg + " " + labelStack1.peek());
+                tinyNodeArrayList.add(new TinyNode("jne", labelStack1.peek()));
+                break;
+
+            case "!=":
+                System.out.println(";EQ " + leftOp + " " + IRreg + " " + labelStack1.peek());
+                tinyNodeArrayList.add(new TinyNode("jeq", labelStack1.peek()));
+                break;
+        }
     }
 }
