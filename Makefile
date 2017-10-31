@@ -1,4 +1,5 @@
 LIB_ANTLR_1 := lib/antlr-4.4-complete.jar
+LIB_ANTLR_2 := lib/antlr-4.7-complete.jar
 LIB_ANTLR := lib/antlr.jar
 ANTLR_SCRIPT := Micro.g4
 
@@ -18,10 +19,10 @@ team:
 compiler:
 				rm -rf build
 				mkdir build
-				java -cp $(LIB_ANTLR_1) org.antlr.v4.Tool -o build $(ANTLR_SCRIPT)
+				java -cp $(LIB_ANTLR_2) org.antlr.v4.Tool -o build $(ANTLR_SCRIPT)
 				rm -rf classes
 				mkdir classes
-				javac -source 1.7 -target 1.7 -cp $(LIB_ANTLR_1) -d classes src/*.java build/*.java
+				javac -source 1.7 -target 1.7 -cp $(LIB_ANTLR_2) -d classes src/*.java build/*.java
 
 compiler_mac:
 				rm -rf build

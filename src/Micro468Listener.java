@@ -20,7 +20,6 @@ public class Micro468Listener extends MicroBaseListener {
     private static int tinyRegisterNumber;
     private SymbolsTable currentScope; // Used to refer to which functio is being parsed
     private static ArrayList<TinyNode> tinyNodeArrayList = new ArrayList<TinyNode>();
-    private Stack<String> labelStack = new Stack<String>();
 
     private Stack<String> labelStack1 = new Stack<String>();
     private Stack<String> labelStack2 = new Stack<String>();
@@ -30,7 +29,7 @@ public class Micro468Listener extends MicroBaseListener {
 
     private String incr_stmt;
 
-    private int randomTiny = 20;
+    private int randomTiny = 20; // Used for the some statements where the tinyRegister is no more used in the subsequent Tiny instructions
 
     private boolean elsePresent; // An Indicator to find if there is an else following the If Statement
 
