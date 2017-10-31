@@ -421,7 +421,7 @@ public class Micro468Listener extends MicroBaseListener {
         if (isNumeric(right) == false) {
             if (parentTree.getCurrentScope().variableMap.containsKey(left) && parentTree.getCurrentScope().variableMap.containsKey(right)) {
                 String dataType = parentTree.getCurrentScope().variableMap.get(left)[0];
-                if (dataType.equals("INT")) { // TODO: Tiny
+                if (dataType.equals("INT")) {
                     System.out.println(";STOREI " + right + " " + left);
                     tinyNodeArrayList.add(new TinyNode("move", right, "r" + randomTiny));
                     tinyNodeArrayList.add(new TinyNode("move", "r" + randomTiny, left));
@@ -645,7 +645,6 @@ public class Micro468Listener extends MicroBaseListener {
             String localStmt = ctx.getChild(2).getText();
         }
 
-        // TODO: Tiny
         if(elsePresentStack.peek()) {
             // System.out.println("else Present");
             System.out.println(";JUMP " + labelStack2.peek());
@@ -664,8 +663,6 @@ public class Micro468Listener extends MicroBaseListener {
         // System.out.println("exitElse");
 
         elsePresent = elsePresentStack.pop();
-
-        // TODO: Tiny
 
         String labelName;
 
@@ -725,7 +722,7 @@ public class Micro468Listener extends MicroBaseListener {
         }
 
         labelStack2.push(getLabel());
-        System.out.println(";LABEL " + labelStack2.peek()); // TODO: Tiny
+        System.out.println(";LABEL " + labelStack2.peek());
         tinyNodeArrayList.add(new TinyNode("label", labelStack2.peek()));
 
         /**
@@ -746,13 +743,12 @@ public class Micro468Listener extends MicroBaseListener {
             parsePostfix(right, left, postfix);
         }
 
-        // TODO: exit Labels
         String labelName = labelStack2.pop();
-        System.out.println(";JUMP " + labelName); // TODO: Tiny
+        System.out.println(";JUMP " + labelName);
         tinyNodeArrayList.add(new TinyNode("jmp", labelName));
 
         labelName = labelStack1.pop();
-        System.out.println(";LABEL " + labelName); // TODO: Tiny
+        System.out.println(";LABEL " + labelName);
         tinyNodeArrayList.add(new TinyNode("label", labelName));
     }
 
@@ -764,8 +760,6 @@ public class Micro468Listener extends MicroBaseListener {
     }
 
     public void checkCompOp(String compOp, String leftOp, String rightOp) {
-
-        // TODO: Tiny
 
         String IRreg = "$T" + this.operationNumber;
 
