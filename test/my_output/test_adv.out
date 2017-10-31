@@ -92,7 +92,8 @@ move r11 diff
 move 0.0 r12
 cmpr diff r12
 jle label3
-Blah:    ...... tolerance
+move tolerance r21
+cmpr diff r21
 jge label5
 move 1 r13
 move r13 enough
@@ -104,7 +105,7 @@ label label3
 move 0.0 r14
 move r14 r15
 subr tolerance r15
-Blah:    ...... $T16
+cmpr diff r15
 jle label7
 move 1 r16
 move r16 enough
@@ -112,8 +113,8 @@ jmp label8
 label label7
 label label8
 label label4
-move newapprox r21
-move r21 approx
+move newapprox r22
+move r22 approx
 jmp label1
 label label2
 sys writer approx

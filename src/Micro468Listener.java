@@ -771,13 +771,31 @@ public class Micro468Listener extends MicroBaseListener {
 
         String tinyReg = "r" + (this.operationNumber - 1);
 
-        // Finding if the rightOperand is an INT or FLOAT
+        // If the rightOperand is either a variable or a register i.e. $Tn
         if (parentTree.getCurrentScope().variableMap.containsKey(rightOp)) {
 
             // if rightOp is a register
+            if(rightOp.trim().startsWith("$")) {
+                if (parentTree.getCurrentScope().variableMap.get(leftOp)[0].equals("FLOAT")) {
+                    tinyNodeArrayList.add(new TinyNode("cmpr", leftOp, "r" + (this.operationNumber - 2)));
+                }
+                else {
+                    tinyNodeArrayList.add(new TinyNode("cmpi", leftOp, "r" + (this.operationNumber - 2)));
+                }
+            }
+            else {
+                if (parentTree.getCurrentScope().variableMap.get(leftOp)[0].equals("FLOAT")) {
+                    tinyNodeArrayList.add(new TinyNode("move", rightOp, "r" + randomTiny));
+                    tinyNodeArrayList.add(new TinyNode("cmpr", leftOp, "r" + randomTiny));
+                }
+                else {
+                    tinyNodeArrayList.add(new TinyNode("move", rightOp, "r" + randomTiny));
+                    tinyNodeArrayList.add(new TinyNode("cmpi", leftOp, "r" + randomTiny));
+                }
 
+                randomTiny += 1;
+            }
 
-            tinyNodeArrayList.add(new TinyNode("Blah:    ......", rightOp));
             IRreg = rightOp;
         }
         else if(isInteger(rightOp)) { // rightOp is an INT
