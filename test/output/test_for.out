@@ -1,61 +1,114 @@
-;IR code
-;READF num
-;STOREI 1 $T1
-;STOREI $T1 j
-;STOREF num approx
-;STOREI 100 $T2
-;STOREI $T2 i
-;LABEL label1
-;STOREI 0 $T3
-;EQ i $T3 label3
-;STOREF 0.5 $T6
-;DIVF num approx $T7
-;ADDF approx $T7 $T8
-;MULTF $T6 $T8 $T9
-;STOREF $T9 newapprox
-;STOREF newapprox approx
-;LABEL label2
-;STOREI 1 $T4
-;SUBI i $T4 $T5
-;STOREI $T5 i
-;JUMP label1
-;LABEL label3
-;WRITEF approx
-;WRITEI eol
-;tiny code
+;*****Start Unoptimized IR Code*****
+;0>> READF num
+;1>> STOREI 1 $T0
+;2>> STOREI $T0 j
+;3>> STOREF num approx
+;4>> STOREI 100 $T1
+;5>> STOREI $T1 i
+;6>> LABEL FOR_START_L0
+;7>> STOREI 0 $T4
+;8>> EQ i $T4 FOR_OUT_L0
+;9>> STOREF 0.5 $T5
+;10>> DIVF num approx $T6
+;11>> ADDF approx $T6 $T7
+;12>> MULTF $T5 $T7 $T8
+;13>> STOREF $T8 newapprox
+;14>> STOREF newapprox approx
+;15>> LABEL FOR_INC_L0
+;16>> STOREI 1 $T2
+;17>> SUBI i $T2 $T3
+;18>> STOREI $T3 i
+;19>> JUMP FOR_START_L0
+;20>> LABEL FOR_OUT_L0
+;21>> WRITEF approx
+;22>> WRITES eol
+;*****End Unoptimized IR Code*****
+;*****Start Unoptimized Tiny Code*****
+;var i
+;var j
+;var newapprox
+;var approx
+;var num
+;str eol "\n"
+;sys readr num
+;move 1 r0
+;move r0 j
+;move num r9
+;move r9 approx
+;move 100 r1
+;move r1 i
+;label FOR_START_L0
+;move 0 r4
+;cmpi i r4
+;jeq FOR_OUT_L0
+;move 0.5 r5
+;move num r6
+;divr approx r6
+;move approx r7
+;addr r6 r7
+;move r5 r8
+;mulr r7 r8
+;move r8 newapprox
+;move newapprox r10
+;move r10 approx
+;label FOR_INC_L0
+;move 1 r2
+;move i r3
+;subi r2 r3
+;move r3 i
+;jmp FOR_START_L0
+;label FOR_OUT_L0
+;sys writer approx
+;sys writes eol
+;sys halt
+;end
+;*****End Unoptimized Tiny Code*****
+;*****Start Optimized IR Code*****
+;0>> READF num
+;1>> STOREF num approx
+;2>> STOREI 100 i
+;3>> LABEL FOR_START_L0
+;4>> EQ i 0 FOR_OUT_L0
+;5>> DIVF num approx $T6
+;6>> ADDF approx $T6 $T7
+;7>> MULTF 0.5 $T7 $T8
+;8>> STOREF $T8 approx
+;9>> SUBI i 1 $T3
+;10>> STOREI $T3 i
+;11>> JUMP FOR_START_L0
+;12>> LABEL FOR_OUT_L0
+;13>> WRITEF approx
+;14>> WRITES eol
+;*****End Optimized IR Code*****
+;*****Start Optimized Tiny Code*****
 var i
 var j
 var newapprox
 var approx
 var num
-var eol
+str eol "\n"
 sys readr num
-move 1 r0
-move r0 j
-move num r1
-move r1 approx
-move 100 r2
-move r2 i
-label label1
-move 0 r3
-cmpi i r3
-jeq label3
-move 0.5 r4
-move num r5
-divr approx r5
-move approx r6
-addr r5 r6
-mulr r6 r4
-move r4 newapprox
-move newapprox r7
-move r7 approx
-label label2
-move 1 r8
-move i r9
-subi r8 r9
-move r9 i
-jmp label1
-label label3
+move num r11
+move r11 approx
+move 100 i
+label FOR_START_L0
+move 0 r12
+cmpi i r12
+jeq FOR_OUT_L0
+move num r6
+divr approx r6
+move approx r7
+addr r6 r7
+move 0.5 r8
+mulr r7 r8
+move r8 approx
+move i r3
+subi 1 r3
+move r3 i
+jmp FOR_START_L0
+label FOR_OUT_L0
 sys writer approx
-sys writei eol
+sys writes eol
 sys halt
+end
+;*****End Optimized Tiny Code*****

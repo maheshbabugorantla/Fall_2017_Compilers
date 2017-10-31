@@ -5,28 +5,42 @@
 ;STOREI $T2 i
 ;STOREI 42 $T3
 ;STOREI $T3 a
+enterIf
 ;STOREI 5 $T4
 ;GE i $T4 label1
 ;ADDI num a $T5
 ;STOREI  $T5 num
+enterIf
 ;STOREI 3 $T6
 ;GE i $T6 label3
 ;ADDI num a $T7
 ;STOREI  $T7 num
+enterElse
+exitElse
 ;JUMP label4
 ;LABEL label3
 ;LABEL label4
+exitIf
 ;JUMP label2
 ;LABEL label1
+Pushed inside exitIf_stmt elsePresent
+enterElse
+enterIf
 ;STOREI 5 $T8
 ;LT i $T8 label5
 ;SUBI num a $T9
 ;STOREI  $T9 num
+enterElse
+exitElse
 ;JUMP label6
 ;LABEL label5
 ;LABEL label6
+exitIf
+Pushed inside exitIf_stmt Last
 ;JUMP label2
 ;LABEL label2
+exitElse
+exitIf
 ;WRITEI num
 ;RET
 ;tiny code

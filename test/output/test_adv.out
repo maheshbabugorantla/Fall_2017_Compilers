@@ -1,56 +1,171 @@
-;IR code
-;STOREF 0.0001 $T1
-;STOREF $T1 tolerance
-;READF num
-;STOREF num approx
-;STOREI 0 $T2
-;STOREI $T2 count
-;STOREF 0.0 $T3
-;STOREF $T3 diff
-;STOREI 0 $T4
-;STOREI $T4 enough
-;LABEL label1
-;STOREI 1 $T5
-;EQ enough $T5 label3
-;STOREI 1 $T6
-;ADDI count $T6 $T7
-;STOREI $T7 count
-;STOREF 0.5 $T8
-;DIVF num approx $T9
-;ADDF approx $T9 $T10
-;MULTF $T8 $T10 $T11
-;STOREF $T11 newapprox
-;SUBF approx newapprox $T12
-;STOREF $T12 diff
-;STOREF 0.0 $T13
-;LE diff $T13 label4
-;GE diff tolerance label6
-;STOREI 1 $T14
-;STOREI $T14 enough
-;JUMP label7
-;LABEL label6
-;LABEL label7
-;JUMP label5
-;LABEL label4
-;STOREF 0.0 $T15
-;SUBF $T15 tolerance $T16
-;LE diff $T16 label8
-;STOREI 1 $T17
-;STOREI $T17 enough
-;JUMP label9
-;LABEL label8
-;LABEL label9
-;JUMP label5
-;LABEL label5
-;STOREF newapprox approx
-;LABEL label2
-;JUMP label1
-;LABEL label3
-;WRITEF approx
-;WRITEI space
-;WRITEI count
-;WRITEI eol
-;tiny code
+;*****Start Unoptimized IR Code*****
+;0>> STOREF 0.0001 $T0
+;1>> STOREF $T0 tolerance
+;2>> READF num
+;3>> STOREF num approx
+;4>> STOREI 0 $T1
+;5>> STOREI $T1 count
+;6>> STOREF 0.0 $T2
+;7>> STOREF $T2 diff
+;8>> STOREI 0 $T3
+;9>> STOREI $T3 enough
+;10>> LABEL label1
+;11>> STOREI 1 $T4
+;12>> EQ enough $T4 label2
+;13>> STOREI 1 $T5
+;14>> ADDI count $T5 $T6
+;15>> STOREI $T6 count
+;16>> STOREF 0.5 $T7
+;17>> DIVF num approx $T8
+;18>> ADDF approx $T8 $T9
+;19>> MULTF $T7 $T9 $T10
+;20>> STOREF $T10 newapprox
+;21>> SUBF approx newapprox $T11
+;22>> STOREF $T11 diff
+;23>> STOREF 0.0 $T12
+;24>> LE diff $T12 label3
+;25>> GE diff tolerance label4
+;26>> STOREI 1 $T13
+;27>> STOREI $T13 enough
+;28>> JUMP label5
+;29>> LABEL label4
+;30>> LABEL label5
+;31>> JUMP label6
+;32>> LABEL label3
+;33>> STOREF 0.0 $T14
+;34>> SUBF $T14 tolerance $T15
+;35>> LE diff $T15 label7
+;36>> STOREI 1 $T16
+;37>> STOREI $T16 enough
+;38>> JUMP label8
+;39>> LABEL label7
+;40>> LABEL label8
+;41>> LABEL label6
+;42>> STOREF newapprox approx
+;43>> LABEL label9 -- Not Required
+;44>> JUMP label1
+;45>> LABEL label2
+;46>> WRITEF approx
+;47>> WRITES space
+;48>> WRITEI count
+;49>> WRITES eol
+;*****End Unoptimized IR Code*****
+;*****Start Unoptimized Tiny Code*****
+;var count
+;var enough
+;var newapprox
+;var approx
+;var num
+;var tolerance
+;var diff
+;str eol "\n"
+;str space " "
+;move 0.0001 r0
+;move r0 tolerance
+;sys readr num
+;move num r17
+;move r17 approx
+;move 0 r1
+;move r1 count
+;move 0.0 r2
+;move r2 diff
+;move 0 r3
+;move r3 enough
+;label label1
+;move 1 r4
+;cmpi enough r4
+;jeq label2
+;move 1 r5
+;move count r6
+;addi r5 r6
+;move r6 count
+;move 0.5 r7
+;move num r8
+;divr approx r8
+;move approx r9
+;addr r8 r9
+;move r7 r10
+;mulr r9 r10
+;move r10 newapprox
+;move approx r11
+;subr newapprox r11
+;move r11 diff
+;move 0.0 r12
+;cmpr diff r12
+;jle label3
+;move tolerance r18
+;cmpr diff r18
+;jge label4
+;move 1 r13
+;move r13 enough
+;jmp label5
+;label label4
+;label label5
+;jmp label6
+;label label3
+;move 0.0 r14
+;move r14 r15
+;subr tolerance r15
+;cmpr diff r15
+;jle label7
+;move 1 r16
+;move r16 enough
+;jmp label8
+;label label7
+;label label8
+;label label6
+;move newapprox r19
+;move r19 approx
+;label label9
+;jmp label1
+;label label2
+;sys writer approx
+;sys writes space
+;sys writei count
+;sys writes eol
+;sys halt
+;end
+;*****End Unoptimized Tiny Code*****
+;*****Start Optimized IR Code*****
+;0>> STOREF 0.0001 tolerance
+;1>> READF num
+;2>> STOREF num approx
+;3>> STOREI 0 count
+;4>> STOREI 0 enough
+;5>> LABEL label1
+;6>> EQ enough 1 label2
+;7>> ADDI count 1 $T6
+;8>> STOREI $T6 count
+;9>> DIVF num approx $T8
+;10>> ADDF approx $T8 $T9
+;11>> MULTF 0.5 $T9 $T10
+;12>> STOREF $T10 newapprox
+;13>> SUBF approx $T10 $T11
+;14>> STOREF $T11 diff
+;15>> LE $T11 0.0 label3
+;16>> GE $T11 tolerance label4
+;17>> STOREI 1 enough
+;18>> JUMP label5
+;19>> LABEL label4
+;20>> LABEL label5
+;21>> JUMP label6
+;22>> LABEL label3
+;23>> SUBF 0.0 tolerance $T15
+;24>> LE diff $T15 label7
+;25>> STOREI 1 enough
+;26>> JUMP label8
+;27>> LABEL label7
+;28>> LABEL label8
+;29>> LABEL label6
+;30>> STOREF newapprox approx
+;31>> JUMP label1
+;32>> LABEL label2
+;33>> WRITEF approx
+;34>> WRITES space
+;35>> WRITEI count
+;36>> WRITES eol
+;*****End Optimized IR Code*****
+;*****Start Optimized Tiny Code*****
 var count
 var enough
 var newapprox
@@ -58,68 +173,60 @@ var approx
 var num
 var tolerance
 var diff
-var eol
-var space
-move 0.0001 r0
-move r0 tolerance
+str eol "\n"
+str space " "
+move 0.0001 tolerance
 sys readr num
-move num r1
-move r1 approx
-move 0 r2
-move r2 count
-move 0.0 r3
-move r3 diff
-move 0 r4
-move r4 enough
+move num r20
+move r20 approx
+move 0 count
+move 0 enough
 label label1
-move 1 r5
-cmpi enough r5
-jeq label3
-move 1 r6
-move count r7
-addi r6 r7
-move r7 count
-move 0.5 r8
-move num r9
-divr approx r9
-move approx r10
-addr r9 r10
-mulr r10 r8
-move r8 newapprox
+move 1 r21
+cmpi enough r21
+jeq label2
+move count r6
+addi 1 r6
+move r6 count
+move num r8
+divr approx r8
+move approx r9
+addr r8 r9
+move 0.5 r10
+mulr r9 r10
+move r10 newapprox
 move approx r11
-subr newapprox r11
+subr r10 r11
 move r11 diff
-move 0.0 r12
-cmpr diff r12
-jle label4
-move tolerance r13
-cmpr diff r13
-jge label6
-move 1 r14
-move r14 enough
-jmp label7
-label label6
-label label7
+move 0.0 r22
+cmpr r11 r22
+jle label3
+move tolerance r23
+cmpr r11 r23
+jge label4
+move 1 enough
 jmp label5
 label label4
+label label5
+jmp label6
+label label3
 move 0.0 r15
 subr tolerance r15
 cmpr diff r15
-jle label8
-move 1 r16
-move r16 enough
-jmp label9
+jle label7
+move 1 enough
+jmp label8
+label label7
 label label8
-label label9
-jmp label5
-label label5
-move newapprox r17
-move r17 approx
-label label2
+label label6
+move newapprox r24
+move r24 approx
 jmp label1
-label label3
+label label2
 sys writer approx
-sys writei space
+sys writes space
 sys writei count
-sys writei eol
+sys writes eol
 sys halt
+end
+;*****End Optimized Tiny Code*****

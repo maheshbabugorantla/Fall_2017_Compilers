@@ -16,10 +16,14 @@ public class Micro468Listener extends MicroBaseListener {
     private int blockNumber;
     private int operationNumber;
     private int labelNumber;
+    private int labelNo;
     private static int tinyRegisterNumber;
     private SymbolsTable currentScope; // Used to refer to which functio is being parsed
     private static ArrayList<TinyNode> tinyNodeArrayList = new ArrayList<TinyNode>();
     private Stack<String> labelStack = new Stack<String>();
+
+    private Stack<String> labelStack1 = new Stack<String>();
+    private Stack<String> labelStack2 = new Stack<String>();
 
     private boolean condFlag;
 
@@ -36,6 +40,7 @@ public class Micro468Listener extends MicroBaseListener {
         this.blockNumber = 1;
         operationNumber = 1;
         labelNumber = 1;
+        labelNo = 1;
         condFlag = false;
         tinyRegisterNumber = 0;
         incr_stmt = "";
@@ -44,6 +49,12 @@ public class Micro468Listener extends MicroBaseListener {
 
     private String getBlockNumber() {
         return "BLOCK " + blockNumber++;
+    }
+
+    public String getLabel() {
+        String LabelNo = new String("label" + labelNo);
+        labelNo += 1;
+        return LabelNo;
     }
 
     /**
@@ -567,7 +578,8 @@ public class Micro468Listener extends MicroBaseListener {
         String labelName = "label" + this.labelNumber;
         //System.out.println("Label Name: " + labelName);
         labelStack.push(labelName);
-        printStack(labelStack);
+        // System.out.println("Pushed inside printConditionalIR");
+        // printStack(labelStack);
         this.labelNumber += 1;
 
         switch (compOp) {
@@ -603,7 +615,8 @@ public class Micro468Listener extends MicroBaseListener {
             labelName = "label" + labelNumber;
             this.labelNumber += 1;
             labelStack.push(labelName);
-            printStack(labelStack);
+            // System.out.println("Pushed inside printConditionalIR 1");
+            // printStack(labelStack);
         }
     }
 
@@ -611,6 +624,8 @@ public class Micro468Listener extends MicroBaseListener {
      * This gets called whenever parser detects an IF Statement
      * */
     @Override public void enterIf_stmt(MicroParser.If_stmtContext ctx) {
+
+        System.out.println("enterIf");
 
         SymbolsTable ifBlock = new SymbolsTable(getBlockNumber());
         currentScope = ifBlock; // Setting the Scope to the IF Block
@@ -667,24 +682,28 @@ public class Micro468Listener extends MicroBaseListener {
     @Override
     public void exitIf_stmt(MicroParser.If_stmtContext ctx) {
 
+        System.out.println("exitIf");
+
         String label2 = "";
         String label1 = "";
 
         if(!labelStack.empty()) {
             label2 = labelStack.pop();
-            printStack(labelStack);
+            // printStack(labelStack);
         }
 
         if(!labelStack.empty()) {
             label1 = labelStack.pop();
-            printStack(labelStack);
+            // printStack(labelStack);
 
             if(elsePresent) {
                 System.out.println(";JUMP " + label2);
                 System.out.println(";LABEL " + label1);
                 labelStack.push(label2);
-                printStack(labelStack);
+                System.out.println("Pushed inside exitIf_stmt elsePresent");
+                // printStack(labelStack);
             } else {
+                System.out.println("Pushed inside exitIf_stmt elsePresent 1");
                 System.out.println(";JUMP " + label2);
                 System.out.println(";LABEL " + label1);
                 System.out.println(";LABEL " + label2);
@@ -694,6 +713,7 @@ public class Micro468Listener extends MicroBaseListener {
         }
 
         if(label1.isEmpty() && !label2.isEmpty()) {
+            System.out.println("Pushed inside exitIf_stmt Last");
             System.out.println(";JUMP " + label2);
             System.out.println(";LABEL " + label2);
         }
@@ -705,6 +725,8 @@ public class Micro468Listener extends MicroBaseListener {
      * This gets called whenever parser detects an ELSE Statement
      * */
     @Override public void enterElse_part(MicroParser.Else_partContext ctx) {
+
+        System.out.println("enterElse");
 
         SymbolsTable elseBlock = new SymbolsTable(getBlockNumber());
         currentScope = elseBlock; // Setting the Scope to the ELSE Block
@@ -726,17 +748,19 @@ public class Micro468Listener extends MicroBaseListener {
      */
     @Override public void exitElse_part(MicroParser.Else_partContext ctx) {
 
+        System.out.println("exitElse");
+
         String label2 = "";
         String label1 = "";
 
         if(!labelStack.empty()) {
             label2 = labelStack.pop();
-            printStack(labelStack);
+            // printStack(labelStack);
         }
 
         if(!labelStack.empty()) {
             label1 = labelStack.pop();
-            printStack(labelStack);
+            // printStack(labelStack);
             System.out.println(";JUMP " + label2);
             System.out.println(";LABEL " + label1);
             System.out.println(";LABEL " + label2);
@@ -782,13 +806,15 @@ public class Micro468Listener extends MicroBaseListener {
         this.labelNumber += 1;
         System.out.println(";LABEL " + labelName1);
         labelStack.push(labelName1);
-        printStack(labelStack);
+        // System.out.println("pushed inside enterFor_stmt 1");
+        // printStack(labelStack);
         /**
          * IR Code for incr_stmt
          * */
         incr_stmt = ctx.getChild(6).getText();
-        labelStack.push(labelName1);
-        printStack(labelStack);
+        // labelStack.push(labelName1); // Here For
+        //System.out.println("pushed inside enterFor_stmt 2");
+        //// printStack(labelStack);
     }
 
     @Override
@@ -808,12 +834,12 @@ public class Micro468Listener extends MicroBaseListener {
 
         if(!labelStack.empty()) {
             label1 = labelStack.pop();
-            printStack(labelStack);
+            // // printStack(labelStack);
         }
 
         if(!labelStack.empty()) {
             label2 = labelStack.pop();
-            printStack(labelStack);
+            // printStack(labelStack);
 
             System.out.println(";JUMP " + label2);
             System.out.println(";LABEL " + label1);
