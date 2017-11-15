@@ -1,0 +1,229 @@
+;*****Start Unoptimized IR Code*****
+;STOREI 1 $T0
+;STOREI $T0 b
+;STOREI 1 $T1
+;STOREI $T1 a
+;LABEL label1
+;STOREI 120 $T4
+;GT a $T4 label2
+;STOREI 1 $T5
+;NE b $T5 label3
+;STOREI 1 $T6
+;MULTI $T6 a $T7
+;STOREI $T7 g
+;WRITEI g
+;JUMP label4
+;LABEL label3
+;STOREI 2 $T8
+;NE b $T8 label5
+;STOREI 2 $T9
+;MULTI $T9 a $T10
+;STOREI $T10 p
+;WRITEI p
+;JUMP label6
+;LABEL label5
+;STOREI 3 $T11
+;NE b $T11 label7
+;STOREI 3 $T12
+;MULTI $T12 a $T13
+;STOREI $T13 k
+;WRITEI k
+;JUMP label8
+;LABEL label7
+;STOREI 4 $T14
+;NE b $T14 label9
+;STOREI 4 $T15
+;MULTI $T15 a $T16
+;STOREI $T16 u
+;WRITEI u
+;JUMP label10
+;LABEL label9
+;LABEL label10
+;LABEL label8
+;LABEL label6
+;LABEL label4
+;STOREI 1 $T17
+;ADDI b $T17 $T18
+;STOREI $T18 b
+;LABEL FOR_INC_L0 -- Not Required
+;STOREI 20 $T2
+;ADDI a $T2 $T3
+;STOREI $T3 a
+;JUMP label1
+;LABEL label2
+;*****End Unoptimized IR Code*****
+;*****Start Unoptimized Tiny Code*****
+;var a
+;var b
+;var k
+;var g
+;var p
+;var u
+;move 1 r0
+;move r0 b
+;move 1 r1
+;move r1 a
+;label label1
+;move 120 r4
+;cmpi a r4
+;jgt label2
+;move 1 r5
+;cmpi b r5
+;jne label3
+;move 1 r6
+;move r6 r7
+;muli a r7
+;move r7 g
+;sys writei g
+;jmp label4
+;label label3
+;move 2 r8
+;cmpi b r8
+;jne label5
+;move 2 r9
+;move r9 r10
+;muli a r10
+;move r10 p
+;sys writei p
+;jmp label6
+;label label5
+;move 3 r11
+;cmpi b r11
+;jne label7
+;move 3 r12
+;move r12 r13
+;muli a r13
+;move r13 k
+;sys writei k
+;jmp label8
+;label label7
+;move 4 r14
+;cmpi b r14
+;jne label9
+;move 4 r15
+;move r15 r16
+;muli a r16
+;move r16 u
+;sys writei u
+;jmp label10
+;label label9
+;label label10
+;label label8
+;label label6
+;label label4
+;move 1 r17
+;move b r18
+;addi r17 r18
+;move r18 b
+;label FOR_INC_L0
+;move 20 r2
+;move a r3
+;addi r2 r3
+;move r3 a
+;jmp label1
+;label label2
+;sys halt
+;end
+;*****End Unoptimized Tiny Code*****
+;*****Start Optimized IR Code*****
+;STOREI 1 b
+;STOREI 1 a
+;LABEL label1
+;GT a 120 label2
+;NE b 1 label3
+;STOREI a g
+;WRITEI g
+;JUMP label4
+;LABEL label3
+;NE b 2 label5
+;MULTI 2 a $T10
+;STOREI $T10 p
+;WRITEI p
+;JUMP label6
+;LABEL label5
+;NE b 3 label7
+;MULTI 3 a $T13
+;STOREI $T13 k
+;WRITEI k
+;JUMP label8
+;LABEL label7
+;NE b 4 label9
+;MULTI 4 a $T16
+;STOREI $T16 u
+;WRITEI u
+;JUMP label10
+;LABEL label9
+;LABEL label10
+;LABEL label8
+;LABEL label6
+;LABEL label4
+;ADDI b 1 $T18
+;STOREI $T18 b
+;ADDI a 20 $T3
+;STOREI $T3 a
+;JUMP label1
+;LABEL label2
+;*****End Optimized IR Code*****
+;*****Start Optimized Tiny Code*****
+var a
+var b
+var k
+var g
+var p
+var u
+move 1 b
+move 1 a
+label label1
+move 120 r19
+cmpi a r19
+jgt label2
+move 1 r20
+cmpi b r20
+jne label3
+move a r21
+move r21 g
+sys writei g
+jmp label4
+label label3
+move 2 r22
+cmpi b r22
+jne label5
+move 2 r10
+muli a r10
+move r10 p
+sys writei p
+jmp label6
+label label5
+move 3 r23
+cmpi b r23
+jne label7
+move 3 r13
+muli a r13
+move r13 k
+sys writei k
+jmp label8
+label label7
+move 4 r24
+cmpi b r24
+jne label9
+move 4 r16
+muli a r16
+move r16 u
+sys writei u
+jmp label10
+label label9
+label label10
+label label8
+label label6
+label label4
+move b r18
+addi 1 r18
+move r18 b
+move a r3
+addi 20 r3
+move r3 a
+jmp label1
+label label2
+sys halt
+end
+;*****End Optimized Tiny Code*****
