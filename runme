@@ -4,4 +4,6 @@ echo "Running script"
 
 cd classes
 
-java -cp ../lib/antlr.jar:. Micro ../$1 > ../$2
+java -cp ../lib/antlr-4.7-complete.jar:. Micro ../$1 > ../$2
+
+cd ..

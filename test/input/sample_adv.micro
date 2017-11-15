@@ -1,0 +1,28 @@
+PROGRAM test
+BEGIN
+
+	INT count,enough;
+	FLOAT newapprox,approx,num,tolerance,diff;
+	STRING eol := "\n";
+	STRING space := " ";
+
+	FUNCTION VOID main()
+	BEGIN
+
+		FOR (enough := 0; enough != 1; ) -- 1,2
+
+			IF (diff > 0.0) -- 3,4
+				IF (diff < tolerance) -- 5,6
+
+				FI
+			ELSE 
+				IF (diff > (0.0 - tolerance)) -- 7,8
+
+				FI
+			FI
+
+		ROF
+
+		WRITE(count, eol);
+	END
+END

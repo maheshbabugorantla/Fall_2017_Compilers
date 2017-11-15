@@ -1,5 +1,9 @@
+import org.antlr.v4.runtime.misc.NotNull;
+
 import java.io.*;
 import java.util.*;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import java.lang.Exception;
 
 /**
@@ -11,10 +15,23 @@ public class Micro468Listener extends MicroBaseListener {
     private SymbolsTree parentTree;
     private int blockNumber;
     private int operationNumber;
+    private int labelNumber;
+    private int labelNo;
     private static int tinyRegisterNumber;
     private SymbolsTable currentScope; // Used to refer to which functio is being parsed
-
     private static ArrayList<TinyNode> tinyNodeArrayList = new ArrayList<TinyNode>();
+
+    private Stack<String> labelStack1 = new Stack<String>();
+    private Stack<String> labelStack2 = new Stack<String>();
+    private Stack<Boolean> elsePresentStack = new Stack<Boolean>();
+
+    private boolean condFlag;
+
+    private String incr_stmt;
+
+    private int randomTiny = 20; // Used for the some statements where the tinyRegister is no more used in the subsequent Tiny instructions
+
+    private boolean elsePresent; // An Indicator to find if there is an else following the If Statement
 
     /**
      * Constructor to detect the Parser Actions.
@@ -24,11 +41,22 @@ public class Micro468Listener extends MicroBaseListener {
         this.parentTree = new SymbolsTree(); // Initializing the Symbol Tree to the GLOBAL Scope
         this.blockNumber = 1;
         operationNumber = 1;
+        labelNumber = 1;
+        labelNo = 1;
+        condFlag = false;
         tinyRegisterNumber = 0;
+        incr_stmt = "";
+        elsePresent = false;
     }
 
     private String getBlockNumber() {
         return "BLOCK " + blockNumber++;
+    }
+
+    public String getLabel() {
+        String LabelNo = new String("label" + labelNo);
+        labelNo += 1;
+        return LabelNo;
     }
 
     /**
@@ -121,6 +149,7 @@ public class Micro468Listener extends MicroBaseListener {
     @Override
     public void enterPgm_body(MicroParser.Pgm_bodyContext ctx) { // ParentScope or GLOBAL
         // Pushing the Symbols to the GLOBAL Symbol Table
+        System.out.println(";IR code");
         pushSymbol(ctx.getChild(0).getText(), parentTree.getParentScope());
     }
 
@@ -138,7 +167,7 @@ public class Micro468Listener extends MicroBaseListener {
             }
             else if (currentType == "FLOAT") {
                 System.out.println(";READF " + words[i]);
-                tinyNodeArrayList.add(new TinyNode("sys readf", words[i]));
+                tinyNodeArrayList.add(new TinyNode("sys readr", words[i]));
             }
             else {
                 System.out.println(";READS " + words[i]);
@@ -146,8 +175,6 @@ public class Micro468Listener extends MicroBaseListener {
             }
         }
     }
-
-
 
     @Override public void enterWrite_stmt(MicroParser.Write_stmtContext ctx) {
         String right = ctx.getChild(2).getText();
@@ -181,12 +208,7 @@ public class Micro468Listener extends MicroBaseListener {
         String left = ctx.getChild(0).getChild(0).getText();
         String right = ctx.getChild(0).getChild(2).getText();
 
-        //String postfix = InfixToPostfix.convertStringToPostfix(right);
         String postfix = InfixToPostfix.infixToPostfix(right);
-
-        //System.out.println("\n\nPrinting postfix");
-        //System.out.println("postfix " + postfix);
-        //System.out.println(postfix2);
 
         parsePostfix(right, left, postfix);
     }
@@ -203,11 +225,7 @@ public class Micro468Listener extends MicroBaseListener {
         String[] words = postfix.split(" ");
         //System.out.println("split: " + Arrays.toString(words));
         if (words.length == 1) {
-            String location = "$T" + this.operationNumber;
-            this.operationNumber += 1;
-
-            parseAssign_stmt(left, right, location);
-
+            parseAssign_stmt(left, right);
             return;
         }
 
@@ -285,7 +303,9 @@ public class Micro468Listener extends MicroBaseListener {
             }
             else {
                 String currentType = parentTree.getCurrentScope().variableMap.get(c)[0];
-
+                if (left == null) {
+                    return;
+                }
                 if (currentType.equals("INT")) {
                     System.out.println(";STOREI " + " " + c + " " + left);
                     add_reg_operation_stmt_2("move", c, left);
@@ -396,33 +416,48 @@ public class Micro468Listener extends MicroBaseListener {
         }
     }
 
-    private void parseAssign_stmt(String left, String right, String location) {
+    private void parseAssign_stmt(String left, String right) {
         if (isNumeric(right) == false) {
+            if (parentTree.getCurrentScope().variableMap.containsKey(left) && parentTree.getCurrentScope().variableMap.containsKey(right)) {
+                String dataType = parentTree.getCurrentScope().variableMap.get(left)[0];
+                if (dataType.equals("INT")) {
+                    System.out.println(";STOREI " + right + " " + left);
+                    tinyNodeArrayList.add(new TinyNode("move", right, "r" + randomTiny));
+                    tinyNodeArrayList.add(new TinyNode("move", "r" + randomTiny, left));
+                    randomTiny += 1;
+                }
+                else {
+                    System.out.println(";STOREF " + right + " " + left);
+                    tinyNodeArrayList.add(new TinyNode("move", right, "r" + randomTiny));
+                    tinyNodeArrayList.add(new TinyNode("move", "r" + randomTiny, left));
+                    randomTiny += 1;
+                }
+            }
             return;
         }
 
         if (isInteger(right)) {
+            String location = "$T" + this.operationNumber;
+            this.operationNumber += 1;
+
             System.out.println(";STOREI " + right + " " + location);
             parentTree.getCurrentScope().addRegister(location,  "INT", "r" + Integer.toString(this.operationNumber - 2));
-            //tinyNodeArrayList.add(new TinyNode("move", right, "r" + Integer.toString(tinyRegisterNumber)));
-            //add_reg_operation_stmt("move", right, location);
             System.out.println(";STOREI " + location + " " + left);
-            //tinyNodeArrayList.add(new TinyNode("move", "r" + Integer.toString(tinyRegisterNumber), left));
-            //add_reg_operation_stmt("move", location, left);
             tinyRegisterNumber += 1;
+            add_reg_operation_stmt_2("move", right, location);
+            add_reg_operation_stmt_2("move", location, left);
         }
         else {
+            String location = "$T" + this.operationNumber;
+            this.operationNumber += 1;
+
             System.out.println(";STOREF " + right + " " + location);
             parentTree.getCurrentScope().addRegister(location,  "FLOAT", "r" + Integer.toString(this.operationNumber - 2));
-            //tinyNodeArrayList.add(new TinyNode("move", right, "r" + Integer.toString(tinyRegisterNumber)));
-            //add_reg_operation_stmt("move", right, location);
             System.out.println(";STOREF " + location + " " + left);
-            //tinyNodeArrayList.add(new TinyNode("move", "r" + Integer.toString(tinyRegisterNumber), left));
-            //add_reg_operation_stmt("move", location, left);
             tinyRegisterNumber += 1;
+            add_reg_operation_stmt_2("move", right, location);
+            add_reg_operation_stmt_2("move", location, left);
         }
-        add_reg_operation_stmt_2("move", right, location);
-        add_reg_operation_stmt_2("move", location, left);
     }
 
 
@@ -489,28 +524,25 @@ public class Micro468Listener extends MicroBaseListener {
     @Override public void enterFunc_decl(MicroParser.Func_declContext ctx) {
 
         // Function Name
-        // System.out.println("Function Name: " + ctx.getChild(2).getText());
+//         System.out.println("Function Name: " + ctx.getChild(2).getText());
 
         // Function Parameters
-        // System.out.println("Function Parameters: " + ctx.getChild(4).getText()); // Function Paramters
+//         System.out.println("Function Parameters: " + ctx.getChild(4).getText()); // Function Paramters
 
         String functionParameters = ctx.getChild(4).getText();
         String functionName = ctx.getChild(2).getText();
+
+//        System.out.println("Function Name: " + functionName);
+//        System.out.println("Function Parameters: " + functionParameters);
 
         // Create a new SymbolsTable for the Function
         SymbolsTable functionSymbolsTable = new SymbolsTable(functionName);
         currentScope = functionSymbolsTable; // Setting the current Scope to the Function Scope
 
-
-
-        // System.out.println(parentTree.getCurrentScope().variableMap.get("a")[0]);
-
         // Adding the New Function as a child to the Program
         parentTree.getCurrentScope().addChild(functionSymbolsTable);
 
         readFunctionParameters(functionParameters, functionSymbolsTable);
-
-
     }
 
     /**
@@ -526,25 +558,77 @@ public class Micro468Listener extends MicroBaseListener {
      * */
     @Override public void enterIf_stmt(MicroParser.If_stmtContext ctx) {
 
+        // System.out.println("enterIf");
+
         SymbolsTable ifBlock = new SymbolsTable(getBlockNumber());
         currentScope = ifBlock; // Setting the Scope to the IF Block
 
         // Adding the new Block as a Child to the Program
         parentTree.getCurrentScope().addChild(ifBlock);
 
-        /**
-         * TODO: Need to Check for Conditional Expr
-         * */
+        condFlag = true;
 
         /**
-         * TODO: Need to Check for Local Parameters
+         * TODO: Need to Check for Conditional Expressions
          * */
+        String conditionExpr = ctx.getChild(2).getText();
+
+        /**
+         * TODO: Need to Check for Declarations and Statements
+         * */
+        String decl = ctx.getChild(4).getText();
+        String stmt_list = ctx.getChild(5).getText();
+
+        if(!ctx.getChild(6).getText().equals("")) {
+            // System.out.println("ElsePresent: true");
+            // printElsePresentStack(elsePresentStack);
+            elsePresentStack.push(true);
+        }
+        else {
+            // System.out.println("ElsePresent: false");
+            elsePresentStack.push(false);
+            // printElsePresentStack(elsePresentStack);
+        }
+    }
+
+    @Override
+    public void enterCond(MicroParser.CondContext ctx) {
+
+        String leftExpr = ctx.getChild(0).getText();
+        String compOp = ctx.getChild(1).getText();
+        String rightExpr = ctx.getChild(2).getText();
+
+        labelStack1.push(getLabel());
+
+        if(condFlag) { // Entered If Statement
+            labelStack2.push(getLabel());
+        } // Enter If Statement
+
+        if (isNumeric(rightExpr) || parentTree.getCurrentScope().variableMap.containsKey(rightExpr)) { // Right Operand is either a number(INT or FLOAT or just a variable)
+            checkCompOp(compOp, leftExpr, rightExpr);
+        } else {
+            String postfix = InfixToPostfix.infixToPostfix(rightExpr);
+            parsePostfix(rightExpr, null, postfix);
+            checkCompOp(compOp, leftExpr, "$T" + Integer.toString(this.operationNumber - 1));
+        }
+    }
+
+    /**
+     * This gets called whenever parser exits an IF Statement
+     * */
+    @Override
+    public void exitIf_stmt(MicroParser.If_stmtContext ctx) {
+
+        // System.out.println("exitIf");
+        // System.out.println("Exited the IF Part");
     }
 
     /**
      * This gets called whenever parser detects an ELSE Statement
      * */
     @Override public void enterElse_part(MicroParser.Else_partContext ctx) {
+
+        // System.out.println("enterElse");
 
         SymbolsTable elseBlock = new SymbolsTable(getBlockNumber());
         currentScope = elseBlock; // Setting the Scope to the ELSE Block
@@ -553,18 +637,61 @@ public class Micro468Listener extends MicroBaseListener {
         parentTree.getCurrentScope().addChild(elseBlock);
 
         /**
-         * TODO: Need to Check for Conditional Expr
-         * */
-
-        /**
          * TODO: Need to Check for Local Parameters
          * */
+        if(ctx.getChild(1) != null) {
+            String localDecl = ctx.getChild(1).getText();
+            String localStmt = ctx.getChild(2).getText();
+        }
+
+        if(elsePresentStack.peek()) {
+            // System.out.println("else Present");
+            System.out.println(";JUMP " + labelStack2.peek());
+            tinyNodeArrayList.add(new TinyNode("jmp", labelStack2.peek()));
+            String labelName = labelStack1.pop();
+            System.out.println(";LABEL " + labelName);
+            tinyNodeArrayList.add(new TinyNode("label", labelName));
+        }
+    }
+
+    /**
+     * This gets called whenever parser exits an ELSE Part
+     */
+    @Override public void exitElse_part(MicroParser.Else_partContext ctx) {
+
+        // System.out.println("exitElse");
+
+        elsePresent = elsePresentStack.pop();
+
+        String labelName;
+
+        if(elsePresent) {
+            labelName = labelStack2.pop();
+            System.out.println(";LABEL " + labelName);
+            tinyNodeArrayList.add(new TinyNode("label", labelName));
+        } else {
+            System.out.println(";JUMP " + labelStack2.peek());
+            tinyNodeArrayList.add(new TinyNode("jmp", labelStack2.peek()));
+
+            labelName = labelStack1.pop();
+            System.out.println(";LABEL " + labelName);
+            tinyNodeArrayList.add(new TinyNode("label", labelName));
+
+            labelName = labelStack2.pop();
+            System.out.println(";LABEL " + labelName);
+            tinyNodeArrayList.add(new TinyNode("label", labelName));
+        }
+
+        // System.out.println("Exited the ELSE part");
     }
 
     /**
      * This gets called whenever parser detects an FOR Statement
      * */
     @Override public void enterFor_stmt(MicroParser.For_stmtContext ctx) {
+
+        condFlag = false;
+
         SymbolsTable forBlock = new SymbolsTable(getBlockNumber());
         currentScope = forBlock; // Setting the Scope to the FOR Block
 
@@ -576,5 +703,137 @@ public class Micro468Listener extends MicroBaseListener {
         }
 
         pushSymbol(ctx.getChild(8).getText(), currentScope);
+
+        /**
+         * IR Code for init_stmt
+         * */
+
+        if(!ctx.getChild(2).getText().equals("")) {
+            String init_stmt = ctx.getChild(2).getText();
+
+            String[] operands = init_stmt.trim().split(":=");
+
+            String left = operands[0].trim();
+            String right = operands[1].trim();
+
+            String postfix = InfixToPostfix.infixToPostfix(right);
+            parsePostfix(right, left, postfix);
+        }
+
+        labelStack2.push(getLabel());
+        System.out.println(";LABEL " + labelStack2.peek());
+        tinyNodeArrayList.add(new TinyNode("label", labelStack2.peek()));
+
+        /**
+         * IR Code for incr_stmt
+         * */
+        incr_stmt = ctx.getChild(6).getText();
+    }
+
+    @Override
+    public void exitFor_stmt(MicroParser.For_stmtContext ctx) {
+
+        if(!incr_stmt.isEmpty()) {
+            String[] operands = incr_stmt.split(":=");
+
+            String left = operands[0].trim();
+            String right = operands[1].trim();
+            String postfix = InfixToPostfix.infixToPostfix(right);
+            parsePostfix(right, left, postfix);
+        }
+
+        String labelName = labelStack2.pop();
+        System.out.println(";JUMP " + labelName);
+        tinyNodeArrayList.add(new TinyNode("jmp", labelName));
+
+        labelName = labelStack1.pop();
+        System.out.println(";LABEL " + labelName);
+        tinyNodeArrayList.add(new TinyNode("label", labelName));
+    }
+
+    private void printStack(Stack<String> labelStack) {
+        System.out.println(Arrays.toString(labelStack.toArray()));
+    }
+    private void printElsePresentStack(Stack<Boolean> elsePresentStack) {
+        System.out.println(Arrays.toString(elsePresentStack.toArray()));
+    }
+
+    public void checkCompOp(String compOp, String leftOp, String rightOp) {
+
+        String IRreg = "$T" + this.operationNumber;
+
+        String tinyReg = "r" + (this.operationNumber - 1);
+
+        // If the rightOperand is either a variable or a register i.e. $Tn
+        if (parentTree.getCurrentScope().variableMap.containsKey(rightOp)) {
+
+            // if rightOp is a register
+            if(rightOp.trim().startsWith("$")) {
+                if (parentTree.getCurrentScope().variableMap.get(leftOp)[0].equals("FLOAT")) {
+                    tinyNodeArrayList.add(new TinyNode("cmpr", leftOp, "r" + (this.operationNumber - 2)));
+                }
+                else {
+                    tinyNodeArrayList.add(new TinyNode("cmpi", leftOp, "r" + (this.operationNumber - 2)));
+                }
+            }
+            else {
+                if (parentTree.getCurrentScope().variableMap.get(leftOp)[0].equals("FLOAT")) {
+                    tinyNodeArrayList.add(new TinyNode("move", rightOp, "r" + randomTiny));
+                    tinyNodeArrayList.add(new TinyNode("cmpr", leftOp, "r" + randomTiny));
+                }
+                else {
+                    tinyNodeArrayList.add(new TinyNode("move", rightOp, "r" + randomTiny));
+                    tinyNodeArrayList.add(new TinyNode("cmpi", leftOp, "r" + randomTiny));
+                }
+
+                randomTiny += 1;
+            }
+
+            IRreg = rightOp;
+        }
+        else if(isInteger(rightOp)) { // rightOp is an INT
+            System.out.println(";STOREI " + rightOp + " " + IRreg);
+            add_reg_operation_stmt_2("move", rightOp, tinyReg);
+            tinyNodeArrayList.add(new TinyNode("cmpi", leftOp, tinyReg));
+            this.operationNumber += 1;
+        } else {
+            System.out.println(";STOREF " + rightOp + " " + IRreg);
+            add_reg_operation_stmt_2("move", rightOp, tinyReg);
+            tinyNodeArrayList.add(new TinyNode("cmpr", leftOp, tinyReg));
+            this.operationNumber += 1;
+        }
+
+        switch(compOp) {
+
+            case "<":
+                System.out.println(";GE " + leftOp + " " + IRreg + " " + labelStack1.peek());
+                tinyNodeArrayList.add(new TinyNode("jge", labelStack1.peek()));
+                break;
+
+            case ">":
+                System.out.println(";LE " + leftOp + " " + IRreg + " " + labelStack1.peek());
+                tinyNodeArrayList.add(new TinyNode("jle", labelStack1.peek()));
+                break;
+
+            case "<=":
+                System.out.println(";GT " + leftOp + " " + IRreg + " " + labelStack1.peek());
+                tinyNodeArrayList.add(new TinyNode("jgt", labelStack1.peek()));
+                break;
+
+            case ">=":
+                System.out.println(";LT " + leftOp + " " + IRreg + " " + labelStack1.peek());
+                tinyNodeArrayList.add(new TinyNode("jlt", labelStack1.peek()));
+                break;
+
+            case "=":
+                System.out.println(";NE " + leftOp + " " + IRreg + " " + labelStack1.peek());
+                tinyNodeArrayList.add(new TinyNode("jne", labelStack1.peek()));
+                break;
+
+            case "!=":
+                System.out.println(";EQ " + leftOp + " " + IRreg + " " + labelStack1.peek());
+                tinyNodeArrayList.add(new TinyNode("jeq", labelStack1.peek()));
+                break;
+        }
     }
 }
