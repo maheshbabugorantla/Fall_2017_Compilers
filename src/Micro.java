@@ -21,15 +21,6 @@ public class Micro {
         microParser.setErrorHandler(new BailErrorStrategy());
 
 
-        /*
-            microParser.removeErrorListeners();
-            if(microParser.getNumberOfSyntaxErrors() < 1) {
-                System.out.println("Accepted");
-            }
-            else {
-                System.out.println("Not accepted");
-            }*/
-
         try {
             ParseTree parseTree = microParser.program();
             ParseTreeWalker parseTreeWalker = new ParseTreeWalker();
