@@ -16,3 +16,5 @@ Micro_test.g4
 sample_regex.java
 
 sample_regex.class
+
+*.iml
