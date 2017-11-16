@@ -1,0 +1,72 @@
+;IR code
+;LABEL factorial
+;STOREI 1 $T1
+;NE a $T1 label1
+;JUMP label2
+;LABEL label1
+;MULTI tret a $T2
+str1: tret
+str2: a
+Location: $T2
+;STOREI  $T2 ret
+;LABEL label2
+;RET
+;LABEL main
+;WRITES input
+;READI num
+;STOREI 1 $T3
+;NE num $T3 label3
+;STOREI 1 $T4
+;STOREI $T4 result
+;JUMP label4
+;LABEL label3
+;STOREI 1 $T5
+;LE num $T5 label5
+;JUMP label6
+;LABEL label5
+;STOREI 0 $T6
+;STOREI $T6 result
+;LABEL label6
+;LABEL label4
+;WRITEI result
+;WRITES eol
+;RET
+;tiny code
+str input "Please enter an integer number: "
+str eol "\n"
+label factorial
+var ret
+var tret
+move 1 r0
+cmpi a r0
+jne label1
+jmp label2
+label label1
+move tret r1
+muli a r1
+move r1 ret
+label label2
+label main
+var num
+var result
+sys writes input
+sys readi num
+move 1 r2
+cmpi num r2
+jne label3
+move 1 r3
+move r3 result
+jmp label4
+label label3
+move 1 r4
+cmpi num r4
+jle label5
+jmp label6
+label label5
+move 0 r5
+move r5 result
+label label6
+label label4
+sys writei result
+sys writes eol
+sys halt

@@ -47,8 +47,11 @@ public class SymbolsTable {
      * */
     public void addSymbol(Symbol symbol) throws IllegalArgumentException {
 
+
         // If the symbol already exists in the symbolSet then it is illegal to declare the variable again
         String variableName = symbol.getSymbolName();
+
+//        System.out.println("Adding Variable: " + variableName);
 
         // Checks to see if the symbol already exists in the current Scope
         if(symbolSet.contains(variableName)) {
@@ -80,6 +83,10 @@ public class SymbolsTable {
 //
 //        return variableMap.get(name)[0];
 //    }
+
+    public String getBlockScope() {
+        return blockScope;
+    }
 
     /**
      * Helper Function to check if the given variable is a shadow variable

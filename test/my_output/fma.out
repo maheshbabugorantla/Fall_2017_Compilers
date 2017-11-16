@@ -1,0 +1,73 @@
+;IR code
+;LABEL add
+;ADDF a b $T1
+str1: a
+str2: b
+Location: $T1
+;STOREF  $T1 result
+;RET
+;LABEL multiply
+;MULTF a b $T2
+str1: a
+str2: b
+Location: $T2
+;STOREF  $T2 result
+;RET
+;LABEL main
+;WRITES intro
+;WRITES first
+;READF a
+;WRITES second
+;READF b
+;WRITES third
+;READF c
+;WRITEF a
+;WRITES star
+;WRITEF b
+;WRITES plus
+;WRITEF c
+;WRITES equal
+;WRITEF addresult
+;WRITES eol
+;RET
+;tiny code
+str intro "You will be asked for three float numbers\n"
+str first "Please enter the first float number: "
+str second "Please enter the second float number: "
+str third "Please enter the third float number: "
+str eol "\n"
+str star "*"
+str plus "+"
+str equal "="
+label add
+var result
+move a r0
+addr b r0
+move r0 result
+label multiply
+var result
+move a r1
+mulr b r1
+move r1 result
+label main
+var a
+var b
+var c
+var addresult
+var multiplyresult
+sys writes intro
+sys writes first
+sys readr a
+sys writes second
+sys readr b
+sys writes third
+sys readr c
+sys writer a
+sys writes star
+sys writer b
+sys writes plus
+sys writer c
+sys writes equal
+sys writer addresult
+sys writes eol
+sys halt
