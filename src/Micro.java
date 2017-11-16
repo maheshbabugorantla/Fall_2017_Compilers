@@ -20,7 +20,6 @@ public class Micro {
         MicroParser microParser = new MicroParser(commonTokenStream);
         microParser.setErrorHandler(new BailErrorStrategy());
 
-
         try {
             ParseTree parseTree = microParser.program();
             ParseTreeWalker parseTreeWalker = new ParseTreeWalker();
@@ -29,6 +28,7 @@ public class Micro {
         }
         catch(Exception e) {
             System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 }
