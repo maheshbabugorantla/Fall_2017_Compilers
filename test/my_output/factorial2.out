@@ -1,17 +1,28 @@
-;IR code
-;LABEL factorial
+; IR code
+; PUSH
+; JSR FUNC_id_main_L
+; HALT
+; LABEL FUNC_id_factorial_L
+; LINK 3
 ;STOREI 1 $T1
 ;NE a $T1 label1
+; UNLINK
+; RET
 ;JUMP label2
 ;LABEL label1
+THIS IS A FUNCTION CALL = factorial(a-1,a+b*d)
+; PUSH
+; PUSH arguments
+; JSR FUNC_id_factorial_L
+; POP
+; POP the value returned
 ;MULTI tret a $T2
-str1: tret
-str2: a
-Location: $T2
 ;STOREI  $T2 ret
 ;LABEL label2
-;RET
-;LABEL main
+; UNLINK
+; RET
+; LABEL FUNC_id_main_L
+; LINK 3
 ;WRITES input
 ;READI num
 ;STOREI 1 $T3
@@ -22,6 +33,12 @@ Location: $T2
 ;LABEL label3
 ;STOREI 1 $T5
 ;LE num $T5 label5
+THIS IS A FUNCTION CALL = factorial(num)
+; PUSH
+; PUSH arguments
+; JSR FUNC_id_factorial_L
+; POP
+; POP the value returned
 ;JUMP label6
 ;LABEL label5
 ;STOREI 0 $T6
@@ -30,7 +47,8 @@ Location: $T2
 ;LABEL label4
 ;WRITEI result
 ;WRITES eol
-;RET
+; UNLINK
+; RET
 ;tiny code
 str input "Please enter an integer number: "
 str eol "\n"

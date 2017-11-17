@@ -156,7 +156,10 @@ public class Micro468Listener extends MicroBaseListener {
     @Override
     public void enterPgm_body(MicroParser.Pgm_bodyContext ctx) { // ParentScope or GLOBAL
         // Pushing the Symbols to the GLOBAL Symbol Table
-        System.out.println(";IR code");
+        System.out.println("; IR code");
+        System.out.println("; PUSH");
+        System.out.println("; JSR FUNC_id_main_L");
+        System.out.println("; HALT");
 //        System.out.println("Global Declarations:");
 //        System.out.println(ctx.getChild(0).getText());
 
@@ -266,21 +269,28 @@ public class Micro468Listener extends MicroBaseListener {
     }
 
     @Override public void enterCall_expr(MicroParser.Call_exprContext ctx) {
-        System.out.println("==========");
+        // System.out.println("==========");
         String function_name = ctx.getChild(0).getText();
-        String[] function_parameters = ctx.getChild(2).getText().split(",");
-        System.out.println("function_name = " + function_name);
-        for (int i = 0; i < function_parameters.length; i++) {
-            System.out.println("param: " + function_parameters[i]);
-            String postfix = InfixToPostfix.infixToPostfix(function_parameters[i]);
-            System.out.println("postfix: " + postfix);
-        }
 
-        System.out.println("==========");
+        System.out.println("; PUSH");
+        System.out.println("; PUSH arguments");
+        System.out.println("; JSR FUNC_id_" + function_name + "_L");
+        System.out.println("; POP");
+        System.out.println("; POP the value returned");
+        // TODO: Not sure:
+
+        String[] function_parameters = ctx.getChild(2).getText().split(",");
+        //System.out.println("function_name = " + function_name);
+//        for (int i = 0; i < function_parameters.length; i++) {
+//            System.out.println("param: " + function_parameters[i]);
+//            String postfix = InfixToPostfix.infixToPostfix(function_parameters[i]);
+//            System.out.println("postfix: " + postfix);
+//        }
+//
+//        System.out.println("==========");
     }
 
     private static boolean isFunctionCall(String str) {
-        //System.out.println("+++++++++++++checking function+++++++++++++++++");
         if (str.trim().startsWith("\"") || (str.trim().startsWith("\'"))) {
             return false;
         }
@@ -434,6 +444,12 @@ public class Micro468Listener extends MicroBaseListener {
         }
     }
 
+    @Override public void enterReturn_stmt(MicroParser.Return_stmtContext ctx) {
+        System.out.println("; UNLINK");
+        System.out.println("; RET");
+    }
+
+
     private void choose_operation(String symbol, String type, String str1, String str2, String location) {
         if (symbol.equals("+")) {
             operation_stmt("ADD", type, str1, str2, location);
@@ -494,9 +510,9 @@ public class Micro468Listener extends MicroBaseListener {
     }
     private void reg_operation_stmt(String operation, String type, String str1, String str2, String location) {
 
-        System.out.println("str1: " + str1);
-        System.out.println("str2: " + str2);
-        System.out.println("Location: " + location);
+//        System.out.println("str1: " + str1);
+//        System.out.println("str2: " + str2);
+//        System.out.println("Location: " + location);
 
         add_reg_operation_stmt("move", str1, location);
         if (type.equals("INT")) {
@@ -654,19 +670,32 @@ public class Micro468Listener extends MicroBaseListener {
     @Override
     public void enterFunc_body(MicroParser.Func_bodyContext ctx) { // currentScope
 //        System.out.println("Enter Function Body");
-//        System.out.println(ctx.getChild(0).getText());
+        System.out.println("; LABEL FUNC_id_" + ctx.getParent().getChild(2).getText() + "_L");
+
+        int totalRegisters = currentScope.variableMap.size();
+
+        // TODO: Rahul does not understand this
+
         pushSymbol(ctx.getChild(0).getText(), currentScope);
-//        System.out.println("Exit Function Body");
+
+        totalRegisters = currentScope.variableMap.size() - totalRegisters + 1;
+        System.out.println("; LINK " + totalRegisters);
     }
 
     /**
      * This gets called when the parser exits the Function
      */
-    @Override
-    public void exitFunc_body(MicroParser.Func_bodyContext ctx) {
-        // System.out.println(ctx.getChild(0).getText());
-        System.out.println(";RET");
-    }
+//    @Override
+//    public void exitFunc_body(MicroParser.Func_bodyContext ctx) {
+//        //System.out.println("==================");
+//        //System.out.println("; RETURNING " + ctx.getChild(1).getChild(1).getText());
+//
+//        /*
+//            // For it seems ok just to return when we come
+//        // across a return statement rather than the end of a function
+//
+//         */
+//    }
 
     /**
      * This gets called when the parser hits the Function Declaration
@@ -683,7 +712,7 @@ public class Micro468Listener extends MicroBaseListener {
         String functionName = ctx.getChild(2).getText();
 
         // TODO: Tiny
-        System.out.println(";LABEL " + functionName);
+        //System.out.println(";LABEL " + functionName);
         tinyNodeArrayList.add(new TinyNode("label", functionName));
 
 //        System.out.println("Function Name: " + functionName);
