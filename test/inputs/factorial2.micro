@@ -10,7 +10,7 @@ BEGIN
 		IF (a = 1)
 			RETURN 1;
 		ELSE
-			-- tret := factorial(a-1);
+			tret := f(a-1, a + b * d);
 			ret := tret*a;
 		FI
 		RETURN ret;
@@ -27,7 +27,7 @@ BEGIN
 			result := 1;
 		ELSE
             IF(num >1)
-                -- result := factorial(num); 
+                result := f(num); 
             ELSE
                 result := 0;
             FI

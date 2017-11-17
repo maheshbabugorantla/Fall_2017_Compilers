@@ -9,8 +9,8 @@ BEGIN
 	BEGIN
 		INT ret1,ret2;
 		IF (n > 2)
-			-- ret1 := F(n-1);
-			-- ret2 := F(n-2);
+			ret1 := Fasdf(n-1);
+			ret2 := F(n-2);
 			RETURN ret1+ret2;
 		ELSE
             IF (n = 0)   --This is a comment
@@ -32,7 +32,7 @@ BEGIN
 		READ(end);
 
  		FOR (i := 0; i != end; i := i + 1)
-			-- result := F(i);
+			result := F(i);
 			WRITE (i,space);
 			WRITE (result,eol);
 		ROF

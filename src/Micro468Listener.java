@@ -225,6 +225,8 @@ public class Micro468Listener extends MicroBaseListener {
         }
     }
 
+
+
     private boolean isVariableinGlobal(String variable) {
         return parentTree.getCurrentScope().variableMap.get(variable) != null;
     }
@@ -241,20 +243,63 @@ public class Micro468Listener extends MicroBaseListener {
 //        System.out.println("Left: " + left);
 //        System.out.println("Right: " + right);
 
+        if(isFunctionCall(right)) {
+            // TODO: Handle function call
+            System.out.println("THIS IS A FUNCTION CALL = " + right);
+            return;
+        }
+
         String postfix = InfixToPostfix.infixToPostfix(right);
 
         //System.out.println("PostFix: " + postfix);
 
-        try {
-            parsePostfix(right, left, postfix);
-        }
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-        }
+        parsePostfix(right, left, postfix);
 
+//        try {
+//            parsePostfix(right, left, postfix);
+//        }
+//        catch (Exception e) {
+//            System.out.println(e.getMessage());
+//            e.printStackTrace();
+//        }
 //        System.out.println("Exit Assign Stmt");
     }
+
+    @Override public void enterCall_expr(MicroParser.Call_exprContext ctx) {
+        System.out.println("==========");
+        String function_name = ctx.getChild(0).getText();
+        String[] function_parameters = ctx.getChild(2).getText().split(",");
+        System.out.println("function_name = " + function_name);
+        for (int i = 0; i < function_parameters.length; i++) {
+            System.out.println("param: " + function_parameters[i]);
+            String postfix = InfixToPostfix.infixToPostfix(function_parameters[i]);
+            System.out.println("postfix: " + postfix);
+        }
+
+        System.out.println("==========");
+    }
+
+    private static boolean isFunctionCall(String str) {
+        //System.out.println("+++++++++++++checking function+++++++++++++++++");
+        if (str.trim().startsWith("\"") || (str.trim().startsWith("\'"))) {
+            return false;
+        }
+
+        boolean val = str.contains(",");
+        if (val) {
+            return true;
+        }
+
+        String regex = "[a-zA-Z]+[a-zA-Z0-9_]*\\(.*\\)";
+        Pattern funcPattern = Pattern.compile(regex);
+
+        Matcher m = funcPattern.matcher(str);
+
+        //System.out.println(Boolean.toString(m.matches()));
+
+        return m.matches();
+    }
+
 
     private static boolean isOperator(String c) {
         return c.equals("+") || c.equals("-") || c.equals("*") || c.equals("/") || c.equals("^") || c.equals("(") || c.equals(")");
