@@ -2,86 +2,29 @@
 ; PUSH
 ; JSR FUNC_id_main_L
 ; HALT
-++++++++++++++++++++++++++++++++
-FLOATa,FLOATb
-key = b
-name = b loc = ARGS func = add dec = FLOAT name = $3
-key = a
-name = a loc = ARGS func = add dec = FLOAT name = $2
-{{{{{{{{{{{{{{{{{{{{{{{{{{
-FLOATresult;
-key = result
-name = result loc = LOCALS func = add dec = FLOAT name = $-1
-key = b
-name = b loc = ARGS func = add dec = FLOAT name = $3
-key = a
-name = a loc = ARGS func = add dec = FLOAT name = $2
 ; LABEL FUNC_id_add_L
 ; LINK 2
-;ADDF a b $T1
-;STOREF  $T1 result
-;STOREF  needs conversion here $4
-
+;ADDF $2 $3 !T0
+; STOREF !T0 $-1
+; STOREF $-1 $4
 ; UNLINK
 ; RET
-++++++++++++++++++++++++++++++++
-FLOATa,FLOATb
-key = result
-name = result loc = LOCALS func = add dec = FLOAT name = $-1
-key = b
-name = b loc = ARGS func = multiply dec = FLOAT name = $3
-key = a
-name = a loc = ARGS func = multiply dec = FLOAT name = $2
-{{{{{{{{{{{{{{{{{{{{{{{{{{
-FLOATresult;
-key = result
-name = result loc = LOCALS func = multiply dec = FLOAT name = $-1
-key = b
-name = b loc = ARGS func = multiply dec = FLOAT name = $3
-key = a
-name = a loc = ARGS func = multiply dec = FLOAT name = $2
 ; LABEL FUNC_id_multiply_L
 ; LINK 2
-;MULTF a b $T2
-;STOREF  $T2 result
-;STOREF  needs conversion here $4
-
+;MULTF $2 $3 !T1
+; STOREF !T1 $-1
+; STOREF $-1 $4
 ; UNLINK
 ; RET
-++++++++++++++++++++++++++++++++
-
-key = result
-name = result loc = LOCALS func = multiply dec = FLOAT name = $-1
-key = b
-name = b loc = ARGS func = multiply dec = FLOAT name = $3
-key = a
-name = a loc = ARGS func = multiply dec = FLOAT name = $2
-{{{{{{{{{{{{{{{{{{{{{{{{{{
-FLOATa,b,c;FLOATaddresult,multiplyresult;
-key = result
-name = result loc = LOCALS func = multiply dec = FLOAT name = $-1
-key = multiplyresult
-name = multiplyresult loc = LOCALS func = main dec = FLOAT name = $-5
-key = b
-name = b loc = LOCALS func = main dec = FLOAT name = $-2
-key = c
-name = c loc = LOCALS func = main dec = FLOAT name = $-3
-key = a
-name = a loc = LOCALS func = main dec = FLOAT name = $-1
-key = addresult
-name = addresult loc = LOCALS func = main dec = FLOAT name = $-4
 ; LABEL FUNC_id_main_L
 ; LINK 6
 ;WRITES intro
 ;WRITES first
-;READF a
+; READF $-1
 ;WRITES second
-;READF b
+; READF $-2
 ;WRITES third
-;READF c
-THIS IS A FUNCTION CALL = multiply(a,b)
-==========
-a,b
+; READF $-3
 ; PUSH (return value)
 ; PUSH arguments
 ; PUSH arguments
@@ -89,9 +32,6 @@ a,b
 ; POP arguments
 ; POP arguments
 ; POP the value returned
-THIS IS A FUNCTION CALL = add(multiplyresult,c)
-==========
-multiplyresult,c
 ; PUSH (return value)
 ; PUSH arguments
 ; PUSH arguments
@@ -99,16 +39,16 @@ multiplyresult,c
 ; POP arguments
 ; POP arguments
 ; POP the value returned
-;WRITEF a
+; WRITEF $-1
 ;WRITES star
-;WRITEF b
+; WRITEF $-2
 ;WRITES plus
-;WRITEF c
+; WRITEF $-3
 ;WRITES equal
-;WRITEF addresult
+; WRITEF $-4
 ;WRITES eol
-;STOREF  needs conversion here $4
-
+;STOREI 0 !T2
+; STOREI !T2 $4
 ; UNLINK
 ; RET
 ;tiny code
@@ -122,14 +62,14 @@ str plus "+"
 str equal "="
 label add
 var result
-move a r0
-addr b r0
-move r0 result
+move a r-1
+addr b r-1
+move r-1 result
 label multiply
 var result
-move a r1
-mulr b r1
-move r1 result
+move a r0
+mulr b r0
+move r0 result
 label main
 var a
 var b
