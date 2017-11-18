@@ -41,6 +41,15 @@ public class SymbolsTable {
         this.variableMap = new HashMap<String, String[]>();
     }
 
+    public Symbol getSymbolFromName(String name) {
+        for (int i =0; i < symbolsList.size(); i++) {
+            if (symbolsList.get(i).getSymbolName().equals(name)) {
+                return symbolsList.get(i);
+            }
+        }
+        return null;
+    }
+
     /**
      * Helper Function to add the Symbol to the SymbolTable
      * @param symbol: This is the symbol that needs to be added to the SymbolTable

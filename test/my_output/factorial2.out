@@ -2,10 +2,24 @@
 ; PUSH
 ; JSR FUNC_id_main_L
 ; HALT
+++++++++++++++++++++++++++++++++
+INTa
+key = a
+name = a loc = ARGS func = factorial dec = INT name = $2
+{{{{{{{{{{{{{{{{{{{{{{{{{{
+INTret;INTtret;
+key = ret
+name = ret loc = LOCALS func = factorial dec = INT name = $-1
+key = tret
+name = tret loc = LOCALS func = factorial dec = INT name = $-2
+key = a
+name = a loc = ARGS func = factorial dec = INT name = $2
 ; LABEL FUNC_id_factorial_L
 ; LINK 3
 ;STOREI 1 $T1
 ;NE a $T1 label1
+;STOREF  needs conversion here $3
+
 ; UNLINK
 ; RET
 ;JUMP label2
@@ -21,8 +35,30 @@ a-1
 ;MULTI tret a $T2
 ;STOREI  $T2 ret
 ;LABEL label2
+;STOREF  needs conversion here $3
+
 ; UNLINK
 ; RET
+++++++++++++++++++++++++++++++++
+
+key = ret
+name = ret loc = LOCALS func = factorial dec = INT name = $-1
+key = tret
+name = tret loc = LOCALS func = factorial dec = INT name = $-2
+key = a
+name = a loc = ARGS func = factorial dec = INT name = $2
+{{{{{{{{{{{{{{{{{{{{{{{{{{
+INTnum;INTresult;
+key = ret
+name = ret loc = LOCALS func = factorial dec = INT name = $-1
+key = result
+name = result loc = LOCALS func = main dec = INT name = $-2
+key = num
+name = num loc = LOCALS func = main dec = INT name = $-1
+key = tret
+name = tret loc = LOCALS func = factorial dec = INT name = $-2
+key = a
+name = a loc = ARGS func = factorial dec = INT name = $2
 ; LABEL FUNC_id_main_L
 ; LINK 3
 ;WRITES input
@@ -51,6 +87,8 @@ num
 ;LABEL label4
 ;WRITEI result
 ;WRITES eol
+;STOREF  needs conversion here $3
+
 ; UNLINK
 ; RET
 ;tiny code

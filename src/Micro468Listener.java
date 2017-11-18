@@ -12,6 +12,8 @@ import java.lang.Exception;
 
 public class Micro468Listener extends MicroBaseListener {
 
+    private int returnRegister;
+
     private SymbolsTree parentTree;
     private int blockNumber;
     private int operationNumber;
@@ -25,6 +27,8 @@ public class Micro468Listener extends MicroBaseListener {
     private Stack<String> labelStack1 = new Stack<String>();
     private Stack<String> labelStack2 = new Stack<String>();
     private Stack<Boolean> elsePresentStack = new Stack<Boolean>();
+
+    private HashMap<String, Scope> symbolScope = new HashMap<String, Scope>();
 
     private boolean condFlag;
 
@@ -48,6 +52,7 @@ public class Micro468Listener extends MicroBaseListener {
         tinyRegisterNumber = 0;
         incr_stmt = "";
         elsePresent = false;
+
     }
 
     private String getBlockNumber() {
@@ -162,7 +167,6 @@ public class Micro468Listener extends MicroBaseListener {
         System.out.println("; HALT");
 //        System.out.println("Global Declarations:");
 //        System.out.println(ctx.getChild(0).getText());
-
         pushSymbol(ctx.getChild(0).getText(), parentTree.getParentScope());
     }
 
@@ -471,6 +475,8 @@ public class Micro468Listener extends MicroBaseListener {
     }
 
     @Override public void enterReturn_stmt(MicroParser.Return_stmtContext ctx) {
+        System.out.println(";STOREF needs a change" + " needs conversion here"  + " " + "$" + returnRegister);
+        System.out.println("");
         System.out.println("; UNLINK");
         System.out.println("; RET");
     }
@@ -695,17 +701,18 @@ public class Micro468Listener extends MicroBaseListener {
      */
     @Override
     public void enterFunc_body(MicroParser.Func_bodyContext ctx) { // currentScope
-//        System.out.println("Enter Function Body");
         System.out.println("; LABEL FUNC_id_" + ctx.getParent().getChild(2).getText() + "_L");
 
         int totalRegisters = currentScope.variableMap.size();
-
-        // TODO: Rahul does not understand this
 
         pushSymbol(ctx.getChild(0).getText(), currentScope);
 
         totalRegisters = currentScope.variableMap.size() - totalRegisters + 1;
         System.out.println("; LINK " + totalRegisters);
+
+
+
+
     }
 
     /**
@@ -752,6 +759,83 @@ public class Micro468Listener extends MicroBaseListener {
         parentTree.getCurrentScope().addChild(functionSymbolsTable);
 
         readFunctionParameters(functionParameters, functionSymbolsTable);
+
+        System.out.println("++++++++++++++++++++++++++++++++");
+        String type = "ARGS";
+        System.out.println(functionParameters);
+        addToSymbolScope(functionParameters, functionName, type);
+        printSymbolScope();
+        System.out.println("{{{{{{{{{{{{{{{{{{{{{{{{{{");
+        type = "LOCALS";
+        System.out.println(ctx.getChild(7).getChild(0).getText());
+        addToSymbolScope(ctx.getChild(7).getChild(0).getText(), functionName, type);
+        printSymbolScope();
+
+    }
+
+
+    public void printSymbolScope() {
+        List<String> keys = new ArrayList<String>(symbolScope.keySet());
+        for (int i = 0; i < keys.size(); i++) {
+            System.out.println("key = " + keys.get(i));
+            symbolScope.get(keys.get(i)).print();
+        }
+    }
+
+    public void addToSymbolScope(String parameters, String function, String type) {
+
+//        System.out.println("Inside read Function parameters");
+
+        // TODO: Need to add the functionParameters to the VariableMap
+
+        if(parameters == null || parameters.equals("")) {
+            return;
+        }
+
+        int count = 0;
+        if (type.equals("ARGS")) {
+            count = 2;
+        }
+        else {
+            count = -1;
+        }
+
+        // Only INT and FLOAT are the datatypes of the Function Parameters
+        String[] functionParameters = parameters.split(";");
+
+        String lastType = "INT";
+
+        for(String parameter: functionParameters) {
+            String[] variables = parameter.split(",");
+            for (String variable : variables) {
+                if(variable.startsWith("INT")) {
+                    lastType = "INT";
+                    symbolScope.put(variable.substring(3),
+                            new Scope(variable.substring(3), type, function, "INT", "$" + Integer.toString(count)));
+                }
+                else if (variable.startsWith("FLOAT")) {
+                    lastType = "FLOAT";
+                    symbolScope.put(variable.substring(5),
+                            new Scope(variable.substring(5), type, function, "FLOAT", "$" + Integer.toString(count)));
+                }
+                else {
+                    symbolScope.put(variable,
+                            new Scope(variable, type, function, lastType, "$" + Integer.toString(count)));
+                }
+                if (type.equals("ARGS")) {
+                    count += 1;
+                }
+                else {
+                    count -= 1;
+                }
+            }
+        }
+
+        if (type.equals("ARGS")) {
+            returnRegister = count;
+        }
+
+//        System.out.println("Exit readFunctionParameters");
     }
 
     /**
