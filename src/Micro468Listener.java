@@ -269,17 +269,43 @@ public class Micro468Listener extends MicroBaseListener {
     }
 
     @Override public void enterCall_expr(MicroParser.Call_exprContext ctx) {
-        // System.out.println("==========");
+        System.out.println("==========");
         String function_name = ctx.getChild(0).getText();
 
-        System.out.println("; PUSH");
-        System.out.println("; PUSH arguments");
-        System.out.println("; JSR FUNC_id_" + function_name + "_L");
-        System.out.println("; POP");
-        System.out.println("; POP the value returned");
+        System.out.println(ctx.getChild(2).getText());
+
+//        System.out.println("; PUSH (return value)");
+//        System.out.println("; PUSH arguments");
+//        System.out.println("; JSR FUNC_id_" + function_name + "_L");
+//        System.out.println("; POP");
+//        System.out.println("; POP the value returned");
         // TODO: Not sure:
 
         String[] function_parameters = ctx.getChild(2).getText().split(",");
+        System.out.println("; PUSH (return value)");
+
+        for (int i = 0; i < function_parameters.length; i++) {
+//            System.out.println("param: " + function_parameters[i]);
+//            String postfix = InfixToPostfix.infixToPostfix(function_parameters[i]);
+//            System.out.println("postfix: " + postfix);
+            System.out.println("; PUSH arguments");
+        }
+
+        System.out.println("; JSR FUNC_id_" + function_name + "_L");
+
+        for (int i = 0; i < function_parameters.length; i++) {
+//            System.out.println("param: " + function_parameters[i]);
+//            String postfix = InfixToPostfix.infixToPostfix(function_parameters[i]);
+//            System.out.println("postfix: " + postfix);
+            System.out.println("; POP arguments");
+        }
+
+
+        System.out.println("; POP the value returned");
+
+
+
+
         //System.out.println("function_name = " + function_name);
 //        for (int i = 0; i < function_parameters.length; i++) {
 //            System.out.println("param: " + function_parameters[i]);

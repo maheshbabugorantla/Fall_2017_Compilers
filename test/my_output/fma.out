@@ -1,19 +1,21 @@
-;IR code
-;LABEL add
+; IR code
+; PUSH
+; JSR FUNC_id_main_L
+; HALT
+; LABEL FUNC_id_add_L
+; LINK 2
 ;ADDF a b $T1
-str1: a
-str2: b
-Location: $T1
 ;STOREF  $T1 result
-;RET
-;LABEL multiply
+; UNLINK
+; RET
+; LABEL FUNC_id_multiply_L
+; LINK 2
 ;MULTF a b $T2
-str1: a
-str2: b
-Location: $T2
 ;STOREF  $T2 result
-;RET
-;LABEL main
+; UNLINK
+; RET
+; LABEL FUNC_id_main_L
+; LINK 6
 ;WRITES intro
 ;WRITES first
 ;READF a
@@ -21,6 +23,26 @@ Location: $T2
 ;READF b
 ;WRITES third
 ;READF c
+THIS IS A FUNCTION CALL = multiply(a,b)
+==========
+a,b
+; PUSH (return value)
+; PUSH arguments
+; PUSH arguments
+; JSR FUNC_id_multiply_L
+; POP arguments
+; POP arguments
+; POP the value returned
+THIS IS A FUNCTION CALL = add(multiplyresult,c)
+==========
+multiplyresult,c
+; PUSH (return value)
+; PUSH arguments
+; PUSH arguments
+; JSR FUNC_id_add_L
+; POP arguments
+; POP arguments
+; POP the value returned
 ;WRITEF a
 ;WRITES star
 ;WRITEF b
@@ -29,7 +51,8 @@ Location: $T2
 ;WRITES equal
 ;WRITEF addresult
 ;WRITES eol
-;RET
+; UNLINK
+; RET
 ;tiny code
 str intro "You will be asked for three float numbers\n"
 str first "Please enter the first float number: "

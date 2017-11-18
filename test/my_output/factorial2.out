@@ -10,11 +10,13 @@
 ; RET
 ;JUMP label2
 ;LABEL label1
-THIS IS A FUNCTION CALL = factorial(a-1,a+b*d)
-; PUSH
+THIS IS A FUNCTION CALL = factorial(a-1)
+==========
+a-1
+; PUSH (return value)
 ; PUSH arguments
 ; JSR FUNC_id_factorial_L
-; POP
+; POP arguments
 ; POP the value returned
 ;MULTI tret a $T2
 ;STOREI  $T2 ret
@@ -34,10 +36,12 @@ THIS IS A FUNCTION CALL = factorial(a-1,a+b*d)
 ;STOREI 1 $T5
 ;LE num $T5 label5
 THIS IS A FUNCTION CALL = factorial(num)
-; PUSH
+==========
+num
+; PUSH (return value)
 ; PUSH arguments
 ; JSR FUNC_id_factorial_L
-; POP
+; POP arguments
 ; POP the value returned
 ;JUMP label6
 ;LABEL label5
