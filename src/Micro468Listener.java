@@ -13,6 +13,8 @@ import java.lang.Exception;
 
 public class Micro468Listener extends MicroBaseListener {
 
+    private String currentFunction = "";
+
     private int returnRegister;
 
     private SymbolsTree parentTree;
@@ -46,7 +48,7 @@ public class Micro468Listener extends MicroBaseListener {
     public Micro468Listener() {
         this.parentTree = new SymbolsTree(); // Initializing the Symbol Tree to the GLOBAL Scope
         this.blockNumber = 1;
-        operationNumber = 0;
+        operationNumber = 1;
         labelNumber = 1;
         labelNo = 1;
         condFlag = false;
@@ -98,7 +100,7 @@ public class Micro468Listener extends MicroBaseListener {
 
                    // Adding all the Variable Names
                    for(String variable: variableNames) {
-                       tinyNodeArrayList.add(new TinyNode("var", variable));
+                       //tinyNodeArrayList.add(new TinyNode(";var", variable));
                        Symbol newVariable = new Symbol(variable, "INT");
                        symbolsTable.addSymbol(newVariable);
                    }
@@ -110,7 +112,7 @@ public class Micro468Listener extends MicroBaseListener {
 
                    // Adding all the Variable Names
                    for(String variable: variableNames) {
-                       tinyNodeArrayList.add(new TinyNode("var", variable));
+                       //tinyNodeArrayList.add(new TinyNode(";var", variable));
                        Symbol newVariable = new Symbol(variable, "FLOAT");
                        symbolsTable.addSymbol(newVariable);
 
@@ -161,14 +163,18 @@ public class Micro468Listener extends MicroBaseListener {
      * */
     @Override
     public void enterPgm_body(MicroParser.Pgm_bodyContext ctx) { // ParentScope or GLOBAL
+        pushSymbol(ctx.getChild(0).getText(), parentTree.getParentScope());
+
         // Pushing the Symbols to the GLOBAL Symbol Table
         System.out.println("; IR code");
         System.out.println("; PUSH");
+        tinyNodeArrayList.add(new TinyNode("push"));
         System.out.println("; JSR FUNC_id_main_L");
+        tinyNodeArrayList.add(new TinyNode("jsr", "FUNC_id_main_L"));
         System.out.println("; HALT");
+        tinyNodeArrayList.add(new TinyNode("sys", "halt"));
 //        System.out.println("Global Declarations:");
 //        System.out.println(ctx.getChild(0).getText());
-        pushSymbol(ctx.getChild(0).getText(), parentTree.getParentScope());
     }
 
     @Override public void enterRead_stmt(MicroParser.Read_stmtContext ctx) {
@@ -187,19 +193,24 @@ public class Micro468Listener extends MicroBaseListener {
                 currentType = currentScope.variableMap.get(words[i])[0];
             }
 
+            String word = words[i];
+            if(symbolScope.containsKey(word)) {
+                word = symbolScope.get(word).register;
+            }
+
             if (currentType == "INT") {
                 //System.out.println(";READI " + words[i]);
                 printReadOperation("READI", words[i]);
-                tinyNodeArrayList.add(new TinyNode("sys readi", words[i]));
+                tinyNodeArrayList.add(new TinyNode("sys readi", word));
             }
             else if (currentType == "FLOAT") {
                 //System.out.println(";READF " + words[i]);
                 printReadOperation("READF", words[i]);
-                tinyNodeArrayList.add(new TinyNode("sys readr", words[i]));
+                tinyNodeArrayList.add(new TinyNode("sys readr", word));
             }
             else {
                 System.out.println(";READS " + words[i]);
-                tinyNodeArrayList.add(new TinyNode("sys reads", words[i]));
+                tinyNodeArrayList.add(new TinyNode("sys reads", word));
             }
         }
     }
@@ -227,20 +238,26 @@ public class Micro468Listener extends MicroBaseListener {
                 currentType = currentScope.variableMap.get(words[i])[0];
             }
 
+            String word = words[i];
+            if(symbolScope.containsKey(word)) {
+                word = symbolScope.get(word).register;
+            }
+
             if (currentType == "INT") {
                 //System.out.println(";WRITEI " + words[i]);
                 printWriteOperation("WRITEI", words[i]);
-                tinyNodeArrayList.add(new TinyNode("sys", "writei", words[i]));
+//                tinyNodeArrayList.add(new TinyNode("sys", "writei", words[i]));
+                tinyNodeArrayList.add(new TinyNode("sys", "writei", word));
             }
             else if (currentType == "FLOAT") {
                 //System.out.println(";WRITEF " + words[i]);
                 printWriteOperation("WRITEF", words[i]);
-                tinyNodeArrayList.add(new TinyNode("sys", "writer", words[i]));
+//                tinyNodeArrayList.add(new TinyNode("sys", "writer", words[i]));
+                tinyNodeArrayList.add(new TinyNode("sys", "writer", word));
             }
             else {
                 System.out.println(";WRITES " + words[i]);
-
-                tinyNodeArrayList.add(new TinyNode("sys", "writes", words[i]));
+                tinyNodeArrayList.add(new TinyNode("sys", "writes", word));
             }
         }
     }
@@ -307,63 +324,9 @@ public class Micro468Listener extends MicroBaseListener {
     private void parsingPostfixForReturnPush(String right, String left, String postfix) {
 
         parsePostfixForPush(right, left, postfix, false);
-
-        //String[] words = postfix.split(" ");
-
-        //System.out.println(postfix);
-
-//        if (words.length == 1) {
-//            postfix = postfix.trim();
-//            String register = "";
-//            if (symbolScope.containsKey(postfix)) {
-//                register = symbolScope.get(postfix).register;
-//                if (symbolScope.get(postfix).decl_type.equals("INT")) {
-//                    System.out.println("; STOREI " + register + " $" + returnRegister);
-//                }
-//                else {
-//                    System.out.println("; STOREF " + register + " $" + returnRegister);
-//                }
-//            }
-//            else {
-//                System.out.println("POSTFIX = " + postfix);
-//                register = postfix;
-//
-//                String currentType = "";
-//                if(isVariableinGlobal(postfix)) {
-//                    currentType = parentTree.getCurrentScope().variableMap.get(postfix)[0];
-//                }
-//                else {
-//                    currentType = currentScope.variableMap.get(postfix)[0];
-//                }
-//
-//                if (currentType.equals("INT")) {
-//                    System.out.println("; STOREI " + register + " $" + returnRegister);
-//                }
-//                else {
-//                    System.out.println("; STOREF " + register + " $" + returnRegister);
-//                }
-//            }
-//        }
-//        else {
-//            String register = "!T" + this.operationNumber;
-//            String currentType = "";
-//            if(isVariableinGlobal(register)) {
-//                currentType = parentTree.getCurrentScope().variableMap.get(register)[0];
-//            }
-//            else {
-//                currentType = currentScope.variableMap.get(register)[0];
-//            }
-//            if (currentType.equals("INT")) {
-//                System.out.println("; STOREI " + "!T" + this.operationNumber + " $" + returnRegister);
-//            }
-//            else {
-//                System.out.println("; STOREF " + "!T" + this.operationNumber + " $" + returnRegister);
-//            }
-//        }
     }
 
     @Override public void enterCall_expr(MicroParser.Call_exprContext ctx) {
-        //System.out.println("==========");
         String function_name = ctx.getChild(0).getText();
 
         String left = ctx.getParent().getParent().getParent().getParent().getChild(0).getText();
@@ -373,6 +336,7 @@ public class Micro468Listener extends MicroBaseListener {
 
         String[] function_parameters = ctx.getChild(2).getText().split(",");
         System.out.println("; PUSH (return value)");
+        tinyNodeArrayList.add(new TinyNode("push"));
 
         for (int i = 0; i < function_parameters.length; i++) {
 //            System.out.println("param: " + function_parameters[i]);
@@ -384,12 +348,14 @@ public class Micro468Listener extends MicroBaseListener {
         }
 
         System.out.println("; JSR FUNC_id_" + function_name + "_L");
+        tinyNodeArrayList.add(new TinyNode("jsr", "FUNC_id_" + function_name + "_L"));
 
         for (int i = 0; i < function_parameters.length; i++) {
 //            System.out.println("param: " + function_parameters[i]);
 //            String postfix = InfixToPostfix.infixToPostfix(function_parameters[i]);
 //            System.out.println("postfix: " + postfix);
             System.out.println("; POP");
+            tinyNodeArrayList.add(new TinyNode("pop"));
         }
 
 
@@ -401,18 +367,22 @@ public class Micro468Listener extends MicroBaseListener {
         if (isSymbolScopeInteger(left)) {
 
             parentTree.getCurrentScope().addRegister(location,  "INT", "r" + Integer.toString(this.operationNumber - 2));
-            //tinyRegisterNumber = this.operationNumber - 2;
+            tinyRegisterNumber = this.operationNumber - 2;
 
             System.out.println("; POP " +  location);
+            tinyNodeArrayList.add(new TinyNode("pop", "r" + tinyRegisterNumber));
+            add_reg_operation_stmt_2("move", "r" + tinyRegisterNumber, symbolScope.get(left).register);
             System.out.println("; STOREI " + location + " " + symbolScope.get(left).register);
 
             //add_reg_operation_stmt_2("move", c, location);
         }
         else {
             parentTree.getCurrentScope().addRegister(location,  "FLOAT", "r" + Integer.toString(this.operationNumber - 2));
-            //tinyRegisterNumber = this.operationNumber - 2;
+            tinyRegisterNumber = this.operationNumber - 2;
 
             System.out.println("; POP " +  location);
+            tinyNodeArrayList.add(new TinyNode("pop", "r" + tinyRegisterNumber));
+            add_reg_operation_stmt_2("move", "r" + tinyRegisterNumber, symbolScope.get(left).register);
             System.out.println("; STOREF " + location + " " + symbolScope.get(left).register);
         }
 
@@ -463,6 +433,7 @@ public class Micro468Listener extends MicroBaseListener {
         //System.out.println("split: " + Arrays.toString(words));
         if (words.length == 1) {
             System.out.println("; PUSH " + symbolScope.get(words[0]).register);
+            tinyNodeArrayList.add(new TinyNode("push", symbolScope.get(words[0]).register));
             return;
         }
 
@@ -570,6 +541,7 @@ public class Micro468Listener extends MicroBaseListener {
 //                    return;
 //                }
                 System.out.println("; PUSH " + c);
+                add_reg_operation_stmt_3("push", c);
 //                if (currentType.equals("INT")) {
 //                    //System.out.println(";STOREI " + " " + c + " " + left);
 //                    //printStoreOperation("PUSH", c, left);
@@ -730,9 +702,13 @@ public class Micro468Listener extends MicroBaseListener {
 
     @Override public void enterReturn_stmt(MicroParser.Return_stmtContext ctx) {
         //System.out.println("++++++++++++++++++++++++++");
-        //System.out.println(ctx.getChild(1).getText());
+        //System.out.println(currentFunction);
+        if (currentFunction.equals("main")) {
+            this.returnRegister = 6;
+        }
         String rightExpr = ctx.getChild(1).getText();
         String postfix = InfixToPostfix.infixToPostfix(rightExpr);
+
 
         if (isNumeric(postfix)) {
 
@@ -743,6 +719,12 @@ public class Micro468Listener extends MicroBaseListener {
                 System.out.println(";STOREI " + postfix + " " + location);
                 parentTree.getCurrentScope().addRegister(location,  "INT", "r" + Integer.toString(this.operationNumber - 2));
                 System.out.println("; STOREI " + location + " $" + returnRegister);
+
+                tinyRegisterNumber = this.operationNumber - 2;
+
+                add_reg_operation_stmt_2("move", postfix, location);
+                add_reg_operation_stmt_2("move", location,  "$" + returnRegister);
+
             }
             else {
                 String location = "!T" + this.operationNumber;
@@ -751,9 +733,17 @@ public class Micro468Listener extends MicroBaseListener {
                 System.out.println(";STOREF " + postfix + " " + location);
                 parentTree.getCurrentScope().addRegister(location,  "FLOAT", "r" + Integer.toString(this.operationNumber - 2));
                 System.out.println("; STOREF " + location + " $" + returnRegister);
+
+                tinyRegisterNumber = this.operationNumber - 2;
+
+                add_reg_operation_stmt_2("move", postfix, location);
+                add_reg_operation_stmt_2("move", location,  "$" + returnRegister);
             }
+
             System.out.println("; UNLINK");
+            tinyNodeArrayList.add(new TinyNode("unlnk"));
             System.out.println("; RET");
+            tinyNodeArrayList.add(new TinyNode("ret"));
             return;
         }
 
@@ -768,9 +758,12 @@ public class Micro468Listener extends MicroBaseListener {
                 register = symbolScope.get(postfix).register;
                 if (symbolScope.get(postfix).decl_type.equals("INT")) {
                     System.out.println("; STOREI " + register + " $" + returnRegister);
+                    add_reg_operation_stmt_2("move", register,  "$" + returnRegister);
                 }
                 else {
                     System.out.println("; STOREF " + register + " $" + returnRegister);
+                    add_reg_operation_stmt_2("move", register,  "$" + returnRegister);
+
                 }
             }
             else {
@@ -787,9 +780,13 @@ public class Micro468Listener extends MicroBaseListener {
 
                 if (currentType.equals("INT")) {
                     System.out.println("; STOREI " + register + " $" + returnRegister);
+                    add_reg_operation_stmt_2("move", register,  "$" + returnRegister);
+
                 }
                 else {
                     System.out.println("; STOREF " + register + " $" + returnRegister);
+                    add_reg_operation_stmt_2("move", register,  "$" + returnRegister);
+
                 }
             }
         }
@@ -807,16 +804,25 @@ public class Micro468Listener extends MicroBaseListener {
                 currentType = currentScope.variableMap.get(register)[0];
             }
             if (currentType.equals("INT")) {
+                tinyRegisterNumber = this.operationNumber - 2;
+
                 System.out.println("; STOREI " + "!T" + Integer.toString(this.operationNumber - 1) + " $" + returnRegister);
+                tinyNodeArrayList.add(new TinyNode("move", "r" + tinyRegisterNumber, " $" + returnRegister));
             }
             else {
+                tinyRegisterNumber = this.operationNumber - 2;
+
                 System.out.println("; STOREF " + "!T" +  Integer.toString(this.operationNumber - 1) + " $" + returnRegister);
+                tinyNodeArrayList.add(new TinyNode("move", "r" + tinyRegisterNumber, " $" + returnRegister));
             }
         }
 
 
         System.out.println("; UNLINK");
+        tinyNodeArrayList.add(new TinyNode("unlnk"));
         System.out.println("; RET");
+        tinyNodeArrayList.add(new TinyNode("ret"));
+
     }
 
 
@@ -860,21 +866,23 @@ public class Micro468Listener extends MicroBaseListener {
         // TODO: Need to refactor this
         if (str1.trim().startsWith("!")) {
             if (parentTree.getCurrentScope().variableMap.get(str1)[1] == null) {
+                if (symbolScope.containsKey(str1)) {
+                    str1 = symbolScope.get(str1).register;
+                }
                 tinyNodeArrayList.add(new TinyNode(operation, str1, parentTree.getCurrentScope().variableMap.get(location)[1]));
             } else {
-
-                // printMap(parentTree.getCurrentScope().variableMap);
-                // printMap(currentScope.variableMap);
                 tinyNodeArrayList.add(new TinyNode(operation, parentTree.getCurrentScope().variableMap.get(str1)[1],
                         parentTree.getCurrentScope().variableMap.get(location)[1]));
             }
         } else {
             if (currentScope.variableMap.get(str1)[1] == null) {
+                if (symbolScope.containsKey(str1)) {
+                    str1 = symbolScope.get(str1).register;
+                }
                 tinyNodeArrayList.add(new TinyNode(operation, str1, parentTree.getCurrentScope().variableMap.get(location)[1]));
             } else {
                 tinyNodeArrayList.add(new TinyNode(operation, parentTree.getCurrentScope().variableMap.get(str1)[1],
                         parentTree.getCurrentScope().variableMap.get(location)[1]));
-
             }
         }
     }
@@ -1008,6 +1016,21 @@ public class Micro468Listener extends MicroBaseListener {
         }
     }
 
+    private void add_reg_operation_stmt_3(String operation, String str1) {
+        String check1 = str1;
+        if (parentTree.getCurrentScope().variableMap.containsKey(check1)) {
+            if (parentTree.getCurrentScope().variableMap.get(check1)[1] != null) {
+                check1 = parentTree.getCurrentScope().variableMap.get(check1)[1];
+            }
+        }
+
+        if (symbolScope.containsKey(check1)) {
+            check1 = symbolScope.get(check1).register;
+        }
+
+        tinyNodeArrayList.add(new TinyNode(operation, check1));
+    }
+
     private void add_reg_operation_stmt_2(String operation, String str1, String location) {
         String check1 = str1;
         String check2 = location;
@@ -1020,6 +1043,23 @@ public class Micro468Listener extends MicroBaseListener {
             if (parentTree.getCurrentScope().variableMap.get(check2)[1] != null) {
                 check2 = parentTree.getCurrentScope().variableMap.get(check2)[1];
             }
+        }
+
+        if (symbolScope.containsKey(check1)) {
+            check1 = symbolScope.get(check1).register;
+        }
+
+
+        if (symbolScope.containsKey(check2)) {
+            check2 = symbolScope.get(check2).register;
+        }
+
+        if (check1.startsWith("$") && check2.startsWith("$") && operation.equals("move")) {
+            String reg = "r" + Integer.toString(this.operationNumber - 2);
+            tinyNodeArrayList.add(new TinyNode(operation, check1, reg));
+            tinyNodeArrayList.add(new TinyNode(operation, reg, check2));
+
+            return;
         }
 
         tinyNodeArrayList.add(new TinyNode(operation, check1, check2));
@@ -1044,7 +1084,7 @@ public class Micro468Listener extends MicroBaseListener {
         // System.out.println(ctx.getChild(0).getText());
         System.out.println(";tiny code");
         printTinyNodeList(tinyNodeArrayList);
-        System.out.println("sys halt");
+        //System.out.println("sys halt");
 
     }
 
@@ -1053,7 +1093,12 @@ public class Micro468Listener extends MicroBaseListener {
      */
     @Override
     public void enterFunc_body(MicroParser.Func_bodyContext ctx) { // currentScope
-        System.out.println("; LABEL FUNC_id_" + ctx.getParent().getChild(2).getText() + "_L");
+
+        String functionName =  ctx.getParent().getChild(2).getText();
+        currentFunction = functionName;
+
+        System.out.println("; LABEL FUNC_id_" + functionName + "_L");
+        tinyNodeArrayList.add(new TinyNode("label", "FUNC_id_" + functionName + "_L"));
 
         int totalRegisters = currentScope.variableMap.size();
 
@@ -1061,10 +1106,7 @@ public class Micro468Listener extends MicroBaseListener {
 
         totalRegisters = currentScope.variableMap.size() - totalRegisters + 1;
         System.out.println("; LINK " + totalRegisters);
-
-
-
-
+        tinyNodeArrayList.add(new TinyNode("link", Integer.toString(totalRegisters)));
     }
 
     /**
@@ -1080,6 +1122,11 @@ public class Micro468Listener extends MicroBaseListener {
 //        // across a return statement rather than the end of a function
 //
 //         */
+//
+//        System.out.println("; UNLINK");
+//        tinyNodeArrayList.add(new TinyNode("unlnk"));
+//        System.out.println("; RET");
+//        tinyNodeArrayList.add(new TinyNode("ret"));
 //    }
 
     /**
@@ -1098,7 +1145,6 @@ public class Micro468Listener extends MicroBaseListener {
 
         // TODO: Tiny
         //System.out.println(";LABEL " + functionName);
-        tinyNodeArrayList.add(new TinyNode("label", functionName));
 
 //        System.out.println("Function Name: " + functionName);
 //        System.out.println("Function Parameters: " + functionParameters);
@@ -1419,6 +1465,11 @@ public class Micro468Listener extends MicroBaseListener {
 
         String tinyReg = "r" + (this.operationNumber - 1);
 
+
+        //parentTree.getCurrentScope().printSymbolTable();
+
+        //System.out.println(currentScope.variableMap.containsKey(rightOp));
+
         // If the rightOperand is either a variable or a register i.e. $Tn
         if (parentTree.getCurrentScope().variableMap.containsKey(rightOp)) {
 
@@ -1426,27 +1477,52 @@ public class Micro468Listener extends MicroBaseListener {
             if(rightOp.trim().startsWith("!")) {
                 if(isVariableinGlobal(leftOp)) {
                     if (parentTree.getCurrentScope().variableMap.get(leftOp)[0].equals("FLOAT")) {
+                        if (symbolScope.containsKey(leftOp)) {
+                            leftOp = symbolScope.get(leftOp).register;
+                        }
+
                         tinyNodeArrayList.add(new TinyNode("cmpr", leftOp, "r" + (this.operationNumber - 2)));
+                        System.out.println("cmpr = " + leftOp + "1");
                     }
                     else {
+                        if (symbolScope.containsKey(leftOp)) {
+                            leftOp = symbolScope.get(leftOp).register;
+                        }
+
                         tinyNodeArrayList.add(new TinyNode("cmpi", leftOp, "r" + (this.operationNumber - 2)));
+                        System.out.println("cmpi = " + leftOp + "2");
+
                     }
                 }
                 else {
                     if (currentScope.variableMap.get(leftOp)[0].equals("FLOAT")) {
+                        if (symbolScope.containsKey(leftOp)) {
+                            leftOp = symbolScope.get(leftOp).register;
+                        }
+
                         tinyNodeArrayList.add(new TinyNode("cmpr", leftOp, "r" + (this.operationNumber - 2)));
                     }
                     else {
+                        if (symbolScope.containsKey(leftOp)) {
+                            leftOp = symbolScope.get(leftOp).register;
+                        }
+
                         tinyNodeArrayList.add(new TinyNode("cmpi", leftOp, "r" + (this.operationNumber - 2)));
                     }
                 }
             }
             else {
                 if (parentTree.getCurrentScope().variableMap.get(leftOp)[0].equals("FLOAT")) {
+                    if (symbolScope.containsKey(leftOp)) {
+                        leftOp = symbolScope.get(leftOp).register;
+                    }
                     tinyNodeArrayList.add(new TinyNode("move", rightOp, "r" + randomTiny));
                     tinyNodeArrayList.add(new TinyNode("cmpr", leftOp, "r" + randomTiny));
                 }
                 else {
+                    if (symbolScope.containsKey(leftOp)) {
+                        leftOp = symbolScope.get(leftOp).register;
+                    }
                     tinyNodeArrayList.add(new TinyNode("move", rightOp, "r" + randomTiny));
                     tinyNodeArrayList.add(new TinyNode("cmpi", leftOp, "r" + randomTiny));
                 }
@@ -1456,14 +1532,26 @@ public class Micro468Listener extends MicroBaseListener {
 
             IRreg = rightOp;
         }
-        else if(isInteger(rightOp)) { // rightOp is an INT
-            //System.out.println(";STOREI " + rightOp + " " + IRreg);
+        else if(isInteger(leftOp) || isInteger(rightOp)) {
+            if (symbolScope.containsKey(leftOp)) {
+                leftOp = symbolScope.get(leftOp).register;
+            }
+
             printStoreOperation("STOREI", rightOp, IRreg);
+
+            //System.out.println("-----------------------" +  tinyReg + " " + leftOp + " " + rightOp);
+
             add_reg_operation_stmt_2("move", rightOp, tinyReg);
             tinyNodeArrayList.add(new TinyNode("cmpi", leftOp, tinyReg));
             this.operationNumber += 1;
         } else {
-            //System.out.println(";STOREF " + rightOp + " " + IRreg);
+            if (symbolScope.containsKey(leftOp)) {
+                leftOp = symbolScope.get(leftOp).register;
+            }
+
+            //System.out.println("++++++++++++++++++++++" +  tinyReg + " " + leftOp + " " + rightOp);
+
+
             printStoreOperation("STOREF", rightOp, IRreg);
             add_reg_operation_stmt_2("move", rightOp, tinyReg);
             tinyNodeArrayList.add(new TinyNode("cmpr", leftOp, tinyReg));

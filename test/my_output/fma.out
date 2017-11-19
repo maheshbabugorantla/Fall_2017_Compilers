@@ -4,15 +4,15 @@
 ; HALT
 ; LABEL FUNC_id_add_L
 ; LINK 2
-;ADDF $2 $3 !T0
-; STOREF !T0 $-1
+;ADDF $2 $3 !T1
+; STOREF !T1 $-1
 ; STOREF $-1 $4
 ; UNLINK
 ; RET
 ; LABEL FUNC_id_multiply_L
 ; LINK 2
-;MULTF $2 $3 !T1
-; STOREF !T1 $-1
+;MULTF $2 $3 !T2
+; STOREF !T2 $-1
 ; STOREF $-1 $4
 ; UNLINK
 ; RET
@@ -31,16 +31,16 @@
 ; JSR FUNC_id_multiply_L
 ; POP
 ; POP
-; POP !T2
-; STOREF !T2 $-5
+; POP !T3
+; STOREF !T3 $-5
 ; PUSH (return value)
 ; PUSH $-5
 ; PUSH $-3
 ; JSR FUNC_id_add_L
 ; POP
 ; POP
-; POP !T3
-; STOREF !T3 $-4
+; POP !T4
+; STOREF !T4 $-4
 ; WRITEF $-1
 ;WRITES star
 ; WRITEF $-2
@@ -49,8 +49,8 @@
 ;WRITES equal
 ; WRITEF $-4
 ;WRITES eol
-;STOREI 0 !T4
-; STOREI !T4 $4
+;STOREI 0 !T5
+; STOREI !T5 $6
 ; UNLINK
 ; RET
 ;tiny code
@@ -62,35 +62,61 @@ str eol "\n"
 str star "*"
 str plus "+"
 str equal "="
-label add
-var result
-move a r-1
-addr b r-1
-move r-1 result
-label multiply
-var result
-move a r0
-mulr b r0
-move r0 result
-label main
-var a
-var b
-var c
-var addresult
-var multiplyresult
+push
+jsr FUNC_id_main_L
+sys halt
+label FUNC_id_add_L
+link 2
+move $2 r0
+addr $3 r0
+move r0 $-1
+move $-1 r0
+move r0 $4
+unlnk
+ret
+label FUNC_id_multiply_L
+link 2
+move $2 r1
+mulr $3 r1
+move r1 $-1
+move $-1 r1
+move r1 $4
+unlnk
+ret
+label FUNC_id_main_L
+link 6
 sys writes intro
 sys writes first
-sys readr a
+sys readr $-1
 sys writes second
-sys readr b
+sys readr $-2
 sys writes third
-sys readr c
-sys writer a
+sys readr $-3
+push
+push $-1
+push $-2
+jsr FUNC_id_multiply_L
+pop
+pop
+pop r2
+move r2 $-5
+push
+push $-5
+push $-3
+jsr FUNC_id_add_L
+pop
+pop
+pop r3
+move r3 $-4
+sys writer $-1
 sys writes star
-sys writer b
+sys writer $-2
 sys writes plus
-sys writer c
+sys writer $-3
 sys writes equal
-sys writer addresult
+sys writer $-4
 sys writes eol
-sys halt
+move 0 r4
+move r4 $6
+unlnk
+ret

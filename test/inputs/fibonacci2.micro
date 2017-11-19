@@ -13,7 +13,7 @@ BEGIN
 			ret2 := F(n-2);
 			RETURN ret1+ret2;
 		ELSE
-            IF (n = 0)   --This is a comment
+            IF (n = 0)
                 RETURN 0;
             ELSE
                 IF (n = 1)

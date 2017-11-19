@@ -19,6 +19,12 @@ public class TinyNode {
         this.register2 = register2;
     }
 
+    public TinyNode(String opCode) {
+        this.opCode = opCode;
+        this.register1 = null;
+        this.register2 = null;
+    }
+
     public String getOpCode() {
         return this.opCode;
     }
@@ -33,6 +39,9 @@ public class TinyNode {
 
     @Override
     public String toString() {
+        if (register1 == null && register2 == null) {
+            return this.opCode;
+        }
 
         /* register2 is null for opCode for only Variable declaration 'var' and 'sys halt' */
         if (register2 == null) {
