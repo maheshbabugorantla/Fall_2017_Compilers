@@ -18,10 +18,10 @@ Micro.g4 is the grammar file that you should edit and Micro.java will be your ma
 - [x] [***Step 0: Test submission***](https://github.com/ECE468/468project-just-in-time-droids/tree/step0-submission)&nbsp;&nbsp;&nbsp;&nbsp;(Grade: 100)&nbsp;&nbsp; [![Endpoint coverage](http://progressed.io/bar/100?title=done)](#progress)
 - [x] [***Step 1: Scanner***](https://github.com/ECE468/468project-just-in-time-droids/tree/step1-submission)&nbsp;&nbsp;&nbsp;&nbsp;(Grade: 100)&nbsp;&nbsp; [![Endpoint coverage](http://progressed.io/bar/100?title=done)](#progress)
 - [x] [***Step 2: Scanner***](https://github.com/ECE468/468project-just-in-time-droids/tree/step2-submission)&nbsp;&nbsp;&nbsp;&nbsp; (Grade: 100) &nbsp;&nbsp;[![Endpoint coverage](http://progressed.io/bar/100?title=done)](#progress)
-- [ ] ***Step 3: Symbol Table*** &nbsp;&nbsp;&nbsp;&nbsp;(Due Date: September 29, 2017) (In Progress) &nbsp;&nbsp; [![Endpoint coverage](http://progressed.io/bar/80?title=progress)](#build_passing)
-- [ ] ***Step 4:***
-- [ ] ***Step 5:***
-- [ ] ***Step 6:***
+- [x] [***Step 3: Symbol Table***](https://github.com/ECE468/468project-just-in-time-droids/tree/step3-submission) &nbsp;&nbsp;&nbsp;&nbsp; (Grade: 100) &nbsp;&nbsp;[![Endpoint coverage](http://progressed.io/bar/100?title=done)](#progress)
+- [x] [***Step 4: Expressions***](https://github.com/ECE468/468project-just-in-time-droids/tree/step4-submission) &nbsp;&nbsp;&nbsp;&nbsp; (Grade: 100) &nbsp;&nbsp;[![Endpoint coverage](http://progressed.io/bar/100?title=done)](#progress)
+- [x] [***Step 5: Control Structures***](https://github.com/ECE468/468project-just-in-time-droids/tree/step5-submission) &nbsp;&nbsp;&nbsp;&nbsp; (Grade: 100) &nbsp;&nbsp;[![Endpoint coverage](http://progressed.io/bar/100?title=done)](#progress)
+- [ ] [***Step 6: Functions***](https://github.com/ECE468/468project-just-in-time-droids/tree/step6-submission) &nbsp;&nbsp;&nbsp;&nbsp; (Grade: NA) &nbsp;&nbsp;[![Endpoint coverage](http://progressed.io/bar/50?title=done)](#in_progress)
 
 
 ### ***Helpful Links***
