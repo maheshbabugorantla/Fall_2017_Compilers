@@ -58,7 +58,7 @@
 ; STOREI 0 !T14
 ; STOREI !T14 $-1
 ;LABEL label7
-; STOREF $-2 !T15
+; STOREI $-2 !T15
 ;EQ $-1 !T15 label8
 ; PUSH (return value)
 ; PUSH $-1
@@ -149,7 +149,7 @@ move 0 r13
 move r13 $-1
 label label7
 move $-2 r14
-cmpr $-1 r14
+cmpi $-1 r14
 jeq label8
 push
 push $-1

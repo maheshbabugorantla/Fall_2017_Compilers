@@ -1520,6 +1520,7 @@ public class Micro468Listener extends MicroBaseListener {
                     tinyNodeArrayList.add(new TinyNode("cmpr", leftOp, "r" + randomTiny));
                 }
                 else {
+
                     if (symbolScope.containsKey(leftOp)) {
                         leftOp = symbolScope.get(leftOp).register;
                     }
@@ -1532,7 +1533,7 @@ public class Micro468Listener extends MicroBaseListener {
 
             IRreg = rightOp;
         }
-        else if(isInteger(leftOp) || isInteger(rightOp)) {
+        else if(isInteger(leftOp)) {
             if (symbolScope.containsKey(leftOp)) {
                 leftOp = symbolScope.get(leftOp).register;
             }
@@ -1545,17 +1546,28 @@ public class Micro468Listener extends MicroBaseListener {
             tinyNodeArrayList.add(new TinyNode("cmpi", leftOp, tinyReg));
             this.operationNumber += 1;
         } else {
-            if (symbolScope.containsKey(leftOp)) {
-                leftOp = symbolScope.get(leftOp).register;
+
+
+            if (currentScope.variableMap.containsKey(leftOp) && currentScope.variableMap.get(leftOp)[0].equals("INT")) {
+                if (symbolScope.containsKey(leftOp)) {
+                    leftOp = symbolScope.get(leftOp).register;
+                }
+                printStoreOperation("STOREI", rightOp, IRreg);
+                add_reg_operation_stmt_2("move", rightOp, tinyReg);
+                tinyNodeArrayList.add(new TinyNode("cmpi", leftOp, tinyReg));
+                this.operationNumber += 1;
+            }
+            else {
+                if (symbolScope.containsKey(leftOp)) {
+                    leftOp = symbolScope.get(leftOp).register;
+                }
+
+                printStoreOperation("STOREF", rightOp, IRreg);
+                add_reg_operation_stmt_2("move", rightOp, tinyReg);
+                tinyNodeArrayList.add(new TinyNode("cmpr", leftOp, tinyReg));
+                this.operationNumber += 1;
             }
 
-            //System.out.println("++++++++++++++++++++++" +  tinyReg + " " + leftOp + " " + rightOp);
-
-
-            printStoreOperation("STOREF", rightOp, IRreg);
-            add_reg_operation_stmt_2("move", rightOp, tinyReg);
-            tinyNodeArrayList.add(new TinyNode("cmpr", leftOp, tinyReg));
-            this.operationNumber += 1;
         }
 
         if (symbolScope.containsKey(leftOp)) {
