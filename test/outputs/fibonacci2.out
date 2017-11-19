@@ -1,9 +1,5 @@
 ;*****IR Start Unoptimized*****
 ;0>> PUSH
-;1>> PUSH
-;2>> PUSH
-;3>> PUSH
-;4>> PUSH
 ;5>> JSR FUNC_id_main_L
 ;6>> HALT
 ;7>> LABEL FUNC_id_F_L
@@ -13,21 +9,17 @@
 ;11>> STOREI 1 !T1
 ;12>> SUBI $2 !T1 !T2
 ;13>> PUSH
-;14>> PUSHREG
 ;15>> PUSH !T2
 ;16>> JSR FUNC_id_F_L
 ;17>> POP
-;18>> POPREG
 ;19>> POP !T3
 ;20>> STOREI !T3 $-1
 ;21>> STOREI 2 !T4
 ;22>> SUBI $2 !T4 !T5
 ;23>> PUSH
-;24>> PUSHREG
 ;25>> PUSH !T5
 ;26>> JSR FUNC_id_F_L
 ;27>> POP
-;28>> POPREG
 ;29>> POP !T6
 ;30>> STOREI !T6 $-2
 ;31>> ADDI $-1 $-2 !T7
@@ -70,11 +62,9 @@
 ;68>> LABEL FOR_START_L0
 ;69>> EQ $-1 $-2 FOR_OUT_L0
 ;70>> PUSH
-;71>> PUSHREG
 ;72>> PUSH $-1
 ;73>> JSR FUNC_id_F_L
 ;74>> POP
-;75>> POPREG
 ;76>> POP !T16
 ;77>> STOREI !T16 $-3
 ;78>> WRITEI $-1

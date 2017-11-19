@@ -1,9 +1,5 @@
 ;*****IR Start Unoptimized*****
 ;0>> PUSH
-;1>> PUSH
-;2>> PUSH
-;3>> PUSH
-;4>> PUSH
 ;5>> JSR FUNC_id_main_L
 ;6>> HALT
 ;7>> LABEL FUNC_id_add_L
@@ -13,6 +9,13 @@
 ;11>> STOREF $-1 $8
 ;12>> UNLINK
 ;13>> RET
+;55>> LABEL FUNC_id_multiply_L
+;56>> LINK 2
+;57>> MULTF $3 $2 !T1
+;58>> STOREF !T1 $-1
+;59>> STOREF $-1 $8
+;60>> UNLINK
+;61>> RET
 ;14>> LABEL FUNC_id_main_L
 ;15>> LINK 6
 ;16>> WRITES id_intro
@@ -23,23 +26,19 @@
 ;21>> WRITES id_third
 ;22>> READF $-3
 ;23>> PUSH
-;24>> PUSHREG
 ;25>> PUSH $-1
 ;26>> PUSH $-2
 ;27>> JSR FUNC_id_multiply_L
 ;28>> POP
 ;29>> POP
-;30>> POPREG
 ;31>> POP !T2
 ;32>> STOREF !T2 $-5
 ;33>> PUSH
-;34>> PUSHREG
 ;35>> PUSH $-5
 ;36>> PUSH $-3
 ;37>> JSR FUNC_id_add_L
 ;38>> POP
 ;39>> POP
-;40>> POPREG
 ;41>> POP !T3
 ;42>> STOREF !T3 $-4
 ;43>> WRITEF $-1
@@ -54,13 +53,6 @@
 ;52>> STOREI !T4 $6
 ;53>> UNLINK
 ;54>> RET
-;55>> LABEL FUNC_id_multiply_L
-;56>> LINK 2
-;57>> MULTF $3 $2 !T1
-;58>> STOREF !T1 $-1
-;59>> STOREF $-1 $8
-;60>> UNLINK
-;61>> RET
 ;*****IR End Unoptimized*****
 ;*****Start Tiny Code Unoptimized*****
 ;str id_intro "You will be asked for three float numbers\n"
