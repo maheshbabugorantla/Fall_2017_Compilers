@@ -1,9 +1,5 @@
 ;*****IR Start Unoptimized*****
 ;0>> PUSH
-;1>> PUSH
-;2>> PUSH
-;3>> PUSH
-;4>> PUSH
 ;5>> JSR FUNC_id_main_L
 ;6>> HALT
 ;7>> LABEL FUNC_id_factorial_L
@@ -19,11 +15,9 @@
 ;17>> STOREI 1 !T2
 ;18>> SUBI $2 !T2 !T3
 ;19>> PUSH
-;20>> PUSHREG
 ;21>> PUSH !T3
 ;22>> JSR FUNC_id_factorial_L
 ;23>> POP
-;24>> POPREG
 ;25>> POP !T4
 ;26>> STOREI !T4 $-2
 ;27>> MULTI $-2 $2 !T5
@@ -45,11 +39,9 @@
 ;43>> STOREI 1 !T8
 ;44>> LE $-1 !T8 IF_ELSE_L1
 ;45>> PUSH
-;46>> PUSHREG
 ;47>> PUSH $-1
 ;48>> JSR FUNC_id_factorial_L
 ;49>> POP
-;50>> POPREG
 ;51>> POP !T9
 ;52>> STOREI !T9 $-2
 ;53>> JUMP IF_END_L1

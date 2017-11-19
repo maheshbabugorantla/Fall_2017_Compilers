@@ -5,7 +5,7 @@
 ; LABEL FUNC_id_factorial_L
 ; LINK 3
 ; STOREI 1 !T0
-;NE a !T0 label1
+;NE $2 !T0 label1
 ;STOREI 1 !T1
 ; STOREI !T1 $3
 ; UNLINK
@@ -13,12 +13,15 @@
 ;JUMP label2
 ;LABEL label1
 ; PUSH (return value)
-; PUSH arguments
+;STOREI 1 !T2
+;SUBI $2 !T2 !T3
+; PUSH !T3
 ; JSR FUNC_id_factorial_L
-; POP arguments
-; POP the value returned
-;MULTI $-2 $2 !T2
-; STOREI !T2 $-1
+; POP
+; POP !T4
+; STOREI !T4 $-2
+;MULTI $-2 $2 !T5
+; STOREI !T5 $-1
 ;LABEL label2
 ; STOREI $-1 $3
 ; UNLINK
@@ -27,29 +30,30 @@
 ; LINK 3
 ;WRITES input
 ; READI $-1
-; STOREI 1 !T3
-;NE num !T3 label3
-;STOREI 1 !T4
-;STOREI !T4 result
+; STOREI 1 !T6
+;NE $-1 !T6 label3
+; STOREI 1 !T7
+; STOREI !T7 $-2
 ;JUMP label4
 ;LABEL label3
-; STOREI 1 !T5
-;LE num !T5 label5
+; STOREI 1 !T8
+;LE $-1 !T8 label5
 ; PUSH (return value)
-; PUSH arguments
+; PUSH $-1
 ; JSR FUNC_id_factorial_L
-; POP arguments
-; POP the value returned
+; POP
+; POP !T9
+; STOREI !T9 $-2
 ;JUMP label6
 ;LABEL label5
-;STOREI 0 !T6
-;STOREI !T6 result
+; STOREI 0 !T10
+; STOREI !T10 $-2
 ;LABEL label6
 ;LABEL label4
 ; WRITEI $-2
 ;WRITES eol
-;STOREI 0 !T7
-; STOREI !T7 $3
+;STOREI 0 !T11
+; STOREI !T11 $3
 ; UNLINK
 ; RET
 ;tiny code
@@ -63,29 +67,32 @@ cmpi a r-1
 jne label1
 jmp label2
 label label1
-move tret r1
-muli a r1
-move r1 ret
+move 1 r1
+move a r2
+subi r1 r2
+move tret r4
+muli a r4
+move r4 ret
 label label2
 label main
 var num
 var result
 sys writes input
 sys readi num
-move 1 r2
-cmpi num r2
+move 1 r5
+cmpi num r5
 jne label3
-move 1 r3
-move r3 result
+move 1 r6
+move r6 result
 jmp label4
 label label3
-move 1 r4
-cmpi num r4
+move 1 r7
+cmpi num r7
 jle label5
 jmp label6
 label label5
-move 0 r5
-move r5 result
+move 0 r9
+move r9 result
 label label6
 label label4
 sys writei result

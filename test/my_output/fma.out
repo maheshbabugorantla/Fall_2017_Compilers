@@ -26,19 +26,21 @@
 ;WRITES third
 ; READF $-3
 ; PUSH (return value)
-; PUSH arguments
-; PUSH arguments
+; PUSH $-1
+; PUSH $-2
 ; JSR FUNC_id_multiply_L
-; POP arguments
-; POP arguments
-; POP the value returned
+; POP
+; POP
+; POP !T2
+; STOREF !T2 $-5
 ; PUSH (return value)
-; PUSH arguments
-; PUSH arguments
+; PUSH $-5
+; PUSH $-3
 ; JSR FUNC_id_add_L
-; POP arguments
-; POP arguments
-; POP the value returned
+; POP
+; POP
+; POP !T3
+; STOREF !T3 $-4
 ; WRITEF $-1
 ;WRITES star
 ; WRITEF $-2
@@ -47,8 +49,8 @@
 ;WRITES equal
 ; WRITEF $-4
 ;WRITES eol
-;STOREI 0 !T2
-; STOREI !T2 $4
+;STOREI 0 !T4
+; STOREI !T4 $4
 ; UNLINK
 ; RET
 ;tiny code

@@ -1,3 +1,4 @@
+//import com.sun.org.apache.xpath.internal.SourceTree;
 import org.antlr.v4.runtime.misc.NotNull;
 
 import java.io.*;
@@ -273,6 +274,9 @@ public class Micro468Listener extends MicroBaseListener {
         if(isFunctionCall(right)) {
             // TODO: Handle function call
             //System.out.println("THIS IS A FUNCTION CALL: " + left + " " + right);
+            //System.out.println(ctx.getChild(0).getChild(2).getChild(1).getText());
+            //System.out.println(ctx.getChild(0).getChild(2).getChild(1).getText());
+            //System.out.println(ctx.getChild(0).getChild(2).getChild(1).getText());
             return;
         }
 
@@ -292,17 +296,79 @@ public class Micro468Listener extends MicroBaseListener {
 //        System.out.println("Exit Assign Stmt");
     }
 
+
+    private boolean isSymbolScopeInteger(String name) {
+        if (symbolScope.get(name).decl_type.equals("INT")) {
+            return true;
+        }
+        return false;
+    }
+
+    private void parsingPostfixForReturnPush(String right, String left, String postfix) {
+
+        parsePostfixForPush(right, left, postfix, false);
+
+        //String[] words = postfix.split(" ");
+
+        //System.out.println(postfix);
+
+//        if (words.length == 1) {
+//            postfix = postfix.trim();
+//            String register = "";
+//            if (symbolScope.containsKey(postfix)) {
+//                register = symbolScope.get(postfix).register;
+//                if (symbolScope.get(postfix).decl_type.equals("INT")) {
+//                    System.out.println("; STOREI " + register + " $" + returnRegister);
+//                }
+//                else {
+//                    System.out.println("; STOREF " + register + " $" + returnRegister);
+//                }
+//            }
+//            else {
+//                System.out.println("POSTFIX = " + postfix);
+//                register = postfix;
+//
+//                String currentType = "";
+//                if(isVariableinGlobal(postfix)) {
+//                    currentType = parentTree.getCurrentScope().variableMap.get(postfix)[0];
+//                }
+//                else {
+//                    currentType = currentScope.variableMap.get(postfix)[0];
+//                }
+//
+//                if (currentType.equals("INT")) {
+//                    System.out.println("; STOREI " + register + " $" + returnRegister);
+//                }
+//                else {
+//                    System.out.println("; STOREF " + register + " $" + returnRegister);
+//                }
+//            }
+//        }
+//        else {
+//            String register = "!T" + this.operationNumber;
+//            String currentType = "";
+//            if(isVariableinGlobal(register)) {
+//                currentType = parentTree.getCurrentScope().variableMap.get(register)[0];
+//            }
+//            else {
+//                currentType = currentScope.variableMap.get(register)[0];
+//            }
+//            if (currentType.equals("INT")) {
+//                System.out.println("; STOREI " + "!T" + this.operationNumber + " $" + returnRegister);
+//            }
+//            else {
+//                System.out.println("; STOREF " + "!T" + this.operationNumber + " $" + returnRegister);
+//            }
+//        }
+    }
+
     @Override public void enterCall_expr(MicroParser.Call_exprContext ctx) {
         //System.out.println("==========");
         String function_name = ctx.getChild(0).getText();
 
-        //System.out.println(ctx.getChild(2).getText());
+        String left = ctx.getParent().getParent().getParent().getParent().getChild(0).getText();
+        String right = ctx.getParent().getParent().getParent().getParent().getChild(2).getText();
 
-//        System.out.println("; PUSH (return value)");
-//        System.out.println("; PUSH arguments");
-//        System.out.println("; JSR FUNC_id_" + function_name + "_L");
-//        System.out.println("; POP");
-//        System.out.println("; POP the value returned");
         // TODO: Not sure:
 
         String[] function_parameters = ctx.getChild(2).getText().split(",");
@@ -310,9 +376,11 @@ public class Micro468Listener extends MicroBaseListener {
 
         for (int i = 0; i < function_parameters.length; i++) {
 //            System.out.println("param: " + function_parameters[i]);
-//            String postfix = InfixToPostfix.infixToPostfix(function_parameters[i]);
+            String postfix = InfixToPostfix.infixToPostfix(function_parameters[i]);
 //            System.out.println("postfix: " + postfix);
-            System.out.println("; PUSH arguments");
+
+            parsingPostfixForReturnPush(right, left, postfix);
+            //System.out.println("; PUSH arguments");
         }
 
         System.out.println("; JSR FUNC_id_" + function_name + "_L");
@@ -321,13 +389,32 @@ public class Micro468Listener extends MicroBaseListener {
 //            System.out.println("param: " + function_parameters[i]);
 //            String postfix = InfixToPostfix.infixToPostfix(function_parameters[i]);
 //            System.out.println("postfix: " + postfix);
-            System.out.println("; POP arguments");
+            System.out.println("; POP");
         }
 
 
-        System.out.println("; POP the value returned");
+        //System.out.println("; POP the value returned");
 
+        String location = "!T" + this.operationNumber;
+        this.operationNumber += 1;
 
+        if (isSymbolScopeInteger(left)) {
+
+            parentTree.getCurrentScope().addRegister(location,  "INT", "r" + Integer.toString(this.operationNumber - 2));
+            //tinyRegisterNumber = this.operationNumber - 2;
+
+            System.out.println("; POP " +  location);
+            System.out.println("; STOREI " + location + " " + symbolScope.get(left).register);
+
+            //add_reg_operation_stmt_2("move", c, location);
+        }
+        else {
+            parentTree.getCurrentScope().addRegister(location,  "FLOAT", "r" + Integer.toString(this.operationNumber - 2));
+            //tinyRegisterNumber = this.operationNumber - 2;
+
+            System.out.println("; POP " +  location);
+            System.out.println("; STOREF " + location + " " + symbolScope.get(left).register);
+        }
 
 
         //System.out.println("function_name = " + function_name);
@@ -364,6 +451,140 @@ public class Micro468Listener extends MicroBaseListener {
     private static boolean isOperator(String c) {
         return c.equals("+") || c.equals("-") || c.equals("*") || c.equals("/") || c.equals("^") || c.equals("(") || c.equals(")");
     }
+
+    private void parsePostfixForPush(String right, String left, String postfix, boolean push) {
+        //System.out.println("Parse Postfix");
+
+//        System.out.println("Left: " + left + " Right: " + right + " PostFix: " + postfix);
+
+        Stack<String> stack = new Stack<String>();
+
+        String[] words = postfix.split(" ");
+        //System.out.println("split: " + Arrays.toString(words));
+        if (words.length == 1) {
+            System.out.println("; PUSH " + symbolScope.get(words[0]).register);
+            return;
+        }
+
+        //stack.push(words[0]);
+        //stack.push(words[1]);
+
+        for (int i = 0; i < words.length; i++) {
+            String c = words[i];
+
+            boolean foundNumber = false;
+
+            if (isNumeric((c))) {
+
+                // System.out.println("isNumeric");
+
+                foundNumber = true;
+                String location = "!T" + this.operationNumber;
+                this.operationNumber += 1;
+
+                if (isInteger(c)) {
+                    //parentTree.getCurrentScope().addRegister(location, "INT");
+//                    System.out.println("scopeName: " + parentTree.getCurrentScope().getBlockScope());
+//                    System.out.println("Location: " + location);
+                    parentTree.getCurrentScope().addRegister(location,  "INT", "r" + Integer.toString(this.operationNumber - 2));
+                    tinyRegisterNumber = this.operationNumber - 2;
+                    stack.push(location);
+
+                    System.out.println(";STOREI " + c + " " + location);
+                    add_reg_operation_stmt_2("move", c, location);
+                }
+                else {
+                    System.out.println("scopeName: " + parentTree.getCurrentScope().getBlockScope());
+                    System.out.println("Location: " + location);
+
+                    //parentTree.getCurrentScope().addRegister(location, "FLOAT");
+                    parentTree.getCurrentScope().addRegister(location,  "FLOAT", "r" + Integer.toString(this.operationNumber - 2));
+                    tinyRegisterNumber = this.operationNumber - 2;
+                    stack.push(location);
+
+                    //System.out.println(";STOREF " + c + " " + location);
+                    printStoreOperation("STOREF", c, location);
+                    add_reg_operation_stmt_2("move", c, location);
+                }
+            }
+
+            if (isOperator(c)) {
+                // System.out.println("isOperator");
+                String val2 = stack.pop();
+                String val1 = stack.pop();
+                String location = "!T" + this.operationNumber;
+                this.operationNumber += 1;
+                // System.out.println("CurrentScope: " + currentScope.getBlockScope());
+                //currentScope.printSymbolTable();
+                //String currentType = parentTree.getCurrentScope().variableMap.get(val1)[0];
+                String currentType = currentScope.variableMap.get(val1)[0];
+                //System.out.println("currentType: " + currentType);
+                parentTree.getCurrentScope().addRegister(location, currentType, "r" + Integer.toString(this.operationNumber - 2));
+                //currentScope.addRegister(location, currentType, "r" + Integer.toString(this.operationNumber - 2));
+                tinyRegisterNumber = this.operationNumber - 2;
+
+                choose_operation(c, currentType, val1, val2, location);
+
+                stack.push(location);
+            }
+            else if (!foundNumber) {
+                // System.out.println("foundNumber");
+                stack.push(c);
+            }
+        }
+
+        while (!stack.isEmpty()) {
+            String c = stack.pop();
+
+//            System.out.println("c: " + c);
+
+            if (isOperator(c)) {
+                String val2 = stack.pop();
+                String val1 = stack.pop();
+                String location = "!T" + this.operationNumber;
+                this.operationNumber += 1;
+
+                //String currentType = parentTree.getCurrentScope().variableMap.get(val1)[0];
+                String currentType = currentScope.variableMap.get(val1)[0];
+
+                parentTree.getCurrentScope().addRegister(location, currentType, "r" + Integer.toString(this.operationNumber - 2));
+                //currentScope.addRegister(location, currentType, "r" + Integer.toString(this.operationNumber - 2));
+
+                tinyRegisterNumber = this.operationNumber - 2;
+
+                choose_operation(c, currentType, val1, val2, location);
+
+                stack.push(location);
+            }
+            else {
+
+               // String currentType;
+
+//                if(isVariableinGlobal(c)) {
+//                    currentType = parentTree.getCurrentScope().variableMap.get(c)[0];
+//                }
+//                else {
+//                    currentType = currentScope.variableMap.get(c)[0];
+//                }
+//                if (left == null) {
+//                    return;
+//                }
+                System.out.println("; PUSH " + c);
+//                if (currentType.equals("INT")) {
+//                    //System.out.println(";STOREI " + " " + c + " " + left);
+//                    //printStoreOperation("PUSH", c, left);
+//                    System.out.println("PUSH " + " " + c);
+//                    //add_reg_operation_stmt_2("move", c, left);
+//                }
+//                else {
+//                    //System.out.println(";STOREF " + " " + c + " " + left);
+//                    printStoreOperation("STOREF", c, left);
+//                    //add_reg_operation_stmt_2("move", c, left);
+//                }
+            }
+        }
+    }
+
 
     private void parsePostfix(String right, String left, String postfix) {
         //System.out.println("Parse Postfix");
@@ -515,8 +736,6 @@ public class Micro468Listener extends MicroBaseListener {
 
         if (isNumeric(postfix)) {
 
-
-
             if (isInteger(postfix)) {
                 String location = "!T" + this.operationNumber;
                 this.operationNumber += 1;
@@ -575,8 +794,12 @@ public class Micro468Listener extends MicroBaseListener {
             }
         }
         else {
-            String register = "!T" + this.operationNumber;
+            String register = "!T" + Integer.toString(this.operationNumber - 1);
             String currentType = "";
+            //System.out.println(register);
+            //parentTree.getCurrentScope().printSymbolTable();
+            //currentScope.printSymbolTable();
+
             if(isVariableinGlobal(register)) {
                 currentType = parentTree.getCurrentScope().variableMap.get(register)[0];
             }
@@ -584,10 +807,10 @@ public class Micro468Listener extends MicroBaseListener {
                 currentType = currentScope.variableMap.get(register)[0];
             }
             if (currentType.equals("INT")) {
-                System.out.println("; STOREI " + "!T" + this.operationNumber + " $" + returnRegister);
+                System.out.println("; STOREI " + "!T" + Integer.toString(this.operationNumber - 1) + " $" + returnRegister);
             }
             else {
-                System.out.println("; STOREF " + "!T" + this.operationNumber + " $" + returnRegister);
+                System.out.println("; STOREF " + "!T" +  Integer.toString(this.operationNumber - 1) + " $" + returnRegister);
             }
         }
 
@@ -738,7 +961,7 @@ public class Micro468Listener extends MicroBaseListener {
             if (parentTree.getCurrentScope().variableMap.containsKey(left) && parentTree.getCurrentScope().variableMap.containsKey(right)) {
                 String dataType = parentTree.getCurrentScope().variableMap.get(left)[0];
                 if (dataType.equals("INT")) {
-                    System.out.println(";STOREI " + right + " " + left);
+                    //System.out.println(";STOREI " + right + " " + left);
                     printStoreOperation("STOREI", right, left);
 
                     tinyNodeArrayList.add(new TinyNode("move", right, "r" + randomTiny));
@@ -761,9 +984,11 @@ public class Micro468Listener extends MicroBaseListener {
             String location = "!T" + this.operationNumber;
             this.operationNumber += 1;
 
-            System.out.println(";STOREI " + right + " " + location);
+            //System.out.println(";STOREI " + right + " " + location);
+            printStoreOperation("STOREI", right, location);
             parentTree.getCurrentScope().addRegister(location,  "INT", "r" + Integer.toString(this.operationNumber - 2));
-            System.out.println(";STOREI " + location + " " + left);
+            //System.out.println(";STOREI " + location + " " + left);
+            printStoreOperation("STOREI", location, left);
             tinyRegisterNumber += 1;
             add_reg_operation_stmt_2("move", right, location);
             add_reg_operation_stmt_2("move", location, left);
@@ -1243,6 +1468,10 @@ public class Micro468Listener extends MicroBaseListener {
             add_reg_operation_stmt_2("move", rightOp, tinyReg);
             tinyNodeArrayList.add(new TinyNode("cmpr", leftOp, tinyReg));
             this.operationNumber += 1;
+        }
+
+        if (symbolScope.containsKey(leftOp)) {
+            leftOp = symbolScope.get(leftOp).register;
         }
 
         switch(compOp) {

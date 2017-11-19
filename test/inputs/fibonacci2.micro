@@ -9,7 +9,7 @@ BEGIN
 	BEGIN
 		INT ret1,ret2;
 		IF (n > 2)
-			ret1 := Fasdf(n-1);
+			ret1 := F(n-1);
 			ret2 := F(n-2);
 			RETURN ret1+ret2;
 		ELSE

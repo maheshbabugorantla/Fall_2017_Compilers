@@ -5,50 +5,47 @@
 ; LABEL FUNC_id_F_L
 ; LINK 3
 ; STOREI 2 !T0
-;LE n !T0 label1
-THIS IS A FUNCTION CALL: ret1 Fasdf(n-1)
+;LE $2 !T0 label1
 ; PUSH (return value)
-; PUSH arguments
-; JSR FUNC_id_Fasdf_L
-; POP arguments
-; POP the value returned
-THIS IS A FUNCTION CALL: ret2 F(n-2)
-; PUSH (return value)
-; PUSH arguments
+;STOREI 1 !T1
+;SUBI $2 !T1 !T2
+; PUSH !T2
 ; JSR FUNC_id_F_L
-; POP arguments
-; POP the value returned
-ret1+ret2
-;ADDI $-1 $-2 !T1
-; STOREF needs a change needs conversion here $3
+; POP
+; POP !T3
+; STOREI !T3 $-1
+; PUSH (return value)
+;STOREI 2 !T4
+;SUBI $2 !T4 !T5
+; PUSH !T5
+; JSR FUNC_id_F_L
+; POP
+; POP !T6
+; STOREI !T6 $-2
+;ADDI $-1 $-2 !T7
+; STOREI !T7 $3
 ; UNLINK
 ; RET
 ;JUMP label2
 ;LABEL label1
-; STOREI 0 !T2
-;NE n !T2 label3
-0
-;STOREI 0 !T3
-;STOREI !T3 null
-; STOREF needs a change needs conversion here $3
+; STOREI 0 !T8
+;NE $2 !T8 label3
+;STOREI 0 !T9
+; STOREI !T9 $3
 ; UNLINK
 ; RET
 ;JUMP label4
 ;LABEL label3
-; STOREI 1 !T4
-;NE n !T4 label5
-1
-;STOREI 1 !T5
-;STOREI !T5 null
-; STOREF needs a change needs conversion here $3
+; STOREI 1 !T10
+;NE $2 !T10 label5
+;STOREI 1 !T11
+; STOREI !T11 $3
 ; UNLINK
 ; RET
 ;JUMP label6
 ;LABEL label5
-1
-;STOREI 1 !T6
-;STOREI !T6 null
-; STOREF needs a change needs conversion here $3
+;STOREI 1 !T12
+; STOREI !T12 $3
 ; UNLINK
 ; RET
 ;LABEL label6
@@ -58,30 +55,28 @@ ret1+ret2
 ; LINK 4
 ;WRITES input
 ; READI $-2
-;STOREI 0 !T7
-;STOREI !T7 i
+; STOREI 0 !T13
+; STOREI !T13 $-1
 ;LABEL label7
-; STOREF $-2 !T8
-;EQ i !T8 label8
-THIS IS A FUNCTION CALL: result F(i)
+; STOREF $-2 !T14
+;EQ $-1 !T14 label8
 ; PUSH (return value)
-; PUSH arguments
+; PUSH $-1
 ; JSR FUNC_id_F_L
-; POP arguments
-; POP the value returned
+; POP
+; POP !T15
+; STOREI !T15 $-3
 ; WRITEI $-1
 ;WRITES space
 ; WRITEI $-3
 ;WRITES eol
-;STOREI 1 !T9
-;ADDI $-1 !T9 !T10
-; STOREI !T10 $-1
+;STOREI 1 !T16
+;ADDI $-1 !T16 !T17
+; STOREI !T17 $-1
 ;JUMP label7
 ;LABEL label8
-0
-;STOREI 0 !T11
-;STOREI !T11 null
-; STOREF needs a change needs conversion here $3
+;STOREI 0 !T18
+; STOREI !T18 $3
 ; UNLINK
 ; RET
 ;tiny code
@@ -94,26 +89,26 @@ var ret2
 move 2 r-1
 cmpi n r-1
 jle label1
-move ret1 r0
-addi ret2 r0
+move 1 r0
+move n r1
+subi r0 r1
+move 2 r3
+move n r4
+subi r3 r4
+move ret1 r6
+addi ret2 r6
 jmp label2
 label label1
-move 0 r1
-cmpi n r1
+move 0 r7
+cmpi n r7
 jne label3
-move 0 r2
-move r2
 jmp label4
 label label3
-move 1 r3
-cmpi n r3
+move 1 r9
+cmpi n r9
 jne label5
-move 1 r4
-move r4
 jmp label6
 label label5
-move 1 r5
-move r5
 label label6
 label label4
 label label2
@@ -123,22 +118,20 @@ var end
 var result
 sys writes input
 sys readi end
-move 0 r6
-move r6 i
+move 0 r12
+move r12 i
 label label7
-move end r7
-cmpr i r7
+move end r13
+cmpr i r13
 jeq label8
 sys writei i
 sys writes space
 sys writei result
 sys writes eol
-move 1 r8
-move i r9
-addi r8 r9
-move r9 i
+move 1 r15
+move i r16
+addi r15 r16
+move r16 i
 jmp label7
 label label8
-move 0 r10
-move r10
 sys halt
