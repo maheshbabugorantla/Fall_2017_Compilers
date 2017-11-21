@@ -281,36 +281,16 @@ public class Micro468Listener extends MicroBaseListener {
      * */
     @Override
     public void enterAssign_stmt(MicroParser.Assign_stmtContext ctx) {
-//        System.out.println("Enter Assign Stmt");
         String left = ctx.getChild(0).getChild(0).getText();
         String right = ctx.getChild(0).getChild(2).getText();
 
-//        System.out.println("Left: " + left);
-//        System.out.println("Right: " + right);
-
         if(isFunctionCall(right)) {
-            // TODO: Handle function call
-            //System.out.println("THIS IS A FUNCTION CALL: " + left + " " + right);
-            //System.out.println(ctx.getChild(0).getChild(2).getChild(1).getText());
-            //System.out.println(ctx.getChild(0).getChild(2).getChild(1).getText());
-            //System.out.println(ctx.getChild(0).getChild(2).getChild(1).getText());
             return;
         }
 
         String postfix = InfixToPostfix.infixToPostfix(right);
 
-        //System.out.println("PostFix: " + postfix);
-
         parsePostfix(right, left, postfix);
-
-//        try {
-//            parsePostfix(right, left, postfix);
-//        }
-//        catch (Exception e) {
-//            System.out.println(e.getMessage());
-//            e.printStackTrace();
-//        }
-//        System.out.println("Exit Assign Stmt");
     }
 
 
@@ -319,11 +299,6 @@ public class Micro468Listener extends MicroBaseListener {
             return true;
         }
         return false;
-    }
-
-    private void parsingPostfixForReturnPush(String right, String left, String postfix) {
-
-        parsePostfixForPush(right, left, postfix, false);
     }
 
     @Override public void enterCall_expr(MicroParser.Call_exprContext ctx) {
@@ -343,8 +318,7 @@ public class Micro468Listener extends MicroBaseListener {
             String postfix = InfixToPostfix.infixToPostfix(function_parameters[i]);
 //            System.out.println("postfix: " + postfix);
 
-            parsingPostfixForReturnPush(right, left, postfix);
-            //System.out.println("; PUSH arguments");
+            parsePostfixForPush(right, left, postfix);
         }
 
         System.out.println("; JSR FUNC_id_" + function_name + "_L");
@@ -358,8 +332,6 @@ public class Micro468Listener extends MicroBaseListener {
             tinyNodeArrayList.add(new TinyNode("pop"));
         }
 
-
-        //System.out.println("; POP the value returned");
 
         String location = "!T" + this.operationNumber;
         this.operationNumber += 1;
@@ -385,44 +357,11 @@ public class Micro468Listener extends MicroBaseListener {
             add_reg_operation_stmt_2("move", "r" + tinyRegisterNumber, symbolScope.get(left).register);
             System.out.println("; STOREF " + location + " " + symbolScope.get(left).register);
         }
-
-
-        //System.out.println("function_name = " + function_name);
-//        for (int i = 0; i < function_parameters.length; i++) {
-//            System.out.println("param: " + function_parameters[i]);
-//            String postfix = InfixToPostfix.infixToPostfix(function_parameters[i]);
-//            System.out.println("postfix: " + postfix);
-//        }
-//
-//        System.out.println("==========");
-    }
-
-    private static boolean isFunctionCall(String str) {
-        if (str.trim().startsWith("\"") || (str.trim().startsWith("\'"))) {
-            return false;
-        }
-
-        boolean val = str.contains(",");
-        if (val) {
-            return true;
-        }
-
-        String regex = "[a-zA-Z]+[a-zA-Z0-9_]*\\(.*\\)";
-        Pattern funcPattern = Pattern.compile(regex);
-
-        Matcher m = funcPattern.matcher(str);
-
-        //System.out.println(Boolean.toString(m.matches()));
-
-        return m.matches();
     }
 
 
-    private static boolean isOperator(String c) {
-        return c.equals("+") || c.equals("-") || c.equals("*") || c.equals("/") || c.equals("^") || c.equals("(") || c.equals(")");
-    }
 
-    private void parsePostfixForPush(String right, String left, String postfix, boolean push) {
+    private void parsePostfixForPush(String right, String left, String postfix) {
         //System.out.println("Parse Postfix");
 
 //        System.out.println("Left: " + left + " Right: " + right + " PostFix: " + postfix);
@@ -888,10 +827,6 @@ public class Micro468Listener extends MicroBaseListener {
     }
     private void reg_operation_stmt(String operation, String type, String str1, String str2, String location) {
 
-//        System.out.println("str1: " + str1);
-//        System.out.println("str2: " + str2);
-//        System.out.println("Location: " + location);
-
         add_reg_operation_stmt("move", str1, location);
         if (type.equals("INT")) {
             add_reg_operation_stmt(operation + "i", str2, location);
@@ -1073,6 +1008,30 @@ public class Micro468Listener extends MicroBaseListener {
         return str.matches("\\d+");
     }
 
+    private static boolean isFunctionCall(String str) {
+        if (str.trim().startsWith("\"") || (str.trim().startsWith("\'"))) {
+            return false;
+        }
+
+        boolean val = str.contains(",");
+        if (val) {
+            return true;
+        }
+
+        String regex = "[a-zA-Z]+[a-zA-Z0-9_]*\\(.*\\)";
+        Pattern funcPattern = Pattern.compile(regex);
+
+        Matcher m = funcPattern.matcher(str);
+
+        //System.out.println(Boolean.toString(m.matches()));
+
+        return m.matches();
+    }
+
+    private static boolean isOperator(String c) {
+        return c.equals("+") || c.equals("-") || c.equals("*") || c.equals("/") || c.equals("^") || c.equals("(") || c.equals(")");
+    }
+
     /**
      * This gets called when the parser enters the Program
      * */
@@ -1085,7 +1044,6 @@ public class Micro468Listener extends MicroBaseListener {
         System.out.println(";tiny code");
         printTinyNodeList(tinyNodeArrayList);
         //System.out.println("sys halt");
-
     }
 
     /**
@@ -1134,16 +1092,11 @@ public class Micro468Listener extends MicroBaseListener {
      * */
     @Override public void enterFunc_decl(MicroParser.Func_declContext ctx) {
 
-//        // Function Name
-//         System.out.println("Function Name: " + ctx.getChild(2).getText());
-//
-//        // Function Parameters
-//         System.out.println("Function Parameters: " + ctx.getChild(4).getText()); // Function Parameters
-    
+        // Function Parameters
         String functionParameters = ctx.getChild(4).getText();
+        // Function Name
         String functionName = ctx.getChild(2).getText();
 
-        // TODO: Tiny
         //System.out.println(";LABEL " + functionName);
 
 //        System.out.println("Function Name: " + functionName);
@@ -1452,14 +1405,15 @@ public class Micro468Listener extends MicroBaseListener {
     private void printStack(Stack<String> labelStack) {
         System.out.println(Arrays.toString(labelStack.toArray()));
     }
+
     private void printElsePresentStack(Stack<Boolean> elsePresentStack) {
         System.out.println(Arrays.toString(elsePresentStack.toArray()));
     }
 
-    public void checkCompOp(String compOp, String leftOp, String rightOp) {
+    //TODO: Refactor
 
-//        System.out.println("LeftOp: " + leftOp);
-//        System.out.println("RightOp: " + rightOp);
+    public void checkCompOp(String compOp, String leftOp, String rightOp) {
+        //System.out.println("compOp " + compOp + " leftOp " + leftOp + " rightOp " + rightOp);
 
         String IRreg = "!T" + this.operationNumber;
 
@@ -1471,6 +1425,9 @@ public class Micro468Listener extends MicroBaseListener {
         //System.out.println(currentScope.variableMap.containsKey(rightOp));
 
         // If the rightOperand is either a variable or a register i.e. $Tn
+
+        //TODO: Refactor logic
+
         if (parentTree.getCurrentScope().variableMap.containsKey(rightOp)) {
 
             // if rightOp is a register
@@ -1512,6 +1469,7 @@ public class Micro468Listener extends MicroBaseListener {
                 }
             }
             else {
+
                 if (parentTree.getCurrentScope().variableMap.get(leftOp)[0].equals("FLOAT")) {
                     if (symbolScope.containsKey(leftOp)) {
                         leftOp = symbolScope.get(leftOp).register;
@@ -1539,8 +1497,6 @@ public class Micro468Listener extends MicroBaseListener {
             }
 
             printStoreOperation("STOREI", rightOp, IRreg);
-
-            //System.out.println("-----------------------" +  tinyReg + " " + leftOp + " " + rightOp);
 
             add_reg_operation_stmt_2("move", rightOp, tinyReg);
             tinyNodeArrayList.add(new TinyNode("cmpi", leftOp, tinyReg));
@@ -1574,6 +1530,10 @@ public class Micro468Listener extends MicroBaseListener {
             leftOp = symbolScope.get(leftOp).register;
         }
 
+        processCompOp(compOp, leftOp, IRreg);
+    }
+
+    private void processCompOp(String compOp, String leftOp, String IRreg) {
         switch(compOp) {
 
             case "<":
@@ -1607,4 +1567,6 @@ public class Micro468Listener extends MicroBaseListener {
                 break;
         }
     }
+
+
 }
