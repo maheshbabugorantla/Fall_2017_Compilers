@@ -53,12 +53,12 @@
 ; WRITEI $-2
 ; WRITES eol
 ; STOREI 0 !T12
-; STOREI !T12 $6
+; STOREI !T12 $2
 ; UNLINK
 ; RET
-+++++++++++++
-CUSTOM NODE LIST
-+++++++++++++
+; +++++++++++++
+; CUSTOM NODE LIST
+; +++++++++++++
 ; 0 ; PUSH 1 -1 -1
 ; 1 ; JSR FUNC_id_main_L 2 -1 0
 ; 2 ; HALT -1 -1 1
@@ -113,6 +113,72 @@ CUSTOM NODE LIST
 ; 51 ; WRITEI $-2 52 -1 50
 ; 52 ; WRITES eol 53 -1 51
 ; 53 ; STOREI 0 !T12 54 -1 52
-; 54 ; STOREI !T12 $6 55 -1 53
+; 54 ; STOREI !T12 $2 55 -1 53
 ; 55 ; UNLINK 56 -1 54
 ; 56 ; RET -1 -1 55
+;tiny code
+str input "Please enter an integer number: "
+str eol "\n"
+push
+jsr FUNC_id_main_L
+sys halt
+label FUNC_id_factorial_L
+link 3
+move 1 r0
+cmpi $2 r0
+jne label1
+move 1 r1
+move r1 $3
+unlnk
+ret
+jmp label2
+label label1
+push
+move 1 r2
+move $2 r3
+subi r2 r3
+push r3
+jsr FUNC_id_factorial_L
+pop
+pop r4
+move r4 $-2
+move $-2 r5
+muli $2 r5
+move r5 $-1
+label label2
+move $-1 r5
+move r5 $3
+unlnk
+ret
+label FUNC_id_main_L
+link 3
+sys writes input
+sys readi $-1
+move 1 r6
+cmpi $-1 r6
+jne label3
+move 1 r7
+move r7 $-2
+jmp label4
+label label3
+move 1 r8
+cmpi $-1 r8
+jle label5
+push
+push $-1
+jsr FUNC_id_factorial_L
+pop
+pop r9
+move r9 $-2
+jmp label6
+label label5
+move 0 r10
+move r10 $-2
+label label6
+label label4
+sys writei $-2
+sys writes eol
+move 0 r11
+move r11 $2
+unlnk
+ret
