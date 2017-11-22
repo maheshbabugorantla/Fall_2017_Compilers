@@ -21,8 +21,8 @@ Micro.g4 is the grammar file that you should edit and Micro.java will be your ma
 - [x] [***Step 3: Symbol Table***](https://github.com/ECE468/468project-just-in-time-droids/tree/step3-submission) &nbsp;&nbsp;&nbsp;&nbsp; (Grade: 100) &nbsp;&nbsp;[![Endpoint coverage](http://progressed.io/bar/100?title=done)](#progress)
 - [x] [***Step 4: Expressions***](https://github.com/ECE468/468project-just-in-time-droids/tree/step4-submission) &nbsp;&nbsp;&nbsp;&nbsp; (Grade: 100) &nbsp;&nbsp;[![Endpoint coverage](http://progressed.io/bar/100?title=done)](#progress)
 - [x] [***Step 5: Control Structures***](https://github.com/ECE468/468project-just-in-time-droids/tree/step5-submission) &nbsp;&nbsp;&nbsp;&nbsp; (Grade: 100) &nbsp;&nbsp;[![Endpoint coverage](http://progressed.io/bar/100?title=done)](#progress)
-- [ ] [***Step 6: Functions***](https://github.com/ECE468/468project-just-in-time-droids/tree/step6-submission) &nbsp;&nbsp;&nbsp;&nbsp; (Grade: NA) &nbsp;&nbsp;[![Endpoint coverage](http://progressed.io/bar/50?title=in_progress)](#in_progress)
-
+- [x] [***Step 6: Functions***](https://github.com/ECE468/468project-just-in-time-droids/tree/step6-submission) &nbsp;&nbsp;&nbsp;&nbsp; (Grade: 100) &nbsp;&nbsp;[![Endpoint coverage](http://progressed.io/bar/100?title=done)](#progress)
+- [ ] [***Step 7: Register Allocation***](https://github.com/ECE468/468project-just-in-time-droids/tree/step7-submission) &nbsp;&nbsp;&nbsp;&nbsp; (Grade: NA) &nbsp;&nbsp;[![Endpoint coverage](http://progressed.io/bar/20?title=in_progress)](#progress)
 
 ### ***Helpful Links***
 [ANTLR Lexer with DFA](http://web.mit.edu/dmaze/school/6.824/antlr-2.7.0/doc/lexer.html#dfacompare)
