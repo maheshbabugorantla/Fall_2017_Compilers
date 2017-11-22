@@ -44,7 +44,6 @@ public class IRNode {
     }
 
     public String getFirstOp() {
-
         if(firstOp == null) {
             return "NULL";
         }
@@ -52,7 +51,6 @@ public class IRNode {
     }
 
     public String getSecondOp() {
-
         if(secondOp == null) {
             return "NULL";
         }
@@ -60,7 +58,6 @@ public class IRNode {
     }
 
     public String getThirdOp() {
-
         if(thirdOp == null) {
             return "NULL";
         }

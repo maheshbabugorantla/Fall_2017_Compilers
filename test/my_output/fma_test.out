@@ -4,26 +4,26 @@
 ; HALT
 ; LABEL FUNC_id_add_L
 ; LINK 2
-;ADDF $2 $3 !T1
+; ADDF $2 $3 !T1
 ; STOREF !T1 $-1
 ; STOREF $-1 $4
 ; UNLINK
 ; RET
 ; LABEL FUNC_id_multiply_L
 ; LINK 2
-;MULTF $2 $3 !T2
+; MULTF $2 $3 !T2
 ; STOREF !T2 $-1
 ; STOREF $-1 $4
 ; UNLINK
 ; RET
 ; LABEL FUNC_id_main_L
 ; LINK 6
-;WRITES intro
-;WRITES first
+; WRITES intro
+; WRITES first
 ; READF $-1
-;WRITES second
+; WRITES second
 ; READF $-2
-;WRITES third
+; WRITES third
 ; READF $-3
 ; PUSH (return value)
 ; PUSH $-1
@@ -42,20 +42,20 @@
 ; POP !T4
 ; STOREF !T4 $-4
 ; WRITEF $-1
-;WRITES star
+; WRITES star
 ; WRITEF $-2
-;WRITES plus
+; WRITES plus
 ; WRITEF $-3
-;WRITES equal
+; WRITES equal
 ; WRITEF $-4
-;WRITES eol
-;STOREI 0 !T5
-; STOREI !T5 $6
+; WRITES eol
+; STOREI 0 !T5
+; STOREI !T5 $2
 ; UNLINK
 ; RET
-+++++++++++++
-CUSTOM NODE LIST
-+++++++++++++
+; +++++++++++++
+; CUSTOM NODE LIST
+; +++++++++++++
 ; 0 ; PUSH 1 -1 -1
 ; 1 ; JSR FUNC_id_main_L 2 -1 0
 ; 2 ; HALT -1 -1 1
@@ -107,6 +107,63 @@ CUSTOM NODE LIST
 ; 48 ; WRITEF $-4 49 -1 47
 ; 49 ; WRITES eol 50 -1 48
 ; 50 ; STOREI 0 !T5 51 -1 49
-; 51 ; STOREI !T5 $6 52 -1 50
+; 51 ; STOREI !T5 $2 52 -1 50
 ; 52 ; UNLINK 53 -1 51
 ; 53 ; RET -1 -1 52
+; +++++++++++++
+; GEN KILL LIST
+; +++++++++++++
+; PUSH => 0 Gen:  Kill: 
+; JSR FUNC_id_main_L => 1 Gen: plus, second, star, eol, equal, first, third, intro, Kill: 
+; HALT => 2 Gen:  Kill: 
+; LABEL FUNC_id_add_L => 3 Gen:  Kill: 
+; LINK 2 => 4 Gen:  Kill: 
+; ADDF $2 $3 !T1 => 5 Gen: $3, $2, Kill: !T1,
+; STOREF !T1 $-1 => 6 Gen: !T1, Kill: $-1,
+; STOREF $-1 $4 => 7 Gen: $-1, Kill: $4,
+; UNLINK => 8 Gen:  Kill: 
+; RET => 9 Gen:  Kill: 
+; LABEL FUNC_id_multiply_L => 10 Gen:  Kill: 
+; LINK 2 => 11 Gen:  Kill: 
+; MULTF $2 $3 !T2 => 12 Gen: $3, $2, Kill: !T2,
+; STOREF !T2 $-1 => 13 Gen: !T2, Kill: $-1,
+; STOREF $-1 $4 => 14 Gen: $-1, Kill: $4,
+; UNLINK => 15 Gen:  Kill: 
+; RET => 16 Gen:  Kill: 
+; LABEL FUNC_id_main_L => 17 Gen:  Kill: 
+; LINK 6 => 18 Gen:  Kill: 
+; WRITES intro => 19 Gen: intro, Kill: 
+; WRITES first => 20 Gen: first, Kill: 
+; READF $-1 => 21 Gen:  Kill: $-1,
+; WRITES second => 22 Gen: second, Kill: 
+; READF $-2 => 23 Gen:  Kill: $-2,
+; WRITES third => 24 Gen: third, Kill: 
+; READF $-3 => 25 Gen:  Kill: $-3,
+; PUSH (return value) => 26 Gen: (return value), Kill: 
+; PUSH $-1 => 27 Gen: $-1, Kill: 
+; PUSH $-2 => 28 Gen: $-2, Kill: 
+; JSR FUNC_id_multiply_L => 29 Gen: plus, second, star, eol, equal, first, third, intro, Kill: 
+; POP => 30 Gen:  Kill: 
+; POP => 31 Gen:  Kill: 
+; POP !T3 => 32 Gen: !T3, Kill: 
+; STOREF !T3 $-5 => 33 Gen: !T3, Kill: $-5,
+; PUSH (return value) => 34 Gen: (return value), Kill: 
+; PUSH $-5 => 35 Gen: $-5, Kill: 
+; PUSH $-3 => 36 Gen: $-3, Kill: 
+; JSR FUNC_id_add_L => 37 Gen: plus, second, star, eol, equal, first, third, intro, Kill: 
+; POP => 38 Gen:  Kill: 
+; POP => 39 Gen:  Kill: 
+; POP !T4 => 40 Gen: !T4, Kill: 
+; STOREF !T4 $-4 => 41 Gen: !T4, Kill: $-4,
+; WRITEF $-1 => 42 Gen: $-1, Kill: 
+; WRITES star => 43 Gen: star, Kill: 
+; WRITEF $-2 => 44 Gen: $-2, Kill: 
+; WRITES plus => 45 Gen: plus, Kill: 
+; WRITEF $-3 => 46 Gen: $-3, Kill: 
+; WRITES equal => 47 Gen: equal, Kill: 
+; WRITEF $-4 => 48 Gen: $-4, Kill: 
+; WRITES eol => 49 Gen: eol, Kill: 
+; STOREI 0 !T5 => 50 Gen: 0, Kill: !T5,
+; STOREI !T5 $2 => 51 Gen: !T5, Kill: $2,
+; UNLINK => 52 Gen:  Kill: 
+; RET => 53 Gen:  Kill: 

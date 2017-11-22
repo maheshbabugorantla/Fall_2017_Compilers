@@ -24,15 +24,15 @@ public class IRNodeList {
         }
     }
 
+    public ArrayList<IRNode> getIrNodeList() {
+        return irNodeList;
+    }
+
     private void addCustomNode(IRNode irNode, int index) {
 
         int maxIndex = irNodeList.size();
 
-//        int tempIndex = 0;
-
         if(checkIfCompOp(irNode.getOpCode().trim())) { // {IF/ELSE, FOR} (Conditional)
-
-//            System.out.println("compOp Detected");
 
             int tempIndex = index + 1; // Start searching bottom up
 
@@ -42,7 +42,6 @@ public class IRNodeList {
 
                 // Setting the Second Successor for the Conditional Jump IR Nodes
                 if(irNode1.getOpCode().equals("LABEL") && irNode.getThirdOp().equals(irNode1.getFirstOp())) {
-//                    System.out.println("Hi There");
                     customNodes.add(new CustomNode(index, irNode, index + 1, tempIndex, index - 1)); // Index, Content, Succ1, Succ2, Pred
                     break;
                 }
@@ -79,8 +78,6 @@ public class IRNodeList {
 
 
         }*/
-
-        index += 1;
     }
 
     public void printCustomNodeList() {

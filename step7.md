@@ -19,12 +19,12 @@
 
 ### Creating a Control Flow Graph
 
-- [ ]   Add unlnk and ret whenever we exit the function
-- [ ]   Create a list of all IR Code (IR Nodes)
+- [x]   Add unlnk and ret whenever we exit the function
+- [x]   Create a list of all IR Code (IR Nodes)
 
-- [ ]   Create the successor and predecessor of each IR Node in the IR Node List
-    - [ ]  First, do the Predecessor
-    - [ ]  Second, do the Successor
+- [x]   Create the successor and predecessor of each IR Node in the IR Node List
+    - [x]  First, do the Predecessor
+    - [x]  Second, do the Successor
 
 - [ ]   Create GEN and KILL sets
     - [ ]  PUSH (GEN and No KILL)

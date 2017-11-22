@@ -42,6 +42,8 @@ public class Micro468Listener extends MicroBaseListener {
     // IRNode List
     private IRNodeList irNodeList;
 
+    private String[] globalVariables;
+
     /**
      * Constructor to detect the Parser Actions.
      * REMEMBER: This gets called only once.
@@ -154,6 +156,10 @@ public class Micro468Listener extends MicroBaseListener {
     @Override
     public void enterPgm_body(MicroParser.Pgm_bodyContext ctx) { // ParentScope or GLOBAL
         pushSymbol(ctx.getChild(0).getText(), parentTree.getParentScope());
+
+        HashSet<String> symbolSet = parentTree.getCurrentScope().getSymbolSet();
+
+        globalVariables = symbolSet.toArray(new String[symbolSet.size()]);
 
         // Pushing the Symbols to the GLOBAL Symbol Table
         System.out.println("; IR code");
@@ -898,9 +904,19 @@ public class Micro468Listener extends MicroBaseListener {
         irNodeList.createCustomNodeList();
         irNodeList.printCustomNodeList();
 
-        System.out.println(";tiny code");
-        printTinyNodeList(tinyNodeArrayList);
+        //System.out.println(";tiny code");
+        //printTinyNodeList(tinyNodeArrayList);
         //// System.out.println("sys halt");
+
+        System.out.println("; +++++++++++++");
+        System.out.println("; GEN KILL LIST");
+        System.out.println("; +++++++++++++");
+        GenKillNodeList genKillNodeList = new GenKillNodeList(irNodeList);
+
+//        parentTree.getCurrentScope().printSymbolTable();
+
+        genKillNodeList.genKillNodeListInit(globalVariables);
+        genKillNodeList.printGenKillNodeList();
     }
 
     /**
