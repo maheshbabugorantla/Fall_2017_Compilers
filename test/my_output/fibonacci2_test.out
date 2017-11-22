@@ -1,0 +1,164 @@
+; IR code
+; PUSH
+; JSR FUNC_id_main_L
+; HALT
+; LABEL FUNC_id_F_L
+; LINK 3
+; STOREI 2 !T1
+; LE $2 !T1 label1
+; PUSH (return value)
+; STOREI 1 !T2
+; SUBI $2 !T2 !T3
+; PUSH !T3
+; JSR FUNC_id_F_L
+; POP
+; POP !T4
+; STOREI !T4 $-1
+; PUSH (return value)
+; STOREI 2 !T5
+; SUBI $2 !T5 !T6
+; PUSH !T6
+; JSR FUNC_id_F_L
+; POP
+; POP !T7
+; STOREI !T7 $-2
+; ADDI $-1 $-2 !T8
+; STOREI !T8 $3
+; UNLINK
+; RET
+; JUMP label2
+; LABEL label1
+; STOREI 0 !T9
+; NE $2 !T9 label3
+; STOREI 0 !T10
+; STOREI !T10 $3
+; UNLINK
+; RET
+; JUMP label4
+; LABEL label3
+; STOREI 1 !T11
+; NE $2 !T11 label5
+; STOREI 1 !T12
+; STOREI !T12 $3
+; UNLINK
+; RET
+; JUMP label6
+; LABEL label5
+; STOREI 1 !T13
+; STOREI !T13 $3
+; UNLINK
+; RET
+; LABEL label6
+; LABEL label4
+; LABEL label2
+; LABEL FUNC_id_main_L
+; LINK 4
+; WRITES input
+; READI $-2
+; STOREI 0 !T14
+; STOREI !T14 $-1
+; LABEL label7
+; STOREI $-2 !T15
+; EQ $-1 !T15 label8
+; PUSH (return value)
+; PUSH $-1
+; JSR FUNC_id_F_L
+; POP
+; POP !T16
+; STOREI !T16 $-3
+; WRITEI $-1
+; WRITES space
+; WRITEI $-3
+; WRITES eol
+; STOREI 1 !T17
+; ADDI $-1 !T17 !T18
+; STOREI !T18 $-1
+; JUMP label7
+; LABEL label8
+; STOREI 0 !T19
+; STOREI !T19 $6
+; UNLINK
+; RET
++++++++++++++
+CUSTOM NODE LIST
++++++++++++++
+; 0 ; PUSH 1 -1 -1
+; 1 ; JSR FUNC_id_main_L 2 -1 0
+; 2 ; HALT -1 -1 1
+; 3 ; LABEL FUNC_id_F_L 4 -1 2
+; 4 ; LINK 3 5 -1 3
+; 5 ; STOREI 2 !T1 6 -1 4
+; 6 ; LE $2 !T1 label1 7 28 5
+; 7 ; PUSH (return value) 8 -1 6
+; 8 ; STOREI 1 !T2 9 -1 7
+; 9 ; SUBI $2 !T2 !T3 10 -1 8
+; 10 ; PUSH !T3 11 -1 9
+; 11 ; JSR FUNC_id_F_L 12 -1 10
+; 12 ; POP 13 -1 11
+; 13 ; POP !T4 14 -1 12
+; 14 ; STOREI !T4 $-1 15 -1 13
+; 15 ; PUSH (return value) 16 -1 14
+; 16 ; STOREI 2 !T5 17 -1 15
+; 17 ; SUBI $2 !T5 !T6 18 -1 16
+; 18 ; PUSH !T6 19 -1 17
+; 19 ; JSR FUNC_id_F_L 20 -1 18
+; 20 ; POP 21 -1 19
+; 21 ; POP !T7 22 -1 20
+; 22 ; STOREI !T7 $-2 23 -1 21
+; 23 ; ADDI $-1 $-2 !T8 24 -1 22
+; 24 ; STOREI !T8 $3 25 -1 23
+; 25 ; UNLINK 26 -1 24
+; 26 ; RET -1 -1 25
+; 27 ; JUMP label2 51 -1 26
+; 28 ; LABEL label1 29 -1 27
+; 29 ; STOREI 0 !T9 30 -1 28
+; 30 ; NE $2 !T9 label3 31 36 29
+; 31 ; STOREI 0 !T10 32 -1 30
+; 32 ; STOREI !T10 $3 33 -1 31
+; 33 ; UNLINK 34 -1 32
+; 34 ; RET -1 -1 33
+; 35 ; JUMP label4 50 -1 34
+; 36 ; LABEL label3 37 -1 35
+; 37 ; STOREI 1 !T11 38 -1 36
+; 38 ; NE $2 !T11 label5 39 44 37
+; 39 ; STOREI 1 !T12 40 -1 38
+; 40 ; STOREI !T12 $3 41 -1 39
+; 41 ; UNLINK 42 -1 40
+; 42 ; RET -1 -1 41
+; 43 ; JUMP label6 49 -1 42
+; 44 ; LABEL label5 45 -1 43
+; 45 ; STOREI 1 !T13 46 -1 44
+; 46 ; STOREI !T13 $3 47 -1 45
+; 47 ; UNLINK 48 -1 46
+; 48 ; RET -1 -1 47
+; 49 ; LABEL label6 50 -1 48
+; 50 ; LABEL label4 51 -1 49
+; 51 ; LABEL label2 52 -1 50
+; 52 ; LABEL FUNC_id_main_L 53 -1 51
+; 53 ; LINK 4 54 -1 52
+; 54 ; WRITES input 55 -1 53
+; 55 ; READI $-2 56 -1 54
+; 56 ; STOREI 0 !T14 57 -1 55
+; 57 ; STOREI !T14 $-1 58 -1 56
+; 58 ; LABEL label7 59 -1 57
+; 59 ; STOREI $-2 !T15 60 -1 58
+; 60 ; EQ $-1 !T15 label8 61 75 59
+; 61 ; PUSH (return value) 62 -1 60
+; 62 ; PUSH $-1 63 -1 61
+; 63 ; JSR FUNC_id_F_L 64 -1 62
+; 64 ; POP 65 -1 63
+; 65 ; POP !T16 66 -1 64
+; 66 ; STOREI !T16 $-3 67 -1 65
+; 67 ; WRITEI $-1 68 -1 66
+; 68 ; WRITES space 69 -1 67
+; 69 ; WRITEI $-3 70 -1 68
+; 70 ; WRITES eol 71 -1 69
+; 71 ; STOREI 1 !T17 72 -1 70
+; 72 ; ADDI $-1 !T17 !T18 73 -1 71
+; 73 ; STOREI !T18 $-1 74 -1 72
+; 74 ; JUMP label7 58 -1 73
+; 75 ; LABEL label8 76 -1 74
+; 76 ; STOREI 0 !T19 77 -1 75
+; 77 ; STOREI !T19 $6 78 -1 76
+; 78 ; UNLINK 79 -1 77
+; 79 ; RET -1 -1 78
