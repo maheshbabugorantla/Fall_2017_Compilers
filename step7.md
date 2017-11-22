@@ -26,14 +26,14 @@
     - [x]  First, do the Predecessor
     - [x]  Second, do the Successor
 
-- [ ]   Create GEN and KILL sets
-    - [ ]  PUSH (GEN and No KILL)
-    - [ ]  POP (KILL and No GEN)
-    - [ ]  WRITE (GEN and No KILL)
-    - [ ]  READ (KILL and No GEN)
-    - [ ]  CALL 
-        - [ ]   All Global Variables in GEN Set, Parameters used in the Function Call
-        - [ ]   KILL is empty
+- [x]   Create GEN and KILL sets
+    - [x]  PUSH (GEN and No KILL)
+    - [x]  POP (KILL and No GEN)
+    - [x]  WRITE (GEN and No KILL)
+    - [x]  READ (KILL and No GEN)
+    - [x]  CALL 
+        - [x]   All Global Variables in GEN Set, Parameters used in the Function Call
+        - [x]   KILL is empty
 
 - [ ]   Define IN (Live-in) and OUT (Live-Out)
     - [ ]   Initialize all the OUT sets for RETURN IR Nodes to all Global Variables
