@@ -63,7 +63,7 @@ push
 jsr FUNC_id_main_L
 sys halt
 label FUNC_id_factorial_L
-link 3
+link 20
 move 1 r0
 cmpi $2 r0
 jne label1

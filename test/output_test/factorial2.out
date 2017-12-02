@@ -1,0 +1,235 @@
+; IR code
+; PUSH
+; JSR FUNC_id_main_L
+; HALT
+; LABEL FUNC_id_factorial_L
+; LINK 3
+; STOREI 1 !T1
+; NE $2 !T1 label1
+; STOREI 1 !T2
+; STOREI !T2 $3
+; UNLINK
+; RET
+; JUMP label2
+; LABEL label1
+; PUSH r0
+; PUSH r1
+; PUSH r2
+; PUSH r3
+; PUSH ;(return value)
+; STOREI 1 !T3
+; SUBI $2 !T3 !T4
+; PUSH !T4
+; JSR FUNC_id_factorial_L
+; POP
+; POP !T5
+; STOREI !T5 $-2
+; POP r3
+; POP r2
+; POP r1
+; POP r0
+; MULTI $-2 $2 !T6
+; STOREI !T6 $-1
+; LABEL label2
+; STOREI $-1 $3
+; UNLINK
+; RET
+; LABEL FUNC_id_main_L
+; LINK 3
+; WRITES input
+; READI $-1
+; STOREI 1 !T7
+; NE $-1 !T7 label3
+; STOREI 1 !T8
+; STOREI !T8 $-2
+; JUMP label4
+; LABEL label3
+; STOREI 1 !T9
+; LE $-1 !T9 label5
+; PUSH r0
+; PUSH r1
+; PUSH r2
+; PUSH r3
+; PUSH ;(return value)
+; PUSH $-1
+; JSR FUNC_id_factorial_L
+; POP
+; POP !T10
+; STOREI !T10 $-2
+; POP r3
+; POP r2
+; POP r1
+; POP r0
+; JUMP label6
+; LABEL label5
+; STOREI 0 !T11
+; STOREI !T11 $-2
+; LABEL label6
+; LABEL label4
+; WRITEI $-2
+; WRITES eol
+; STOREI 0 !T12
+; STOREI !T12 $2
+; UNLINK
+; RET
+str input "Please enter an integer number: "
+str eol "\n"
+push
+jsr FUNC_id_main_L
+sys halt
+label FUNC_id_factorial_L
+link 3
+move 1 r0
+cmpi $2 r0
+jne label1
+move 1 r1
+move r1 $3
+unlnk
+ret
+jmp label2
+label label1
+push
+move 1 r2
+move $2 r3
+subi r2 r3
+push r3
+jsr FUNC_id_factorial_L
+pop
+pop r4
+move r4 $-2
+move $-2 r5
+muli $2 r5
+move r5 $-1
+label label2
+move $-1 r5
+move r5 $3
+unlnk
+ret
+label FUNC_id_main_L
+link 3
+sys writes input
+sys readi $-1
+move 1 r6
+cmpi $-1 r6
+jne label3
+move 1 r7
+move r7 $-2
+jmp label4
+label label3
+move 1 r8
+cmpi $-1 r8
+jle label5
+push
+push $-1
+jsr FUNC_id_factorial_L
+pop
+pop r9
+move r9 $-2
+jmp label6
+label label5
+move 0 r10
+move r10 $-2
+label label6
+label label4
+sys writei $-2
+sys writes eol
+move 0 r11
+move r11 $2
+unlnk
+ret
+push
+jsr FUNC_id_main_L
+sys halt
+label FUNC_id_factorial_L
+link 16
+move 1 $-3
+move $2 r0
+move $-3 r1
+cmpi r0 r1
+jne label1
+move 1 $-4
+move $-4 r0
+move r0 $3
+unlnk
+ret
+jmp label2
+label label1
+push r0
+push r1
+push r2
+push r3
+push ;(return value)
+move 1 $-6
+move $2 r0
+move $-6 r1
+subi r0 r1
+; STORE_HANDLED: move r1 $-7
+push r3
+jsr FUNC_id_factorial_L
+pop
+pop r4
+move $-8 r0
+move r0 $-2
+pop r3
+pop r2
+pop r1
+pop r0
+move $-2 r0
+move $2 r1
+muli r0 r1
+; STORE_HANDLED: move r1 $-9
+move $-9 r0
+move r0 $-1
+label label2
+move $-1 r0
+move r0 $3
+unlnk
+ret
+label FUNC_id_main_L
+link 16
+sys writes input
+sys readi $-1
+move 1 $-3
+move $-1 r0
+move $-3 r1
+cmpi r0 r1
+jne label3
+move 1 $-4
+move $-4 r0
+move r0 $-2
+jmp label4
+label label3
+move 1 $-6
+move $-1 r0
+move $-6 r1
+cmpi r0 r1
+jle label5
+push r0
+push r1
+push r2
+push r3
+push ;(return value)
+push $-1
+jsr FUNC_id_factorial_L
+pop
+pop r9
+move $-7 r0
+move r0 $-2
+pop r3
+pop r2
+pop r1
+pop r0
+jmp label6
+label label5
+move 0 $-8
+move $-8 r0
+move r0 $-2
+label label6
+label label4
+sys writei $-2
+sys writes eol
+move 0 $-10
+move $-10 r0
+move r0 $2
+unlnk
+ret

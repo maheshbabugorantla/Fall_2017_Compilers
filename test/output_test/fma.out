@@ -4,28 +4,32 @@
 ; HALT
 ; LABEL FUNC_id_add_L
 ; LINK 2
-;ADDF $2 $3 !T1
+; ADDF $2 $3 !T1
 ; STOREF !T1 $-1
 ; STOREF $-1 $4
 ; UNLINK
 ; RET
 ; LABEL FUNC_id_multiply_L
 ; LINK 2
-;MULTF $2 $3 !T2
+; MULTF $2 $3 !T2
 ; STOREF !T2 $-1
 ; STOREF $-1 $4
 ; UNLINK
 ; RET
 ; LABEL FUNC_id_main_L
 ; LINK 6
-;WRITES intro
-;WRITES first
+; WRITES intro
+; WRITES first
 ; READF $-1
-;WRITES second
+; WRITES second
 ; READF $-2
-;WRITES third
+; WRITES third
 ; READF $-3
-; PUSH (return value)
+; PUSH r0
+; PUSH r1
+; PUSH r2
+; PUSH r3
+; PUSH ;(return value)
 ; PUSH $-1
 ; PUSH $-2
 ; JSR FUNC_id_multiply_L
@@ -33,7 +37,15 @@
 ; POP
 ; POP !T3
 ; STOREF !T3 $-5
-; PUSH (return value)
+; POP r3
+; POP r2
+; POP r1
+; POP r0
+; PUSH r0
+; PUSH r1
+; PUSH r2
+; PUSH r3
+; PUSH ;(return value)
 ; PUSH $-5
 ; PUSH $-3
 ; JSR FUNC_id_add_L
@@ -41,16 +53,20 @@
 ; POP
 ; POP !T4
 ; STOREF !T4 $-4
+; POP r3
+; POP r2
+; POP r1
+; POP r0
 ; WRITEF $-1
-;WRITES star
+; WRITES star
 ; WRITEF $-2
-;WRITES plus
+; WRITES plus
 ; WRITEF $-3
-;WRITES equal
+; WRITES equal
 ; WRITEF $-4
-;WRITES eol
-;STOREI 0 !T5
-; STOREI !T5 $6
+; WRITES eol
+; STOREI 0 !T5
+; STOREI !T5 $2
 ; UNLINK
 ; RET
 str intro "You will be asked for three float numbers\n"
@@ -117,5 +133,84 @@ sys writer $-4
 sys writes eol
 move 0 r4
 move r4 $2
+unlnk
+ret
+2
+2
+6
+push
+jsr FUNC_id_main_L
+sys halt
+label FUNC_id_add_L
+link 8
+move $2 r0
+move $3 r1
+addr r0 r1
+; STORE_HANDLED: move r1 $3
+move !T1 $-1
+move $-1 $4
+unlnk
+ret
+label FUNC_id_multiply_L
+link 8
+move $2 r0
+move $3 r1
+mulr r0 r1
+; STORE_HANDLED: move r1 $3
+move !T2 $-1
+move $-1 $4
+unlnk
+ret
+label FUNC_id_main_L
+link 12
+sys writes intro
+sys writes first
+sys readr $-1
+sys writes second
+sys readr $-2
+sys writes third
+sys readr $-3
+push r0
+push r1
+push r2
+push r3
+push ;(return value)
+push $-1
+push $-2
+jsr FUNC_id_multiply_L
+pop
+pop
+pop r2
+move !T3 $-5
+pop r3
+pop r2
+pop r1
+pop r0
+push r0
+push r1
+push r2
+push r3
+push ;(return value)
+push $-5
+push $-3
+jsr FUNC_id_add_L
+pop
+pop
+pop r3
+move !T4 $-4
+pop r3
+pop r2
+pop r1
+pop r0
+sys writer $-1
+sys writes star
+sys writer $-2
+sys writes plus
+sys writer $-3
+sys writes equal
+sys writer $-4
+sys writes eol
+move 0 !T5
+move !T5 $2
 unlnk
 ret
