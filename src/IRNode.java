@@ -9,31 +9,31 @@ public class IRNode {
     private String thirdOp;
 
     public IRNode(String opCode) {
-        this.OpCode = opCode;
+        this.OpCode = opCode.trim();
         this.firstOp = null;
         this.secondOp = null;
         this.thirdOp = null;
     }
 
     public IRNode(String opCode, String firstOp) {
-        this.OpCode = opCode;
-        this.firstOp = firstOp;
+        this.OpCode = opCode.trim();
+        this.firstOp = firstOp.trim();
         this.secondOp = null;
         this.thirdOp = null;
     }
 
     public IRNode(String opCode, String firstOp, String secondOp) {
-        this.OpCode = opCode;
-        this.firstOp = firstOp;
-        this.secondOp = secondOp;
+        this.OpCode = opCode.trim();
+        this.firstOp = firstOp.trim();
+        this.secondOp = secondOp.trim();
         this.thirdOp = null;
     }
 
     public IRNode(String opCode, String firstOp, String secondOp, String thirdOp) {
-        this.OpCode = opCode;
-        this.firstOp = firstOp;
-        this.secondOp = secondOp;
-        this.thirdOp = thirdOp;
+        this.OpCode = opCode.trim();
+        this.firstOp = firstOp.trim();
+        this.secondOp = secondOp.trim();
+        this.thirdOp = thirdOp.trim();
     }
 
     public String getOpCode() {

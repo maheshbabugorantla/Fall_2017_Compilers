@@ -42,6 +42,8 @@ public class Micro468Listener extends MicroBaseListener {
     // IRNode List
     private IRNodeList irNodeList;
 
+    private ArrayList<TinyNode> tinyNodes;
+
     private String[] globalVariables;
 
     /**
@@ -58,6 +60,7 @@ public class Micro468Listener extends MicroBaseListener {
         incr_stmt = "";
         elsePresent = false;
         irNodeList = new IRNodeList();
+        tinyNodes = new ArrayList<TinyNode>();
     }
 
     private String getBlockNumber() {
@@ -164,6 +167,7 @@ public class Micro468Listener extends MicroBaseListener {
         // Pushing the Symbols to the GLOBAL Symbol Table
         System.out.println("; IR code");
         irNodeList.addNode(new IRNode("PUSH"));
+
         tinyNodeArrayList.add(new TinyNode("push"));
 
         irNodeList.addNode(new IRNode("JSR", "FUNC_id_main_L"));
@@ -297,6 +301,7 @@ public class Micro468Listener extends MicroBaseListener {
 
         irNodeList.addNode(new IRNode("PUSH", "(return value)"));
         tinyNodeArrayList.add(new TinyNode("push"));
+
 
         for (int i = 0; i < function_parameters.length; i++) {
             // System.out.println("param: " + function_parameters[i]);
@@ -897,27 +902,208 @@ public class Micro468Listener extends MicroBaseListener {
     @Override
     public void exitPgm_body(MicroParser.Pgm_bodyContext ctx) {
 
+        // Print IR Code
         irNodeList.printIRNodeList();
-         System.out.println("; +++++++++++++");
-         System.out.println("; CUSTOM NODE LIST");
-         System.out.println("; +++++++++++++");
-        irNodeList.createCustomNodeList();
-        irNodeList.printCustomNodeList();
+
+//        System.out.println("; +++++++++++++");
+//        System.out.println("; CUSTOM NODE LIST");
+//        System.out.println("; +++++++++++++");
+//        irNodeList.createCustomNodeList();
+//        irNodeList.printCustomNodeList();
 
         //System.out.println(";tiny code");
-        //printTinyNodeList(tinyNodeArrayList);
+        printTinyNodeList(tinyNodeArrayList);
         //// System.out.println("sys halt");
 
-        System.out.println("; +++++++++++++");
-        System.out.println("; GEN KILL LIST");
-        System.out.println("; +++++++++++++");
-        GenKillNodeList genKillNodeList = new GenKillNodeList(irNodeList);
+//        System.out.println("; +++++++++++++");
+//        System.out.println("; GEN KILL LIST");
+//        System.out.println("; +++++++++++++");
+//        GenKillNodeList genKillNodeList = new GenKillNodeList(irNodeList);
+//        genKillNodeList.genKillNodeListInit(globalVariables);
+//        genKillNodeList.printGenKillNodeList();
 
-//        parentTree.getCurrentScope().printSymbolTable();
-
-        genKillNodeList.genKillNodeListInit(globalVariables);
-        genKillNodeList.printGenKillNodeList();
+        convertIRtoTiny();
     }
+
+    public String convertOperand(String op) {
+        String check1 = op;
+
+        if (parentTree.getCurrentScope().variableMap.containsKey(check1)) {
+            if (parentTree.getCurrentScope().variableMap.get(check1)[1] != null) {
+                check1 = parentTree.getCurrentScope().variableMap.get(check1)[1];
+            }
+        }
+
+        if (symbolScope.containsKey(check1)) {
+            check1 = symbolScope.get(check1).register;
+        }
+
+        return check1;
+    }
+
+    public void convertIRtoTiny() {
+
+        ArrayList<IRNode> irNodes = irNodeList.getIrNodeList();
+
+        for(IRNode irNode: irNodes) {
+            String opCode = irNode.getOpCode();
+            String firstOp = irNode.getFirstOp();
+            String secondOp = irNode.getSecondOp();
+            String thirdOp = irNode.getThirdOp();
+            // EQ, NE, LE, LT, GE, GT & cmpi/r
+            if(opCode.equals("GT")) {
+                // check first/second op is int/float
+                // cmpi/r
+                // check register, temporary, stack, etc. for first and second op
+
+                tinyNodes.add(new TinyNode("jgt", thirdOp));
+            }
+            else if(opCode.equals("GE")) {
+                tinyNodes.add(new TinyNode("jge", thirdOp));
+            }
+            else if(opCode.equals("LT")) {
+                tinyNodes.add(new TinyNode("jlt", thirdOp));
+            }
+            else if(opCode.equals("LE")) {
+                tinyNodes.add(new TinyNode("jle", thirdOp));
+            }
+            else if(opCode.equals("EQ")) {
+                tinyNodes.add(new TinyNode("jeq", thirdOp));
+            }
+            else if(opCode.equals("NE")) {
+                tinyNodes.add(new TinyNode("jne", thirdOp));
+            }
+            // LINK, UNLINK, RET, HALT
+            else if(opCode.equals("LINK")) {
+                int totalSpace = Integer.getInteger(firstOp) + this.operationNumber;
+                tinyNodes.add(new TinyNode("link", Integer.toString(totalSpace)));
+            }
+            else if (opCode.equals("UNLINK")) {
+                tinyNodes.add(new TinyNode("unlnk"));
+            }
+            else if (opCode.equals("RET")) {
+                tinyNodes.add(new TinyNode("ret"));
+            }
+            else if (opCode.equals("HALT")) {
+                tinyNodes.add(new TinyNode("sys", "halt"));
+            }
+            // JSR, JUMP, LABEL
+            else if (opCode.equals("JSR")) {
+                tinyNodes.add(new TinyNode("jsr", firstOp));
+            }
+            else if (opCode.equals("JUMP")) {
+                tinyNodes.add(new TinyNode("jmp", firstOp));
+            }
+            else if (opCode.equals("LABEL")) {
+                tinyNodes.add(new TinyNode("label", firstOp));
+            }
+            // PUSH
+            // POP
+            else if (opCode.equals("PUSH")) {
+                // DONE
+                if (firstOp == null) {
+                    tinyNodes.add(new TinyNode("push"));
+                }
+                else {
+                    tinyNodes.add(new TinyNode("push", convertOperand(firstOp)));
+                }
+            }
+            else if (opCode.equals("POP")) {
+                // DONE
+                if (firstOp == null) {
+                    tinyNodes.add(new TinyNode("pop"));
+                }
+                else {
+                    tinyNodes.add(new TinyNode("pop", convertOperand(firstOp)));
+                }
+            }
+            // STOREI/F/S, READI/F, WRITEI/F/S
+            else if (opCode.startsWith("STORE")) {
+                // move
+                tinyNodes.add(new TinyNode("move", firstOp, secondOp));
+            }
+            else if (opCode.startsWith("READ")) {
+                if (opCode.equals("READI")) {
+                    tinyNodes.add(new TinyNode("sys", "readi", firstOp));
+                }
+                else if (opCode.equals("READF")) {
+                    tinyNodes.add(new TinyNode("sys", "readr", firstOp));
+                }
+            }
+            else if (opCode.startsWith("WRITE")) {
+                if (opCode.equals("WRITEI")) {
+                    tinyNodes.add(new TinyNode("sys", "writei", firstOp));
+                }
+                else if (opCode.equals("WRITEF")) {
+                    tinyNodes.add(new TinyNode("sys", "writer", firstOp));
+                }
+                else if (opCode.equals("WRITES")) {
+                    tinyNodes.add(new TinyNode("sys", "writes", firstOp));
+                }
+            }
+
+            // ADD, SUB, MULT, DIV
+            else if (opCode.startsWith("ADD")) {
+                // TODO: Check if store handles
+                tinyNodes.add(new TinyNode("move", firstOp, "r0"));
+                tinyNodes.add(new TinyNode("move", secondOp, "r1"));
+                if (opCode.equals("ADDI")) {
+                    tinyNodes.add(new TinyNode("addi", "r0", "r1"));
+
+                }
+                else if (opCode.equals("ADDF")) {
+                    tinyNodes.add(new TinyNode("addr", "r0", "r1"));
+                }
+                tinyNodes.add(new TinyNode("; STORE_HANDLED: move", "r1", secondOp));
+            }
+            else if (opCode.startsWith("MULT")) {
+                // TODO: Check if store handles
+                tinyNodes.add(new TinyNode("move", firstOp, "r0"));
+                tinyNodes.add(new TinyNode("move", secondOp, "r1"));
+                if (opCode.equals("MULTI")) {
+                    tinyNodes.add(new TinyNode("muli", "r0", "r1"));
+
+                }
+                else if (opCode.equals("MULTF")) {
+                    tinyNodes.add(new TinyNode("mulr", "r0", "r1"));
+                }
+                tinyNodes.add(new TinyNode("; STORE_HANDLED: move", "r1", secondOp));
+            }
+            else if (opCode.startsWith("SUB")) {
+                // TODO: Check if store handles
+                tinyNodes.add(new TinyNode("move", firstOp, "r0"));
+                tinyNodes.add(new TinyNode("move", secondOp, "r1"));
+                if (opCode.equals("SUBI")) {
+                    tinyNodes.add(new TinyNode("subi", "r0", "r1"));
+                }
+                else if (opCode.equals("SUBF")) {
+                    tinyNodes.add(new TinyNode("subr", "r0", "r1"));
+                }
+                tinyNodes.add(new TinyNode("; STORE_HANDLED: move", "r1", secondOp));
+            }
+            else if (opCode.startsWith("DIV")) {
+                // TODO: Check if store handles
+                tinyNodes.add(new TinyNode("move", firstOp, "r0"));
+                tinyNodes.add(new TinyNode("move", secondOp, "r1"));
+                if (opCode.equals("DIVI")) {
+                    tinyNodes.add(new TinyNode("divi", "r0", "r1"));
+                }
+                else if (opCode.equals("DIVF")) {
+                    tinyNodes.add(new TinyNode("divr", "r0", "r1"));
+                }
+                tinyNodes.add(new TinyNode("; STORE_HANDLED: move", "r1", secondOp));
+            }
+        }
+
+        printTinyNodes();
+    }
+
+    public void printTinyNodes() {
+        for (TinyNode tinyNode : tinyNodes) {
+            System.out.println(tinyNode.toString());
+        }
+    }
+
 
     /**
      * This gets called when the parser enters the Function
@@ -1344,8 +1530,6 @@ public class Micro468Listener extends MicroBaseListener {
             tinyNodeArrayList.add(new TinyNode("cmpi", leftOp, tinyReg));
             this.operationNumber += 1;
         } else {
-
-
             if (currentScope.variableMap.containsKey(leftOp) && currentScope.variableMap.get(leftOp)[0].equals("INT")) {
                 if (symbolScope.containsKey(leftOp)) {
                     leftOp = symbolScope.get(leftOp).register;
@@ -1365,7 +1549,6 @@ public class Micro468Listener extends MicroBaseListener {
                 tinyNodeArrayList.add(new TinyNode("cmpr", leftOp, tinyReg));
                 this.operationNumber += 1;
             }
-
         }
 
         if (symbolScope.containsKey(leftOp)) {
