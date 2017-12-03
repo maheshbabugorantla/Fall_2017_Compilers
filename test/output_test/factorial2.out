@@ -74,17 +74,26 @@
 ; RET
 str input "Please enter an integer number: "
 str eol "\n"
+var ret
+var tret
+var num
+var result
 push
 jsr FUNC_id_main_L
 sys halt
 label FUNC_id_factorial_L
 link 16
+;1 $-3 false false
 move 1 $-3
+; handled?
 move $2 r0
+; handled2?
 move $-3 r1
 cmpi r0 r1
 jne label1
+;1 $-4 false false
 move 1 $-4
+;$-4 $3 false false
 move $-4 r0
 move r0 $3
 unlnk
@@ -96,8 +105,11 @@ push r1
 push r2
 push r3
 push ;(return value)
+;1 $-6 false false
 move 1 $-6
+; handled?
 move $-6 r0
+; handled2?
 move $2 r1
 subi r0 r1
 move r1 $-7 ; - STORE_HANDLED
@@ -105,19 +117,24 @@ push $-7 ;using temp
 jsr FUNC_id_factorial_L
 pop
 pop $-9 ;using temp
+;$-9 $-2 false false
 move $-9 r0
 move r0 $-2
 pop r3
 pop r2
 pop r1
 pop r0
+; handled?
 move $-2 r0
+; handled2?
 move $2 r1
 muli r0 r1
 move r1 $-11 ; * STORE_HANDLED
+;$-11 $-1 false false
 move $-11 r0
 move r0 $-1
 label label2
+;$-1 $3 false false
 move $-1 r0
 move r0 $3
 unlnk
@@ -126,18 +143,26 @@ label FUNC_id_main_L
 link 16
 sys writes input
 sys readi $-1
+;1 $-3 false false
 move 1 $-3
+; handled?
 move $-1 r0
+; handled2?
 move $-3 r1
 cmpi r0 r1
 jne label3
+;1 $-4 false false
 move 1 $-4
+;$-4 $-2 false false
 move $-4 r0
 move r0 $-2
 jmp label4
 label label3
+;1 $-6 false false
 move 1 $-6
+; handled?
 move $-1 r0
+; handled2?
 move $-6 r1
 cmpi r0 r1
 jle label5
@@ -150,6 +175,7 @@ push $-1
 jsr FUNC_id_factorial_L
 pop
 pop $-7 ;using temp
+;$-7 $-2 false false
 move $-7 r0
 move r0 $-2
 pop r3
@@ -158,14 +184,18 @@ pop r1
 pop r0
 jmp label6
 label label5
+;0 $-9 false false
 move 0 $-9
+;$-9 $-2 false false
 move $-9 r0
 move r0 $-2
 label label6
 label label4
 sys writei $-2
 sys writes eol
+;0 $-11 false false
 move 0 $-11
+;$-11 $2 false false
 move $-11 r0
 move r0 $2
 unlnk

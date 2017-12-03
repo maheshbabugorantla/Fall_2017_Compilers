@@ -1,0 +1,207 @@
+; IR code
+; PUSH
+; JSR FUNC_id_main_L
+; HALT
+; LABEL FUNC_id_main_L
+; LINK 1
+; STOREI 1 !T1
+; STOREI !T1 b
+; STOREI 1 !T2
+; STOREI !T2 a
+; LABEL label1
+; STOREF 120 !T3
+; GT a !T3 label2
+; STOREF 1 !T4
+; NE b !T4 label3
+; STOREI 1 !T5
+; MULTI !T5 a !T6
+; STOREI !T6 g
+; WRITEI g
+; JUMP label4
+; LABEL label3
+; STOREF 2 !T7
+; NE b !T7 label5
+; STOREI 2 !T8
+; MULTI !T8 a !T9
+; STOREI !T9 p
+; WRITEI p
+; JUMP label6
+; LABEL label5
+; STOREF 3 !T10
+; NE b !T10 label7
+; STOREI 3 !T11
+; MULTI !T11 a !T12
+; STOREI !T12 k
+; WRITEI k
+; JUMP label8
+; LABEL label7
+; STOREF 4 !T13
+; NE b !T13 label9
+; STOREI 4 !T14
+; MULTI !T14 a !T15
+; STOREI !T15 u
+; WRITEI u
+; JUMP label10
+; LABEL label9
+; LABEL label10
+; LABEL label8
+; LABEL label6
+; LABEL label4
+; STOREI 1 !T16
+; ADDI b !T16 !T17
+; STOREI !T17 b
+; STOREI 20 !T18
+; ADDI a !T18 !T19
+; STOREI !T19 a
+; JUMP label1
+; LABEL label2
+; UNLINK
+; RET
+var a
+var b
+var k
+var g
+var p
+var u
+push
+jsr FUNC_id_main_L
+sys halt
+label FUNC_id_main_L
+link 21
+;1 $-1 false false
+move 1 $-1
+;$-1 b false true
+move $-1 r0
+move r0 b
+;1 $-3 false false
+move 1 $-3
+;$-3 a false true
+move $-3 r0
+move r0 a
+label label1
+;120 $-5 false false
+move 120 $-5
+; handled?
+move a r0
+; handled2?
+move $-5 r1
+cmpi r0 r1
+jgt label2
+;1 $-6 false false
+move 1 $-6
+; handled?
+move b r0
+; handled2?
+move $-6 r1
+cmpi r0 r1
+jne label3
+;1 $-7 false false
+move 1 $-7
+; handled?
+move $-7 r0
+; handled2?
+move a r1
+muli r0 r1
+move r1 $-8 ; * STORE_HANDLED
+;$-8 g false true
+move $-8 r0
+move r0 g
+sys writei g
+jmp label4
+label label3
+;2 $-10 false false
+move 2 $-10
+; handled?
+move b r0
+; handled2?
+move $-10 r1
+cmpi r0 r1
+jne label5
+;2 $-11 false false
+move 2 $-11
+; handled?
+move $-11 r0
+; handled2?
+move a r1
+muli r0 r1
+move r1 $-12 ; * STORE_HANDLED
+;$-12 p false true
+move $-12 r0
+move r0 p
+sys writei p
+jmp label6
+label label5
+;3 $-14 false false
+move 3 $-14
+; handled?
+move b r0
+; handled2?
+move $-14 r1
+cmpi r0 r1
+jne label7
+;3 $-15 false false
+move 3 $-15
+; handled?
+move $-15 r0
+; handled2?
+move a r1
+muli r0 r1
+move r1 $-16 ; * STORE_HANDLED
+;$-16 k false true
+move $-16 r0
+move r0 k
+sys writei k
+jmp label8
+label label7
+;4 $-18 false false
+move 4 $-18
+; handled?
+move b r0
+; handled2?
+move $-18 r1
+cmpi r0 r1
+jne label9
+;4 $-19 false false
+move 4 $-19
+; handled?
+move $-19 r0
+; handled2?
+move a r1
+muli r0 r1
+move r1 $-20 ; * STORE_HANDLED
+;$-20 u false true
+move $-20 r0
+move r0 u
+sys writei u
+jmp label10
+label label9
+label label10
+label label8
+label label6
+label label4
+;1 $-22 false false
+move 1 $-22
+; handled?
+move b r0
+; handled2?
+move $-22 r1
+addi r0 r1
+move r1 $-23 ; + STORE_HANDLED
+;$-23 b false true
+move $-23 r0
+move r0 b
+;20 $-25 false false
+move 20 $-25
+; handled?
+move a r0
+; handled2?
+move $-25 r1
+addi r0 r1
+move r1 $-26 ; + STORE_HANDLED
+;$-26 a false true
+move $-26 r0
+move r0 a
+jmp label1
+label label2
+unlnk
+ret

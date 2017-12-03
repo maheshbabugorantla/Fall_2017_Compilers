@@ -108,13 +108,21 @@
 str input "Please input an integer number: "
 str space " "
 str eol "\n"
+var ret1
+var ret2
+var i
+var end
+var result
 push
 jsr FUNC_id_main_L
 sys halt
 label FUNC_id_F_L
 link 23
+;2 $-3 false false
 move 2 $-3
+; handled?
 move $2 r0
+; handled2?
 move $-3 r1
 cmpi r0 r1
 jle label1
@@ -123,8 +131,11 @@ push r1
 push r2
 push r3
 push ;(return value)
+;1 $-4 false false
 move 1 $-4
+; handled?
 move $-4 r0
+; handled2?
 move $2 r1
 subi r0 r1
 move r1 $-5 ; - STORE_HANDLED
@@ -132,6 +143,7 @@ push $-5 ;using temp
 jsr FUNC_id_F_L
 pop
 pop $-7 ;using temp
+;$-7 $-1 false false
 move $-7 r0
 move r0 $-1
 pop r3
@@ -143,8 +155,11 @@ push r1
 push r2
 push r3
 push ;(return value)
+;2 $-9 false false
 move 2 $-9
+; handled?
 move $-9 r0
+; handled2?
 move $2 r1
 subi r0 r1
 move r1 $-10 ; - STORE_HANDLED
@@ -152,47 +167,63 @@ push $-10 ;using temp
 jsr FUNC_id_F_L
 pop
 pop $-12 ;using temp
+;$-12 $-2 false false
 move $-12 r0
 move r0 $-2
 pop r3
 pop r2
 pop r1
 pop r0
+; handled?
 move $-1 r0
+; handled2?
 move $-2 r1
 addi r0 r1
 move r1 $-14 ; + STORE_HANDLED
+;$-14 $3 false false
 move $-14 r0
 move r0 $3
 unlnk
 ret
 jmp label2
 label label1
+;0 $-16 false false
 move 0 $-16
+; handled?
 move $2 r0
+; handled2?
 move $-16 r1
 cmpi r0 r1
 jne label3
+;0 $-17 false false
 move 0 $-17
+;$-17 $3 false false
 move $-17 r0
 move r0 $3
 unlnk
 ret
 jmp label4
 label label3
+;1 $-19 false false
 move 1 $-19
+; handled?
 move $2 r0
+; handled2?
 move $-19 r1
 cmpi r0 r1
 jne label5
+;1 $-20 false false
 move 1 $-20
+;$-20 $3 false false
 move $-20 r0
 move r0 $3
 unlnk
 ret
 jmp label6
 label label5
+;1 $-22 false false
 move 1 $-22
+;$-22 $3 false false
 move $-22 r0
 move r0 $3
 unlnk
@@ -206,13 +237,18 @@ label FUNC_id_main_L
 link 24
 sys writes input
 sys readi $-2
+;0 $-4 false false
 move 0 $-4
+;$-4 $-1 false false
 move $-4 r0
 move r0 $-1
 label label7
+;$-2 $-6 false false
 move $-2 r0
 move r0 $-6
+; handled?
 move $-1 r0
+; handled2?
 move $-6 r1
 cmpi r0 r1
 jeq label8
@@ -225,6 +261,7 @@ push $-1
 jsr FUNC_id_F_L
 pop
 pop $-7 ;using temp
+;$-7 $-3 false false
 move $-7 r0
 move r0 $-3
 pop r3
@@ -235,16 +272,22 @@ sys writei $-1
 sys writes space
 sys writei $-3
 sys writes eol
+;1 $-9 false false
 move 1 $-9
+; handled?
 move $-1 r0
+; handled2?
 move $-9 r1
 addi r0 r1
 move r1 $-10 ; + STORE_HANDLED
+;$-10 $-1 false false
 move $-10 r0
 move r0 $-1
 jmp label7
 label label8
+;0 $-12 false false
 move 0 $-12
+;$-12 $2 false false
 move $-12 r0
 move r0 $2
 unlnk

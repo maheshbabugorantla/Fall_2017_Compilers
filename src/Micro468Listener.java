@@ -96,6 +96,7 @@ public class Micro468Listener extends MicroBaseListener {
                    // Adding all the Variable Names
                    for(String variable: variableNames) {
                        //tinyNodeArrayList.add(new TinyNode(";var", variable));
+                       tinyNodes.add(new TinyNode("var", variable));
                        Symbol newVariable = new Symbol(variable, "INT");
                        symbolsTable.addSymbol(newVariable);
                    }
@@ -108,6 +109,7 @@ public class Micro468Listener extends MicroBaseListener {
                    // Adding all the Variable Names
                    for(String variable: variableNames) {
                        //tinyNodeArrayList.add(new TinyNode(";var", variable));
+                       tinyNodes.add(new TinyNode("var", variable));
                        Symbol newVariable = new Symbol(variable, "FLOAT");
                        symbolsTable.addSymbol(newVariable);
 
@@ -499,7 +501,17 @@ public class Micro468Listener extends MicroBaseListener {
                 String val1 = stack.pop();
                 String location = "!T" + this.operationNumber;
                 this.operationNumber += 1;
-                String currentType = currentScope.variableMap.get(val1)[0];
+                //System.out.println("Error from this: " + val1 + " " + val2);
+
+                String currentType;
+
+
+                if(isVariableinGlobal(val1)) {
+                    currentType = parentTree.getCurrentScope().variableMap.get(val1)[0];
+                }
+                else {
+                    currentType = currentScope.variableMap.get(val1)[0];
+                }
 
                 parentTree.getCurrentScope().addRegister(location, currentType, "r" + Integer.toString(this.operationNumber - 2));
 
@@ -523,7 +535,15 @@ public class Micro468Listener extends MicroBaseListener {
                 String location = "!T" + this.operationNumber;
                 this.operationNumber += 1;
 
-                String currentType = currentScope.variableMap.get(val1)[0];
+                String currentType;
+
+
+                if(isVariableinGlobal(val1)) {
+                    currentType = parentTree.getCurrentScope().variableMap.get(val1)[0];
+                }
+                else {
+                    currentType = currentScope.variableMap.get(val1)[0];
+                }
 
                 parentTree.getCurrentScope().addRegister(location, currentType, "r" + Integer.toString(this.operationNumber - 2));
 
@@ -725,31 +745,7 @@ public class Micro468Listener extends MicroBaseListener {
         }
     }
 
-    private void add_reg_operation_stmt(String operation, String str1, String location) {
 
-        // TODO: Need to refactor this
-        if (str1.trim().startsWith("!")) {
-            if (parentTree.getCurrentScope().variableMap.get(str1)[1] == null) {
-                if (symbolScope.containsKey(str1)) {
-                    str1 = symbolScope.get(str1).register;
-                }
-                tinyNodeArrayList.add(new TinyNode(operation, str1, parentTree.getCurrentScope().variableMap.get(location)[1]));
-            } else {
-                tinyNodeArrayList.add(new TinyNode(operation, parentTree.getCurrentScope().variableMap.get(str1)[1],
-                        parentTree.getCurrentScope().variableMap.get(location)[1]));
-            }
-        } else {
-            if (currentScope.variableMap.get(str1)[1] == null) {
-                if (symbolScope.containsKey(str1)) {
-                    str1 = symbolScope.get(str1).register;
-                }
-                tinyNodeArrayList.add(new TinyNode(operation, str1, parentTree.getCurrentScope().variableMap.get(location)[1]));
-            } else {
-                tinyNodeArrayList.add(new TinyNode(operation, parentTree.getCurrentScope().variableMap.get(str1)[1],
-                        parentTree.getCurrentScope().variableMap.get(location)[1]));
-            }
-        }
-    }
     private void reg_operation_stmt(String operation, String type, String str1, String str2, String location) {
 
         add_reg_operation_stmt("move", str1, location);
@@ -840,6 +836,33 @@ public class Micro468Listener extends MicroBaseListener {
         }
 
         tinyNodeArrayList.add(new TinyNode(operation, check1));
+    }
+
+    private void add_reg_operation_stmt(String operation, String str1, String location) {
+
+        // TODO: Need to refactor this
+//        if (str1.trim().startsWith("!")) {
+//            if (parentTree.getCurrentScope().variableMap.get(str1)[1] == null) {
+//                if (symbolScope.containsKey(str1)) {
+//                    str1 = symbolScope.get(str1).register;
+//                }
+//                tinyNodeArrayList.add(new TinyNode(operation, str1, parentTree.getCurrentScope().variableMap.get(location)[1]));
+//            } else {
+//                tinyNodeArrayList.add(new TinyNode(operation, parentTree.getCurrentScope().variableMap.get(str1)[1],
+//                        parentTree.getCurrentScope().variableMap.get(location)[1]));
+//            }
+//        } else {
+//            if (parentTree.getCurrentScope().variableMap.get(str1)[1] == null) {
+//            //if (currentScope.variableMap.get(str1)[1] == null) { // TODO: Crashing in Here again
+//                if (symbolScope.containsKey(str1)) {
+//                    str1 = symbolScope.get(str1).register;
+//                }
+//                tinyNodeArrayList.add(new TinyNode(operation, str1, parentTree.getCurrentScope().variableMap.get(location)[1]));
+//            } else {
+//                tinyNodeArrayList.add(new TinyNode(operation, parentTree.getCurrentScope().variableMap.get(str1)[1],
+//                        parentTree.getCurrentScope().variableMap.get(location)[1]));
+//            }
+//        }
     }
 
     private void add_reg_operation_stmt_2(String operation, String str1, String location) {
@@ -1075,7 +1098,12 @@ public class Micro468Listener extends MicroBaseListener {
                 String updated1 = getTemporary(temporaries, secondOp, currentTemporaryLocation);
                 currentTemporaryLocation = updateTemporaryCount(secondOp, updated1, currentTemporaryLocation);
 
-                if (updated.startsWith("$") && updated1.startsWith("$")) {
+                boolean check = parentTree.getCurrentScope().variableMap.containsKey(updated);
+                boolean check1 = parentTree.getCurrentScope().variableMap.containsKey(updated1);
+
+                tinyNodes.add(new TinyNode(";" + updated + " " + updated1 + " " + check + " " + check1));
+
+                if ((updated.startsWith("$") && updated1.startsWith("$")) || (check && check1) || (updated.startsWith("$") && check1) || (updated1.startsWith("$") && check) ) {
                     tinyNodes.add(new TinyNode("move", updated, "r0"));
                     tinyNodes.add(new TinyNode("move", "r0", updated1));
                 }
@@ -1186,7 +1214,7 @@ public class Micro468Listener extends MicroBaseListener {
             }
         }
 
-        else if(firstOp.startsWith("!T")) {
+        if(firstOp.startsWith("!T")) {
             if (temporaries.containsKey(firstOp)) {
                 firstOp = temporaries.get(firstOp);
             }
@@ -1208,7 +1236,9 @@ public class Micro468Listener extends MicroBaseListener {
             }
        }
 
+        tinyNodes.add(new TinyNode("; handled?"));
         tinyNodes.add(new TinyNode("move", firstOp, "r0")); // check if temp
+        tinyNodes.add(new TinyNode("; handled2?"));
         tinyNodes.add(new TinyNode("move", secondOp, "r1")); // check if temp
 
         if (f) {

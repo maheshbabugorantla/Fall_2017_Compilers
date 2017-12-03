@@ -77,29 +77,44 @@ str eol "\n"
 str star "*"
 str plus "+"
 str equal "="
+var result
+var result
+var a
+var b
+var c
+var addresult
+var multiplyresult
 push
 jsr FUNC_id_main_L
 sys halt
 label FUNC_id_add_L
 link 8
+; handled?
 move $2 r0
+; handled2?
 move $3 r1
 addi r0 r1
 move r1 $-2 ; + STORE_HANDLED
+;$-2 $-1 false false
 move $-2 r0
 move r0 $-1
+;$-1 $4 false false
 move $-1 r0
 move r0 $4
 unlnk
 ret
 label FUNC_id_multiply_L
 link 8
+; handled?
 move $2 r0
+; handled2?
 move $3 r1
 muli r0 r1
 move r1 $-2 ; * STORE_HANDLED
+;$-2 $-1 false false
 move $-2 r0
 move r0 $-1
+;$-1 $4 false false
 move $-1 r0
 move r0 $4
 unlnk
@@ -124,6 +139,7 @@ jsr FUNC_id_multiply_L
 pop
 pop
 pop $-6 ;using temp
+;$-6 $-5 false false
 move $-6 r0
 move r0 $-5
 pop r3
@@ -141,6 +157,7 @@ jsr FUNC_id_add_L
 pop
 pop
 pop $-8 ;using temp
+;$-8 $-4 false false
 move $-8 r0
 move r0 $-4
 pop r3
@@ -155,7 +172,9 @@ sys writer $-3
 sys writes equal
 sys writer $-4
 sys writes eol
+;0 $-10 false false
 move 0 $-10
+;$-10 $2 false false
 move $-10 r0
 move r0 $2
 unlnk
