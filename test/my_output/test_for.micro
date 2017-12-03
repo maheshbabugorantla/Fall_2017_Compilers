@@ -1,0 +1,107 @@
+; IR code
+; PUSH
+; JSR FUNC_id_main_L
+; HALT
+; LABEL FUNC_id_main_L
+; LINK 1
+; READF num
+; STOREI 1 !T1
+; STOREI !T1 j
+; STOREF num approx
+; STOREI 100 !T2
+; STOREI !T2 i
+; LABEL label1
+; STOREF 0 !T3
+; EQ i !T3 label2
+; STOREF 0.5 !T4
+; DIVF num approx !T5
+; ADDF approx !T5 !T6
+; MULTF !T4 !T6 !T7
+; STOREF !T7 newapprox
+; STOREF newapprox approx
+; STOREI 1 !T8
+; SUBI i !T8 !T9
+; STOREI !T9 i
+; JUMP label1
+; LABEL label2
+; WRITEF approx
+; WRITES eol
+; UNLINK
+; RET
+var i
+var j
+var newapprox
+var approx
+var num
+str eol "\n"
+push
+jsr FUNC_id_main_L
+sys halt
+label FUNC_id_main_L
+link 11
+sys readr num
+;1 $-1 false false
+move 1 $-1
+;$-1 j false true
+move $-1 r0
+move r0 j
+;num approx true true
+move num r0
+move r0 approx
+;100 $-3 false false
+move 100 $-3
+;$-3 i false true
+move $-3 r0
+move r0 i
+label label1
+;0 $-5 false false
+move 0 $-5
+; handled?
+move i r0
+; handled2?
+move $-5 r1
+cmpi r0 r1
+jeq label2
+;0.5 $-6 false false
+move 0.5 $-6
+; handled?
+move approx r0
+; handled2?
+move num r1
+divr r0 r1
+move r1 $-7 ; / STORE_HANDLED
+; handled?
+move approx r0
+; handled2?
+move $-7 r1
+addr r0 r1
+move r1 $-8 ; + STORE_HANDLED
+; handled?
+move !T4 r0
+; handled2?
+move $-8 r1
+mulr r0 r1
+move r1 $-9 ; * STORE_HANDLED
+;$-9 newapprox false true
+move $-9 r0
+move r0 newapprox
+;newapprox approx true true
+move newapprox r0
+move r0 approx
+;1 $-11 false false
+move 1 $-11
+; handled?
+move !T8 r0
+; handled2?
+move i r1
+subi r0 r1
+move r1 $-12 ; - STORE_HANDLED
+;$-12 i false true
+move $-12 r0
+move r0 i
+jmp label1
+label label2
+sys writer approx
+sys writes eol
+unlnk
+ret

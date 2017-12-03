@@ -1,0 +1,205 @@
+; IR code
+; PUSH
+; JSR FUNC_id_main_L
+; HALT
+; LABEL FUNC_id_main_L
+; LINK 1
+; STOREF 0.0001 !T1
+; STOREF !T1 tolerance
+; READF num
+; STOREF num approx
+; STOREI 0 !T2
+; STOREI !T2 count
+; STOREF 0.0 !T3
+; STOREF !T3 diff
+; STOREI 0 !T4
+; STOREI !T4 enough
+; LABEL label1
+; STOREF 1 !T5
+; EQ enough !T5 label2
+; STOREI 1 !T6
+; ADDI count !T6 !T7
+; STOREI !T7 count
+; STOREF 0.5 !T8
+; DIVF num approx !T9
+; ADDF approx !T9 !T10
+; MULTF !T8 !T10 !T11
+; STOREF !T11 newapprox
+; SUBF approx newapprox !T12
+; STOREF !T12 diff
+; STOREF 0.0 !T13
+; LE diff !T13 label3
+; GE diff tolerance label5
+; STOREI 1 !T14
+; STOREI !T14 enough
+; JUMP label6
+; LABEL label5
+; LABEL label6
+; JUMP label4
+; LABEL label3
+; STOREF 0.0 !T15
+; SUBF !T15 tolerance !T16
+; LE diff !T16 label7
+; STOREI 1 !T17
+; STOREI !T17 enough
+; JUMP label8
+; LABEL label7
+; LABEL label8
+; LABEL label4
+; STOREF newapprox approx
+; JUMP label1
+; LABEL label2
+; WRITEF approx
+; WRITES space
+; WRITEI count
+; WRITES eol
+; UNLINK
+; RET
+var count
+var enough
+var newapprox
+var approx
+var num
+var tolerance
+var diff
+str eol "\n"
+str space " "
+push
+jsr FUNC_id_main_L
+sys halt
+label FUNC_id_main_L
+link 19
+;0.0001 $-1 false false
+move 0.0001 $-1
+;$-1 tolerance false true
+move $-1 r0
+move r0 tolerance
+sys readr num
+;num approx true true
+move num r0
+move r0 approx
+;0 $-3 false false
+move 0 $-3
+;$-3 count false true
+move $-3 r0
+move r0 count
+;0.0 $-5 false false
+move 0.0 $-5
+;$-5 diff false true
+move $-5 r0
+move r0 diff
+;0 $-7 false false
+move 0 $-7
+;$-7 enough false true
+move $-7 r0
+move r0 enough
+label label1
+;1 $-9 false false
+move 1 $-9
+; handled?
+move enough r0
+; handled2?
+move $-9 r1
+cmpi r0 r1
+jeq label2
+;1 $-10 false false
+move 1 $-10
+; handled?
+move count r0
+; handled2?
+move $-10 r1
+addi r0 r1
+move r1 $-11 ; + STORE_HANDLED
+;$-11 count false true
+move $-11 r0
+move r0 count
+;0.5 $-13 false false
+move 0.5 $-13
+; handled?
+move approx r0
+; handled2?
+move num r1
+divr r0 r1
+move r1 $-14 ; / STORE_HANDLED
+; handled?
+move approx r0
+; handled2?
+move $-14 r1
+addr r0 r1
+move r1 $-15 ; + STORE_HANDLED
+; handled?
+move $-13 r0
+; handled2?
+move $-15 r1
+mulr r0 r1
+move r1 $-16 ; * STORE_HANDLED
+;$-16 newapprox false true
+move $-16 r0
+move r0 newapprox
+; handled?
+move newapprox r0
+; handled2?
+move approx r1
+subr r0 r1
+move r1 $-18 ; - STORE_HANDLED
+;$-18 diff false true
+move $-18 r0
+move r0 diff
+;0.0 $-20 false false
+move 0.0 $-20
+; handled?
+move diff r0
+; handled2?
+move $-20 r1
+cmpr r0 r1
+jle label3
+; handled?
+move diff r0
+; handled2?
+move tolerance r1
+cmpr r0 r1
+jge label5
+;1 $-21 false false
+move 1 $-21
+;$-21 enough false true
+move $-21 r0
+move r0 enough
+jmp label6
+label label5
+label label6
+jmp label4
+label label3
+;0.0 $-23 false false
+move 0.0 $-23
+; handled?
+move tolerance r0
+; handled2?
+move $-23 r1
+subr r0 r1
+move r1 $-24 ; - STORE_HANDLED
+; handled?
+move diff r0
+; handled2?
+move $-24 r1
+cmpr r0 r1
+jle label7
+;1 $-25 false false
+move 1 $-25
+;$-25 enough false true
+move $-25 r0
+move r0 enough
+jmp label8
+label label7
+label label8
+label label4
+;newapprox approx true true
+move newapprox r0
+move r0 approx
+jmp label1
+label label2
+sys writer approx
+sys writes space
+sys writei count
+sys writes eol
+unlnk
+ret
