@@ -118,6 +118,7 @@ public class Micro468Listener extends MicroBaseListener {
                else if (dataType.startsWith("STRING")) {
                    String[] variableNames = dataType.substring(6).trim().split(":=");
                    tinyNodeArrayList.add(new TinyNode("str", variableNames[0].trim(), variableNames[1].trim()));
+                   tinyNodes.add(new TinyNode("str", variableNames[0].trim(), variableNames[1].trim()));
                    symbolsTable.addSymbol(new Symbol("STRING", variableNames[0].trim(), variableNames[1].trim()));
                }
            }
@@ -921,7 +922,7 @@ public class Micro468Listener extends MicroBaseListener {
 //        irNodeList.printCustomNodeList();
 
         //System.out.println(";tiny code");
-        printTinyNodeList(tinyNodeArrayList);
+        //printTinyNodeList(tinyNodeArrayList);
         //// System.out.println("sys halt");
 
 //        System.out.println("; +++++++++++++");
@@ -1036,7 +1037,16 @@ public class Micro468Listener extends MicroBaseListener {
                     tinyNodes.add(new TinyNode("push"));
                 }
                 else {
-                    tinyNodes.add(new TinyNode("push", convertOperand(firstOp)));
+                    if (firstOp.startsWith("!T")) {
+                        //tinyNodes.add(new TinyNode("push using temporary " + firstOp));
+                        String updated = getTemporary(temporaries, firstOp, currentTemporaryLocation);
+                        currentTemporaryLocation = updateTemporaryCount(firstOp, updated, currentTemporaryLocation);
+
+                        tinyNodes.add(new TinyNode("push", updated, ";using temp"));
+                    }
+                    else {
+                        tinyNodes.add(new TinyNode("push", convertOperand(firstOp)));
+                    }
                 }
             }
             else if (opCode.equals("POP")) {
@@ -1045,7 +1055,16 @@ public class Micro468Listener extends MicroBaseListener {
                     tinyNodes.add(new TinyNode("pop"));
                 }
                 else {
-                    tinyNodes.add(new TinyNode("pop", convertOperand(firstOp)));
+                    if (firstOp.startsWith("!T")) {
+                        //tinyNodes.add(new TinyNode("pop using temporary " + firstOp));
+                        String updated = getTemporary(temporaries, firstOp, currentTemporaryLocation);
+                        currentTemporaryLocation = updateTemporaryCount(firstOp, updated, currentTemporaryLocation);
+
+                        tinyNodes.add(new TinyNode("pop", updated, ";using temp"));
+                    }
+                    else {
+                        tinyNodes.add(new TinyNode("pop", convertOperand(firstOp)));
+                    }
                 }
             }
             // STOREI/F/S, READI/F, WRITEI/F/S
@@ -1102,7 +1121,7 @@ public class Micro468Listener extends MicroBaseListener {
                 String updated = getTemporary(temporaries, thirdOp, currentTemporaryLocation);
                 currentTemporaryLocation = updateTemporaryCount(thirdOp, updated, currentTemporaryLocation);
 
-                tinyNodes.add(new TinyNode("; STORE_HANDLED: move", "r1", updated));
+                tinyNodes.add(new TinyNode("move", "r1", updated + " ; + STORE_HANDLED"));
             }
             else if (opCode.startsWith("MULT")) {
                 currentTemporaryLocation = getCompOpTiny(temporaries, currentTemporaryLocation, firstOp, secondOp, "mul");
@@ -1110,23 +1129,23 @@ public class Micro468Listener extends MicroBaseListener {
                 String updated = getTemporary(temporaries, thirdOp, currentTemporaryLocation);
                 currentTemporaryLocation = updateTemporaryCount(thirdOp, updated, currentTemporaryLocation);
 
-                tinyNodes.add(new TinyNode("; STORE_HANDLED: move", "r1", updated));
+                tinyNodes.add(new TinyNode("move", "r1", updated + " ; * STORE_HANDLED"));
             }
             else if (opCode.startsWith("SUB")) {
-                currentTemporaryLocation = getCompOpTiny(temporaries, currentTemporaryLocation, firstOp, secondOp, "sub");
+                currentTemporaryLocation = getCompOpTiny(temporaries, currentTemporaryLocation, secondOp, firstOp, "sub");
 
                 String updated = getTemporary(temporaries, thirdOp, currentTemporaryLocation);
                 currentTemporaryLocation = updateTemporaryCount(thirdOp, updated, currentTemporaryLocation);
 
-                tinyNodes.add(new TinyNode("; STORE_HANDLED: move", "r1", updated));
+                tinyNodes.add(new TinyNode("move", "r1", updated + " ; - STORE_HANDLED"));
             }
             else if (opCode.startsWith("DIV")) {
-                currentTemporaryLocation = getCompOpTiny(temporaries, currentTemporaryLocation, firstOp, secondOp, "div");
+                currentTemporaryLocation = getCompOpTiny(temporaries, currentTemporaryLocation, secondOp, firstOp, "div");
 
                 String updated = getTemporary(temporaries, thirdOp, currentTemporaryLocation);
                 currentTemporaryLocation = updateTemporaryCount(thirdOp, updated, currentTemporaryLocation);
 
-                tinyNodes.add(new TinyNode("; STORE_HANDLED: move", "r1", updated));
+                tinyNodes.add(new TinyNode("move", "r1", updated + " ; / STORE_HANDLED"));
             }
         }
 

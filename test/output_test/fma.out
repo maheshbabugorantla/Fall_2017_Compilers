@@ -81,84 +81,27 @@ push
 jsr FUNC_id_main_L
 sys halt
 label FUNC_id_add_L
-link 2
+link 8
 move $2 r0
-addr $3 r0
+move $3 r1
+addi r0 r1
+move r1 $-2 ; + STORE_HANDLED
+move $-2 r0
 move r0 $-1
 move $-1 r0
 move r0 $4
 unlnk
 ret
 label FUNC_id_multiply_L
-link 2
-move $2 r1
-mulr $3 r1
-move r1 $-1
-move $-1 r1
-move r1 $4
-unlnk
-ret
-label FUNC_id_main_L
-link 6
-sys writes intro
-sys writes first
-sys readr $-1
-sys writes second
-sys readr $-2
-sys writes third
-sys readr $-3
-push
-push $-1
-push $-2
-jsr FUNC_id_multiply_L
-pop
-pop
-pop r2
-move r2 $-5
-push
-push $-5
-push $-3
-jsr FUNC_id_add_L
-pop
-pop
-pop r3
-move r3 $-4
-sys writer $-1
-sys writes star
-sys writer $-2
-sys writes plus
-sys writer $-3
-sys writes equal
-sys writer $-4
-sys writes eol
-move 0 r4
-move r4 $2
-unlnk
-ret
-2
-2
-6
-push
-jsr FUNC_id_main_L
-sys halt
-label FUNC_id_add_L
 link 8
 move $2 r0
 move $3 r1
-addr r0 r1
-; STORE_HANDLED: move r1 $3
-move !T1 $-1
-move $-1 $4
-unlnk
-ret
-label FUNC_id_multiply_L
-link 8
-move $2 r0
-move $3 r1
-mulr r0 r1
-; STORE_HANDLED: move r1 $3
-move !T2 $-1
-move $-1 $4
+muli r0 r1
+move r1 $-2 ; * STORE_HANDLED
+move $-2 r0
+move r0 $-1
+move $-1 r0
+move r0 $4
 unlnk
 ret
 label FUNC_id_main_L
@@ -180,8 +123,9 @@ push $-2
 jsr FUNC_id_multiply_L
 pop
 pop
-pop r2
-move !T3 $-5
+pop $-6 ;using temp
+move $-6 r0
+move r0 $-5
 pop r3
 pop r2
 pop r1
@@ -196,8 +140,9 @@ push $-3
 jsr FUNC_id_add_L
 pop
 pop
-pop r3
-move !T4 $-4
+pop $-8 ;using temp
+move $-8 r0
+move r0 $-4
 pop r3
 pop r2
 pop r1
@@ -210,7 +155,8 @@ sys writer $-3
 sys writes equal
 sys writer $-4
 sys writes eol
-move 0 !T5
-move !T5 $2
+move 0 $-10
+move $-10 r0
+move r0 $2
 unlnk
 ret

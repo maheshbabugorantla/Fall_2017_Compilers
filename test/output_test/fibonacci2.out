@@ -1,0 +1,251 @@
+; IR code
+; PUSH
+; JSR FUNC_id_main_L
+; HALT
+; LABEL FUNC_id_F_L
+; LINK 3
+; STOREI 2 !T1
+; LE $2 !T1 label1
+; PUSH r0
+; PUSH r1
+; PUSH r2
+; PUSH r3
+; PUSH ;(return value)
+; STOREI 1 !T2
+; SUBI $2 !T2 !T3
+; PUSH !T3
+; JSR FUNC_id_F_L
+; POP
+; POP !T4
+; STOREI !T4 $-1
+; POP r3
+; POP r2
+; POP r1
+; POP r0
+; PUSH r0
+; PUSH r1
+; PUSH r2
+; PUSH r3
+; PUSH ;(return value)
+; STOREI 2 !T5
+; SUBI $2 !T5 !T6
+; PUSH !T6
+; JSR FUNC_id_F_L
+; POP
+; POP !T7
+; STOREI !T7 $-2
+; POP r3
+; POP r2
+; POP r1
+; POP r0
+; ADDI $-1 $-2 !T8
+; STOREI !T8 $3
+; UNLINK
+; RET
+; JUMP label2
+; LABEL label1
+; STOREI 0 !T9
+; NE $2 !T9 label3
+; STOREI 0 !T10
+; STOREI !T10 $3
+; UNLINK
+; RET
+; JUMP label4
+; LABEL label3
+; STOREI 1 !T11
+; NE $2 !T11 label5
+; STOREI 1 !T12
+; STOREI !T12 $3
+; UNLINK
+; RET
+; JUMP label6
+; LABEL label5
+; STOREI 1 !T13
+; STOREI !T13 $3
+; UNLINK
+; RET
+; LABEL label6
+; LABEL label4
+; LABEL label2
+; UNLINK
+; RET
+; LABEL FUNC_id_main_L
+; LINK 4
+; WRITES input
+; READI $-2
+; STOREI 0 !T14
+; STOREI !T14 $-1
+; LABEL label7
+; STOREI $-2 !T15
+; EQ $-1 !T15 label8
+; PUSH r0
+; PUSH r1
+; PUSH r2
+; PUSH r3
+; PUSH ;(return value)
+; PUSH $-1
+; JSR FUNC_id_F_L
+; POP
+; POP !T16
+; STOREI !T16 $-3
+; POP r3
+; POP r2
+; POP r1
+; POP r0
+; WRITEI $-1
+; WRITES space
+; WRITEI $-3
+; WRITES eol
+; STOREI 1 !T17
+; ADDI $-1 !T17 !T18
+; STOREI !T18 $-1
+; JUMP label7
+; LABEL label8
+; STOREI 0 !T19
+; STOREI !T19 $2
+; UNLINK
+; RET
+str input "Please input an integer number: "
+str space " "
+str eol "\n"
+push
+jsr FUNC_id_main_L
+sys halt
+label FUNC_id_F_L
+link 23
+move 2 $-3
+move $2 r0
+move $-3 r1
+cmpi r0 r1
+jle label1
+push r0
+push r1
+push r2
+push r3
+push ;(return value)
+move 1 $-4
+move $-4 r0
+move $2 r1
+subi r0 r1
+move r1 $-5 ; - STORE_HANDLED
+push $-5 ;using temp
+jsr FUNC_id_F_L
+pop
+pop $-7 ;using temp
+move $-7 r0
+move r0 $-1
+pop r3
+pop r2
+pop r1
+pop r0
+push r0
+push r1
+push r2
+push r3
+push ;(return value)
+move 2 $-9
+move $-9 r0
+move $2 r1
+subi r0 r1
+move r1 $-10 ; - STORE_HANDLED
+push $-10 ;using temp
+jsr FUNC_id_F_L
+pop
+pop $-12 ;using temp
+move $-12 r0
+move r0 $-2
+pop r3
+pop r2
+pop r1
+pop r0
+move $-1 r0
+move $-2 r1
+addi r0 r1
+move r1 $-14 ; + STORE_HANDLED
+move $-14 r0
+move r0 $3
+unlnk
+ret
+jmp label2
+label label1
+move 0 $-16
+move $2 r0
+move $-16 r1
+cmpi r0 r1
+jne label3
+move 0 $-17
+move $-17 r0
+move r0 $3
+unlnk
+ret
+jmp label4
+label label3
+move 1 $-19
+move $2 r0
+move $-19 r1
+cmpi r0 r1
+jne label5
+move 1 $-20
+move $-20 r0
+move r0 $3
+unlnk
+ret
+jmp label6
+label label5
+move 1 $-22
+move $-22 r0
+move r0 $3
+unlnk
+ret
+label label6
+label label4
+label label2
+unlnk
+ret
+label FUNC_id_main_L
+link 24
+sys writes input
+sys readi $-2
+move 0 $-4
+move $-4 r0
+move r0 $-1
+label label7
+move $-2 r0
+move r0 $-6
+move $-1 r0
+move $-6 r1
+cmpi r0 r1
+jeq label8
+push r0
+push r1
+push r2
+push r3
+push ;(return value)
+push $-1
+jsr FUNC_id_F_L
+pop
+pop $-7 ;using temp
+move $-7 r0
+move r0 $-3
+pop r3
+pop r2
+pop r1
+pop r0
+sys writei $-1
+sys writes space
+sys writei $-3
+sys writes eol
+move 1 $-9
+move $-1 r0
+move $-9 r1
+addi r0 r1
+move r1 $-10 ; + STORE_HANDLED
+move $-10 r0
+move r0 $-1
+jmp label7
+label label8
+move 0 $-12
+move $-12 r0
+move r0 $2
+unlnk
+ret
