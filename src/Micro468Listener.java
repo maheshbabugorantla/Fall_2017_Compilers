@@ -340,7 +340,7 @@ public class Micro468Listener extends MicroBaseListener {
 
             irNodeList.addNode(new IRNode("POP", location));
             tinyNodeArrayList.add(new TinyNode("pop", "r" + tinyRegisterNumber));
-            add_reg_operation_stmt_2("move", "r" + tinyRegisterNumber, symbolScope.get(left).register);
+            //add_reg_operation_stmt_2("move", "r" + tinyRegisterNumber, symbolScope.get(left).register);
 
             irNodeList.addNode(new IRNode("STOREI", location, symbolScope.get(left).register));
         }
@@ -350,7 +350,7 @@ public class Micro468Listener extends MicroBaseListener {
 
             irNodeList.addNode(new IRNode("POP", location));
             tinyNodeArrayList.add(new TinyNode("pop", "r" + tinyRegisterNumber));
-            add_reg_operation_stmt_2("move", "r" + tinyRegisterNumber, symbolScope.get(left).register);
+            //add_reg_operation_stmt_2("move", "r" + tinyRegisterNumber, symbolScope.get(left).register);
 
             irNodeList.addNode(new IRNode("STOREF", location, symbolScope.get(left).register));
         }
@@ -394,7 +394,7 @@ public class Micro468Listener extends MicroBaseListener {
 
                     irNodeList.addNode(new IRNode("STOREI", c, location));
 
-                    add_reg_operation_stmt_2("move", c, location);
+                    //add_reg_operation_stmt_2("move", c, location);
                 }
                 else {
 
@@ -403,7 +403,7 @@ public class Micro468Listener extends MicroBaseListener {
                     stack.push(location);
 
                     printStoreOperation("STOREF", c, location);
-                    add_reg_operation_stmt_2("move", c, location);
+                    //add_reg_operation_stmt_2("move", c, location);
                 }
             }
 
@@ -450,7 +450,7 @@ public class Micro468Listener extends MicroBaseListener {
             }
             else {
                 irNodeList.addNode(new IRNode("PUSH", c));
-                add_reg_operation_stmt_3("push", c);
+                //add_reg_operation_stmt_3("push", c);
             }
         }
     }
@@ -483,7 +483,7 @@ public class Micro468Listener extends MicroBaseListener {
                     stack.push(location);
 
                     irNodeList.addNode(new IRNode("STOREI", c, location));
-                    add_reg_operation_stmt_2("move", c, location);
+                    //add_reg_operation_stmt_2("move", c, location);
                 }
                 else {
 
@@ -492,7 +492,7 @@ public class Micro468Listener extends MicroBaseListener {
                     stack.push(location);
 
                     printStoreOperation("STOREF", c, location);
-                    add_reg_operation_stmt_2("move", c, location);
+                   // add_reg_operation_stmt_2("move", c, location);
                 }
             }
 
@@ -569,11 +569,11 @@ public class Micro468Listener extends MicroBaseListener {
                 }
                 if (currentType.equals("INT")) {
                     printStoreOperation("STOREI", c, left);
-                    add_reg_operation_stmt_2("move", c, left);
+                    ///add_reg_operation_stmt_2("move", c, left);
                 }
                 else {
                     printStoreOperation("STOREF", c, left);
-                    add_reg_operation_stmt_2("move", c, left);
+                    //add_reg_operation_stmt_2("move", c, left);
                 }
             }
         }
@@ -612,8 +612,8 @@ public class Micro468Listener extends MicroBaseListener {
 
                 tinyRegisterNumber = this.operationNumber - 2;
 
-                add_reg_operation_stmt_2("move", postfix, location);
-                add_reg_operation_stmt_2("move", location,  "$" + returnRegister);
+                //add_reg_operation_stmt_2("move", postfix, location);
+                //add_reg_operation_stmt_2("move", location,  "$" + returnRegister);
 
             }
             else {
@@ -629,8 +629,8 @@ public class Micro468Listener extends MicroBaseListener {
 
                 tinyRegisterNumber = this.operationNumber - 2;
 
-                add_reg_operation_stmt_2("move", postfix, location);
-                add_reg_operation_stmt_2("move", location,  "$" + returnRegister);
+                //add_reg_operation_stmt_2("move", postfix, location);
+                //add_reg_operation_stmt_2("move", location,  "$" + returnRegister);
             }
 
             // System.out.println("; UNLINK");
@@ -655,11 +655,11 @@ public class Micro468Listener extends MicroBaseListener {
                 register = symbolScope.get(postfix).register;
                 if (symbolScope.get(postfix).decl_type.equals("INT")) {
                     irNodeList.addNode(new IRNode("STOREI", register, "$" + returnRegister));
-                    add_reg_operation_stmt_2("move", register,  "$" + returnRegister);
+                    //add_reg_operation_stmt_2("move", register,  "$" + returnRegister);
                 }
                 else {
                     irNodeList.addNode(new IRNode("STOREF", register, "$" + returnRegister));
-                    add_reg_operation_stmt_2("move", register,  "$" + returnRegister);
+                    //add_reg_operation_stmt_2("move", register,  "$" + returnRegister);
                 }
             }
             else {
@@ -675,11 +675,11 @@ public class Micro468Listener extends MicroBaseListener {
 
                 if (currentType.equals("INT")) {
                     irNodeList.addNode(new IRNode("STOREI", register, "$" + returnRegister));
-                    add_reg_operation_stmt_2("move", register,  "$" + returnRegister);
+                    //add_reg_operation_stmt_2("move", register,  "$" + returnRegister);
                 }
                 else {
                     irNodeList.addNode(new IRNode("STOREF", register, "$" + returnRegister));
-                    add_reg_operation_stmt_2("move", register,  "$" + returnRegister);
+                    //add_reg_operation_stmt_2("move", register,  "$" + returnRegister);
                 }
             }
         }
@@ -717,19 +717,19 @@ public class Micro468Listener extends MicroBaseListener {
     private void choose_operation(String symbol, String type, String str1, String str2, String location) {
         if (symbol.equals("+")) {
             operation_stmt("ADD", type, str1, str2, location);
-            reg_operation_stmt("add", type, str1, str2, location);
+//            reg_operation_stmt("add", type, str1, str2, location);
         }
         else if (symbol.equals("*")) {
             operation_stmt("MULT", type, str1, str2, location);
-            reg_operation_stmt("mul", type, str1, str2, location);
+//            reg_operation_stmt("mul", type, str1, str2, location);
         }
         else if (symbol.equals("/")) {
             operation_stmt("DIV", type, str1, str2, location);
-            reg_operation_stmt("div", type, str1, str2, location);
+//            reg_operation_stmt("div", type, str1, str2, location);
         }
         else if (symbol.equals("-")) {
             operation_stmt("SUB", type, str1, str2, location);
-            reg_operation_stmt("sub", type, str1, str2, location);
+//            reg_operation_stmt("sub", type, str1, str2, location);
         }
         else {
             // System.out.println("None of the symbols...");
@@ -746,16 +746,6 @@ public class Micro468Listener extends MicroBaseListener {
     }
 
 
-    private void reg_operation_stmt(String operation, String type, String str1, String str2, String location) {
-
-        add_reg_operation_stmt("move", str1, location);
-        if (type.equals("INT")) {
-            add_reg_operation_stmt(operation + "i", str2, location);
-        }
-        else {
-            add_reg_operation_stmt(operation + "r", str2, location);
-        }
-    }
 
     private void operation_stmt(String operation, String type, String str1, String str2, String location) {
         if (symbolScope.containsKey(str1)) {
@@ -806,8 +796,8 @@ public class Micro468Listener extends MicroBaseListener {
 
             printStoreOperation("STOREI", location, left);
             tinyRegisterNumber += 1;
-            add_reg_operation_stmt_2("move", right, location);
-            add_reg_operation_stmt_2("move", location, left);
+            //add_reg_operation_stmt_2("move", right, location);
+            //add_reg_operation_stmt_2("move", location, left);
         }
         else {
             String location = "!T" + this.operationNumber;
@@ -818,85 +808,9 @@ public class Micro468Listener extends MicroBaseListener {
 
             printStoreOperation("STOREF", location, left);
             tinyRegisterNumber += 1;
-            add_reg_operation_stmt_2("move", right, location);
-            add_reg_operation_stmt_2("move", location, left);
+            //add_reg_operation_stmt_2("move", right, location);
+            //add_reg_operation_stmt_2("move", location, left);
         }
-    }
-
-    private void add_reg_operation_stmt_3(String operation, String str1) {
-        String check1 = str1;
-        if (parentTree.getCurrentScope().variableMap.containsKey(check1)) {
-            if (parentTree.getCurrentScope().variableMap.get(check1)[1] != null) {
-                check1 = parentTree.getCurrentScope().variableMap.get(check1)[1];
-            }
-        }
-
-        if (symbolScope.containsKey(check1)) {
-            check1 = symbolScope.get(check1).register;
-        }
-
-        tinyNodeArrayList.add(new TinyNode(operation, check1));
-    }
-
-    private void add_reg_operation_stmt(String operation, String str1, String location) {
-
-        // TODO: Need to refactor this
-//        if (str1.trim().startsWith("!")) {
-//            if (parentTree.getCurrentScope().variableMap.get(str1)[1] == null) {
-//                if (symbolScope.containsKey(str1)) {
-//                    str1 = symbolScope.get(str1).register;
-//                }
-//                tinyNodeArrayList.add(new TinyNode(operation, str1, parentTree.getCurrentScope().variableMap.get(location)[1]));
-//            } else {
-//                tinyNodeArrayList.add(new TinyNode(operation, parentTree.getCurrentScope().variableMap.get(str1)[1],
-//                        parentTree.getCurrentScope().variableMap.get(location)[1]));
-//            }
-//        } else {
-//            if (parentTree.getCurrentScope().variableMap.get(str1)[1] == null) {
-//            //if (currentScope.variableMap.get(str1)[1] == null) { // TODO: Crashing in Here again
-//                if (symbolScope.containsKey(str1)) {
-//                    str1 = symbolScope.get(str1).register;
-//                }
-//                tinyNodeArrayList.add(new TinyNode(operation, str1, parentTree.getCurrentScope().variableMap.get(location)[1]));
-//            } else {
-//                tinyNodeArrayList.add(new TinyNode(operation, parentTree.getCurrentScope().variableMap.get(str1)[1],
-//                        parentTree.getCurrentScope().variableMap.get(location)[1]));
-//            }
-//        }
-    }
-
-    private void add_reg_operation_stmt_2(String operation, String str1, String location) {
-        String check1 = str1;
-        String check2 = location;
-        if (parentTree.getCurrentScope().variableMap.containsKey(check1)) {
-            if (parentTree.getCurrentScope().variableMap.get(check1)[1] != null) {
-               check1 = parentTree.getCurrentScope().variableMap.get(check1)[1];
-            }
-        }
-        if (parentTree.getCurrentScope().variableMap.containsKey(check2)) {
-            if (parentTree.getCurrentScope().variableMap.get(check2)[1] != null) {
-                check2 = parentTree.getCurrentScope().variableMap.get(check2)[1];
-            }
-        }
-
-        if (symbolScope.containsKey(check1)) {
-            check1 = symbolScope.get(check1).register;
-        }
-
-
-        if (symbolScope.containsKey(check2)) {
-            check2 = symbolScope.get(check2).register;
-        }
-
-        if (check1.startsWith("$") && check2.startsWith("$") && operation.equals("move")) {
-            String reg = "r" + Integer.toString(this.operationNumber - 2);
-            tinyNodeArrayList.add(new TinyNode(operation, check1, reg));
-            tinyNodeArrayList.add(new TinyNode(operation, reg, check2));
-
-            return;
-        }
-
-        tinyNodeArrayList.add(new TinyNode(operation, check1, check2));
     }
 
     private static boolean isNumeric(String str) {
@@ -1679,7 +1593,7 @@ public class Micro468Listener extends MicroBaseListener {
 
             printStoreOperation("STOREI", rightOp, IRreg);
 
-            add_reg_operation_stmt_2("move", rightOp, tinyReg);
+//            add_reg_operation_stmt_2("move", rightOp, tinyReg);
             tinyNodeArrayList.add(new TinyNode("cmpi", leftOp, tinyReg));
             this.operationNumber += 1;
         } else {
@@ -1688,7 +1602,7 @@ public class Micro468Listener extends MicroBaseListener {
                     leftOp = symbolScope.get(leftOp).register;
                 }
                 printStoreOperation("STOREI", rightOp, IRreg);
-                add_reg_operation_stmt_2("move", rightOp, tinyReg);
+//                add_reg_operation_stmt_2("move", rightOp, tinyReg);
                 tinyNodeArrayList.add(new TinyNode("cmpi", leftOp, tinyReg));
                 this.operationNumber += 1;
             }
@@ -1698,7 +1612,7 @@ public class Micro468Listener extends MicroBaseListener {
                 }
 
                 printStoreOperation("STOREF", rightOp, IRreg);
-                add_reg_operation_stmt_2("move", rightOp, tinyReg);
+//                add_reg_operation_stmt_2("move", rightOp, tinyReg);
                 tinyNodeArrayList.add(new TinyNode("cmpr", leftOp, tinyReg));
                 this.operationNumber += 1;
             }
@@ -1746,3 +1660,90 @@ public class Micro468Listener extends MicroBaseListener {
         }
     }
 }
+
+/*
+    private void add_reg_operation_stmt_3(String operation, String str1) {
+//        String check1 = str1;
+//        if (parentTree.getCurrentScope().variableMap.containsKey(check1)) {
+//            if (parentTree.getCurrentScope().variableMap.get(check1)[1] != null) {
+//                check1 = parentTree.getCurrentScope().variableMap.get(check1)[1];
+//            }
+//        }
+//
+//        if (symbolScope.containsKey(check1)) {
+//            check1 = symbolScope.get(check1).register;
+//        }
+//
+//        tinyNodeArrayList.add(new TinyNode(operation, check1));
+    }
+
+    private void add_reg_operation_stmt(String operation, String str1, String location) {
+        // TODO: Need to refactor this
+//        if (str1.trim().startsWith("!")) {
+//            if (parentTree.getCurrentScope().variableMap.get(str1)[1] == null) {
+//                if (symbolScope.containsKey(str1)) {
+//                    str1 = symbolScope.get(str1).register;
+//                }
+//                tinyNodeArrayList.add(new TinyNode(operation, str1, parentTree.getCurrentScope().variableMap.get(location)[1]));
+//            } else {
+//                tinyNodeArrayList.add(new TinyNode(operation, parentTree.getCurrentScope().variableMap.get(str1)[1],
+//                        parentTree.getCurrentScope().variableMap.get(location)[1]));
+//            }
+//        } else {
+//            if (parentTree.getCurrentScope().variableMap.get(str1)[1] == null) {
+//            //if (currentScope.variableMap.get(str1)[1] == null) { // TODO: Crashing in Here again
+//                if (symbolScope.containsKey(str1)) {
+//                    str1 = symbolScope.get(str1).register;
+//                }
+//                tinyNodeArrayList.add(new TinyNode(operation, str1, parentTree.getCurrentScope().variableMap.get(location)[1]));
+//            } else {
+//                tinyNodeArrayList.add(new TinyNode(operation, parentTree.getCurrentScope().variableMap.get(str1)[1],
+//                        parentTree.getCurrentScope().variableMap.get(location)[1]));
+//            }
+//        }
+    }
+    private void add_reg_operation_stmt_2(String operation, String str1, String location) {
+//        String check1 = str1;
+//        String check2 = location;
+//        if (parentTree.getCurrentScope().variableMap.containsKey(check1)) {
+//            if (parentTree.getCurrentScope().variableMap.get(check1)[1] != null) {
+//               check1 = parentTree.getCurrentScope().variableMap.get(check1)[1];
+//            }
+//        }
+//        if (parentTree.getCurrentScope().variableMap.containsKey(check2)) {
+//            if (parentTree.getCurrentScope().variableMap.get(check2)[1] != null) {
+//                check2 = parentTree.getCurrentScope().variableMap.get(check2)[1];
+//            }
+//        }
+//
+//        if (symbolScope.containsKey(check1)) {
+//            check1 = symbolScope.get(check1).register;
+//        }
+//
+//
+//        if (symbolScope.containsKey(check2)) {
+//            check2 = symbolScope.get(check2).register;
+//        }
+//
+//        if (check1.startsWith("$") && check2.startsWith("$") && operation.equals("move")) {
+//            String reg = "r" + Integer.toString(this.operationNumber - 2);
+//            tinyNodeArrayList.add(new TinyNode(operation, check1, reg));
+//            tinyNodeArrayList.add(new TinyNode(operation, reg, check2));
+//
+//            return;
+//        }
+//
+//        tinyNodeArrayList.add(new TinyNode(operation, check1, check2));
+    }
+*/
+
+//    private void reg_operation_stmt(String operation, String type, String str1, String str2, String location) {
+//
+//        //add_reg_operation_stmt("move", str1, location);
+//        if (type.equals("INT")) {
+//            //add_reg_operation_stmt(operation + "i", str2, location);
+//        }
+//        else {
+//            //add_reg_operation_stmt(operation + "r", str2, location);
+//        }
+//    }
