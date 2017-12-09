@@ -1,21 +1,70 @@
 ;STRINGeol:="\n";STRINGstar:="*";STRINGplus:="+";STRINGequal:="=";
 ; IR code
 ;FLOATa,b,c;
+;In infix to postfix: arg1*3.0
+arg1*3.0
+arg1*3.0
+arg1 3.0 *
+; post fix function: arg1 3.0 *
+; THIS SHOULD NEVER HIT: Function in assign statement
+;arg1 3.0 *
 ;Print store: c 3.0 left: !T1
 ;Print store: c !T2 left: $-1
+;In infix to postfix: arg2
+arg2
+arg2
+arg2
+; post fix function: arg2
+; THIS SHOULD NEVER HIT: Function in assign statement
+;arg2
 ;AHHHH left: b right: arg2
 ;Print store: c $3 left: $-2
+;In infix to postfix: a+b/4.0
+a+b/4.0
+a+b/4.0
+a b 4.0 / +
+; post fix function: a b 4.0 / +
+; THIS SHOULD NEVER HIT: Function in assign statement
+;a b 4.0 / +
 ;Print store: c 4.0 left: !T3
 ;Print store: c !T5 left: $-3
 ;AHHHH left: null right: c
 ;FLOATd,e,multiplyresult;
+;In infix to postfix: 2.0
+2.0
+2.0
+2.0
+; post fix function: 2.0
+; THIS SHOULD NEVER HIT: Function in assign statement
+;2.0
 ;AHHHH left: d right: 2.0
 ;Print store: c 2.0 left: !T6
 ;Print store: c !T6 left: $-1
+;In infix to postfix: 2.0
+2.0
+2.0
+2.0
+; post fix function: 2.0
+; THIS SHOULD NEVER HIT: Function in assign statement
+;2.0
 ;AHHHH left: e right: 2.0
 ;Print store: c 2.0 left: !T7
 ;Print store: c !T7 left: $-2
-;Print store: c !T9 left: $-3
+;In infix to postfix: myFunction(d,e)+1
+myFunction(d,e)+1
+myFunction(d,e)
+!T8+1
+!T8 1 +
+; post fix function: !T8 1 +
+; THIS SHOULD NEVER HIT: Function in assign statement
+;only one function call: myFunction(d,e)+1
+;In infix to postfix: d+e
+d+e
+d+e
+d e +
+; post fix function: d e +
+; THIS SHOULD NEVER HIT: Function in assign statement
+;only one function call: d+e
 ; PUSH
 ; JSR FUNC_id_main_L
 ; HALT
@@ -44,30 +93,12 @@
 ; STOREF !T6 $-1
 ; STOREF 2.0 !T7
 ; STOREF !T7 $-2
-; PUSH r0
-; PUSH r1
-; PUSH r2
-; PUSH r3
-; PUSH ;(return value)
-; PUSH $-1
-; PUSH $-2
-; JSR FUNC_id_myFunction_L
-; POP
-; POP
-; POP !T8
-; STOREF !T8 $-3
-; POP r3
-; POP r2
-; POP r1
-; POP r0
 ; WRITEF $-3
 ; WRITES eol
-; ADDF $-1 $-2 !T9
-; STOREF !T9 $-3
 ; WRITEF $-3
 ; WRITES eol
-; STOREI 0 !T10
-; STOREI !T10 $2
+; STOREI 0 !T8
+; STOREI !T8 $2
 ; UNLINK
 ; RET
 str eol "\n"
@@ -84,7 +115,7 @@ push
 jsr FUNC_id_main_L
 sys halt
 label FUNC_id_myFunction_L
-link 15
+link 13
 ;3.0 $-4 false false
 move 3.0 $-4
 ; handled?
@@ -128,7 +159,7 @@ move r0 $4
 unlnk
 ret
 label FUNC_id_main_L
-link 15
+link 13
 ;2.0 $-4 false false
 move 2.0 $-4
 ;$-4 $-1 false false
@@ -139,41 +170,14 @@ move 2.0 $-6
 ;$-6 $-2 false false
 move $-6 r0
 move r0 $-2
-push r0
-push r1
-push r2
-push r3
-push ;(return value)
-push $-1
-push $-2
-jsr FUNC_id_myFunction_L
-pop
-pop
-pop $-8 ;using temp
-;$-8 $-3 false false
+sys writer $-3
+sys writes eol
+sys writer $-3
+sys writes eol
+;0 $-8 false false
+move 0 $-8
+;$-8 $2 false false
 move $-8 r0
-move r0 $-3
-pop r3
-pop r2
-pop r1
-pop r0
-sys writer $-3
-sys writes eol
-; handled?
-move $-1 r0
-; handled2?
-move $-2 r1
-addi r0 r1
-move r1 $-10 ; + STORE_HANDLED
-;$-10 $-3 false false
-move $-10 r0
-move r0 $-3
-sys writer $-3
-sys writes eol
-;0 $-12 false false
-move 0 $-12
-;$-12 $2 false false
-move $-12 r0
 move r0 $2
 unlnk
 ret

@@ -3,8 +3,13 @@ import java.util.*;
 import java.lang.StringBuilder;
 import java.lang.String;
 import java.lang.Exception;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class InfixToPostfix {
+
+    public static HashMap<String, String> tempToFunctionMap = new HashMap<String, String>();
+    public static int registerNumber = 0;
 
     private static boolean isOperator(String c) {
         return c.equals("+") || c.equals("-") || c.equals("*") || c.equals("/") || c.equals("^") || c.equals("(") || c.equals(")");
@@ -50,7 +55,127 @@ public class InfixToPostfix {
         return str.split(regex);
     }
 
-    public static String convertStringToPostfix2(String infix) {
+
+
+    public static int Prec(String ch)
+    {
+        switch (ch)
+        {
+            case "+":
+            case "-":
+                return 1;
+
+            case "*":
+            case "/":
+                return 2;
+
+            case "^":
+                return 3;
+        }
+        return -1;
+    }
+
+    public static String infixToPostfixFunctions(String str, int rnum) {
+        System.out.println(";In infix to postfix: " + str);
+        String[] parts = str.split(" ");
+
+        String combined = str.replace(" ", "");
+
+//        if (parts.length == 1) {
+//            combined = str;
+//        }
+//        else {
+//            combined = String.join("", parts);
+//        }
+//
+        System.out.println(combined);
+
+
+        List<String> allMatches = new ArrayList<String>();
+
+        String regex = "[a-zA-Z]+[a-zA-Z0-9_]*\\([a-zA-Z0-9_+/\\-*.,]*\\)";
+
+        Matcher m = Pattern.compile(regex).matcher(combined);
+
+        while (m.find()) {
+            String register = "!T" + rnum;
+            rnum += 1;
+            String current = m.group();
+            allMatches.add(current);
+            System.out.println(current);
+
+            tempToFunctionMap.put(register, current);
+            registerNumber = rnum;
+
+            combined = combined.replace(current, register);
+        }
+
+        System.out.println(combined);
+
+        String postfix = infixToPostfix(combined);
+        System.out.println(postfix);
+
+        return postfix.trim();
+    }
+
+    static String infixToPostfix(String infix)
+    {
+        // initializing empty String for result
+        String result = new String("");
+
+        String[] words = SplittingInfix(infix);
+        //System.out.println("printing combined " + Arrays.toString(words));
+
+        //System.out.println("what to parse: " + String.join(",", words));
+
+        Stack<String> stack = new Stack<String>();
+        String c = "";
+
+        for (int i = 0; i < words.length; i++)
+        {
+            c = words[i];
+
+            // If the scanned character is an operand, add it to output.
+            if (!isOperator(c))
+                result += c + " ";
+
+                // If the scanned character is an '(', push it to the stack.
+            else if (c.equals("("))
+                stack.push(c);
+
+                //  If the scanned character is an ')', pop and output from the stack
+                // until an '(' is encountered.
+            else if (c.equals(")"))
+            {
+                while (!stack.isEmpty() && !(stack.peek().equals("(")))
+                    result += stack.pop() + " ";
+
+                if (!stack.isEmpty() && !(stack.peek().equals("(")))
+                    return "Invalid Expression"; // invalid expression
+                else
+                    stack.pop();
+            }
+            else // an operator is encountered
+            {
+                while (!stack.isEmpty() && Prec(c) <= Prec(stack.peek()))
+                    result += stack.pop() + " ";
+                stack.push(c);
+            }
+
+        }
+
+        // pop all the operators from the stack
+        while (!stack.isEmpty())
+            result += stack.pop() + " ";
+
+
+        //System.out.println("second result: " + result);
+        return result.trim();
+    }
+}
+
+/*
+public static String convertStringToPostfix2(String infix) {
 
         String[] words = SplittingInfix(infix);
 
@@ -191,78 +316,4 @@ public class InfixToPostfix {
 
         return postfix.toString();
     }
-
-    public static int Prec(String ch)
-    {
-        switch (ch)
-        {
-            case "+":
-            case "-":
-                return 1;
-
-            case "*":
-            case "/":
-                return 2;
-
-            case "^":
-                return 3;
-        }
-        return -1;
-    }
-
-    static String infixToPostfix(String infix)
-    {
-        // initializing empty String for result
-        String result = new String("");
-
-        String[] words = SplittingInfix(infix);
-        //System.out.println("printing combined " + Arrays.toString(words));
-
-        //System.out.println("what to parse: " + String.join(",", words));
-
-        Stack<String> stack = new Stack<String>();
-        String c = "";
-
-        for (int i = 0; i < words.length; i++)
-        {
-            c = words[i];
-
-            // If the scanned character is an operand, add it to output.
-            if (!isOperator(c))
-                result += c + " ";
-
-                // If the scanned character is an '(', push it to the stack.
-            else if (c.equals("("))
-                stack.push(c);
-
-                //  If the scanned character is an ')', pop and output from the stack
-                // until an '(' is encountered.
-            else if (c.equals(")"))
-            {
-                while (!stack.isEmpty() && !(stack.peek().equals("(")))
-                    result += stack.pop() + " ";
-
-                if (!stack.isEmpty() && !(stack.peek().equals("(")))
-                    return "Invalid Expression"; // invalid expression
-                else
-                    stack.pop();
-            }
-            else // an operator is encountered
-            {
-                while (!stack.isEmpty() && Prec(c) <= Prec(stack.peek()))
-                    result += stack.pop() + " ";
-                stack.push(c);
-            }
-
-        }
-
-        // pop all the operators from the stack
-        while (!stack.isEmpty())
-            result += stack.pop() + " ";
-
-
-        //System.out.println("second result: " + result);
-        return result.trim();
-    }
-
-}
+ */

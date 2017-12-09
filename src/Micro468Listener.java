@@ -279,11 +279,30 @@ public class Micro468Listener extends MicroBaseListener {
         String left = ctx.getChild(0).getChild(0).getText();
         String right = ctx.getChild(0).getChild(2).getText();
 
-        if(isFunctionCall(right)) {
+        if(isOnlyFunctionCall(right)) {
+            System.out.println("is only function call: " + right);
+            return;
+        }
+
+        int numberBefore = this.operationNumber;
+
+        String postFixFunction = InfixToPostfix.infixToPostfixFunctions(right, this.operationNumber);
+        System.out.println("; post fix function: " + postFixFunction);
+        int numberAfter = InfixToPostfix.registerNumber;
+
+        if (numberAfter == numberBefore) {
+            System.out.println("; No function in assign statement");
+        }else {
+            System.out.println("; THIS SHOULD NEVER HIT: Function in assign statement");
+        }
+
+        if (numberAfter - numberBefore == 1) {
+            System.out.println(";only one function call: " + right);
             return;
         }
 
         String postfix = InfixToPostfix.infixToPostfix(right);
+        System.out.println(";" + postfix);
         parsePostfix(right, left, postfix);
     }
 
@@ -297,7 +316,18 @@ public class Micro468Listener extends MicroBaseListener {
     @Override public void enterCall_expr(MicroParser.Call_exprContext ctx) {
         String function_name = ctx.getChild(0).getText();
 
+        if (ctx.getParent().getParent().getParent().getParent().getChild(0) == null) {
+            //System.out.println(";left function call is wrong");
+            return;
+        }
+
         String left = ctx.getParent().getParent().getParent().getParent().getChild(0).getText();
+
+        if (ctx.getParent().getParent().getParent().getParent().getChild(2) == null) {
+            //System.out.println(";right function call is wrong");
+            return;
+        }
+
         String right = ctx.getParent().getParent().getParent().getParent().getChild(2).getText();
 
         // TODO: Not sure:
@@ -774,7 +804,7 @@ public class Micro468Listener extends MicroBaseListener {
         if (right == null) {
             return;
         }
-        if (isNumeric(right) == false) {
+        if (!isNumeric(right)) {
             // TODO: Might have to check for the GLOBAL Scope and also might have to change parentTree.getCurrentScope()
             if (parentTree.getCurrentScope().variableMap.containsKey(left) && parentTree.getCurrentScope().variableMap.containsKey(right)) {
                 String dataType = parentTree.getCurrentScope().variableMap.get(left)[0];
@@ -846,20 +876,23 @@ public class Micro468Listener extends MicroBaseListener {
         return str.matches("\\d+");
     }
 
-    private static boolean isFunctionCall(String str) {
+    private static boolean isOnlyFunctionCall(String str) {
         if (str.trim().startsWith("\"") || (str.trim().startsWith("\'"))) {
             return false;
         }
 
-        boolean val = str.contains(",");
-        if (val) {
-            return true;
-        }
+//        boolean val = str.contains(",");
+//        if (val) {
+//            return true;
+//        }
 
-        String regex = "[a-zA-Z]+[a-zA-Z0-9_]*\\(.*\\)";
+        //String regex = "^[a-zA-Z]+[a-zA-Z0-9_]*\\(.*\\)$";
+        String regex = "^[a-zA-Z]+[a-zA-Z0-9_]*\\([a-zA-Z0-9_+/\\-*.,]*\\)$";
         Pattern funcPattern = Pattern.compile(regex);
 
         Matcher m = funcPattern.matcher(str);
+
+        //System.out.println("; FUNCTION CALL: " + str + " " + str.matches(regex));
 
         return m.matches();
     }

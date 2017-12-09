@@ -27,7 +27,7 @@ BEGIN
 		FLOAT d,e,multiplyresult;
 		d := 2.0;
 		e := 2.0;
-		multiplyresult := myFunction(d,e);
+		multiplyresult := myFunction(d,e) + 1;
 		WRITE(multiplyresult);
 		WRITE(eol);
 		multiplyresult := d + e;

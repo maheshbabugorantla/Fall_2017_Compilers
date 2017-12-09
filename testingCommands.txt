@@ -50,3 +50,6 @@ mca && ./runme ./prev_testing_files/testingStep4Files/input/test_complex.micro .
 ./runme ./prev_testing_files/testingStep4Files/input/test_expr.micro ./test/my_output/test_expr.out
 ./tiny4 ./test/my_output/test_expr.out
 ./tiny ./prev_testing_files/testingStep4Files/output/test_expr.out
+
+mca && ./runme ./test/input/hidden_SameVarNameInDiffScopes.micro ./test/output/hidden_SameVarNameInDiffScopes.out
+./tiny4 ./test/output/hidden_SameVarNameInDiffScopes.out
