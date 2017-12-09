@@ -1,4 +1,21 @@
+;INTi,a,num;
 ; IR code
+;
+;AHHHH left: num right: 7
+;Print store: c 7 left: !T1
+;Print store: c !T1 left: num
+;AHHHH left: i right: 2
+;Print store: c 2 left: !T2
+;Print store: c !T2 left: i
+;AHHHH left: a right: 42
+;Print store: c 42 left: !T3
+;Print store: c !T3 left: a
+;Print store: c 5 left: !T4
+;Print store: c !T5 left: num
+;Print store: c 3 left: !T6
+;Print store: c !T7 left: num
+;Print store: c 5 left: !T8
+;Print store: c !T9 left: num
 ; PUSH
 ; JSR FUNC_id_main_L
 ; HALT

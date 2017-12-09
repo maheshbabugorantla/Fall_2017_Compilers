@@ -1,4 +1,46 @@
+;INTa,b,c,d;FLOATx,y,z,t;STRINGnewline:="\n";
 ; IR code
+;
+;AHHHH left: a right: 1
+;Print store: c 1 left: !T1
+;Print store: c !T1 left: a
+;AHHHH left: b right: 2
+;Print store: c 2 left: !T2
+;Print store: c !T2 left: b
+;AHHHH left: c right: 10
+;Print store: c 10 left: !T3
+;Print store: c !T3 left: c
+;AHHHH left: d right: 20
+;Print store: c 20 left: !T4
+;Print store: c !T4 left: d
+;Print store: c !T5 left: a
+;Print store: c !T6 left: b
+;Print store: c !T9 left: c
+;Print store: c !T11 left: d
+;Print store: c !T19 left: a
+;Print store: c !T21 left: a
+;Print store: c !T24 left: b
+;Print store: c !T27 left: c
+;AHHHH left: x right: 1.0
+;Print store: c 1.0 left: !T28
+;Print store: c !T28 left: x
+;AHHHH left: y right: 2.0
+;Print store: c 2.0 left: !T29
+;Print store: c !T29 left: y
+;AHHHH left: z right: 3.14159
+;Print store: c 3.14159 left: !T30
+;Print store: c !T30 left: z
+;Print store: c 2.0 left: !T31
+;Print store: c !T32 left: x
+;Print store: c !T33 left: y
+;Print store: c !T36 left: t
+;Print store: c !T37 left: t
+;Print store: c 2.0 left: !T40
+;Print store: c 4.0 left: !T43
+;Print store: c 5.0 left: !T46
+;Print store: c 6.0 left: !T49
+;Print store: c 7.0 left: !T52
+;Print store: c !T54 left: t
 ; PUSH
 ; JSR FUNC_id_main_L
 ; HALT

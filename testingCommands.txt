@@ -1,11 +1,14 @@
 mca && ./runme ./test/input/fibonacci2.micro ./test/output_test/fibonacci2.out
 ./tiny4 ./test/output_test/fibonacci2.out
+Input: 15
 
 mca && ./runme ./test/input/factorial2.micro ./test/output_test/factorial2.out
 ./tiny4 ./test/output_test/factorial2.out
+Input: 12
 
 mca && ./runme ./test/input/fma.micro ./test/output_test/fma.out
 ./tiny4 ./test/output_test/fma.out
+Input: 2.435 4.897 0.654
 
 mca && ./runme ./prev_testing_files/testingStep5Files/input/test_for.micro ./test/my_output/test_for.out
 ./tiny4 ./test/my_output/test_for.out
@@ -18,9 +21,11 @@ mca && ./runme ./prev_testing_files/testingStep5Files/input/test_for.micro ./tes
 
 mca && ./runme ./prev_testing_files/testingStep4Files/input/test_complex.micro ./test/my_output/test_complex.out
 ./tiny4 ./test/my_output/test_complex.out
+./tiny ./prev_testing_files/testingStep4Files/output/test_complex.out
 
 ./runme ./prev_testing_files/testingStep4Files/input/test_combination.micro ./test/my_output/test_combination.out
 ./tiny4 ./test/my_output/test_combination.out
+./tiny ./prev_testing_files/testingStep4Files/output/test_combination.out
 
 ./runme ./prev_testing_files/testingStep5Files/input/step4_testcase.micro ./test/my_output/step4_testcase.out
 ./tiny4 ./test/my_output/step4_testcase.out
@@ -28,12 +33,15 @@ mca && ./runme ./prev_testing_files/testingStep4Files/input/test_complex.micro .
 
 ./runme ./prev_testing_files/testingStep4Files/input/test_mult.micro ./test/my_output/test_mult.out
 ./tiny4 ./test/my_output/test_mult.out
+./tiny ./prev_testing_files/testingStep4Files/output/test_mult.out
 
 ./runme ./prev_testing_files/testingStep5Files/input/step4_testcase2.micro ./test/my_output/step4_testcase2.out
 ./tiny4 ./test/my_output/step4_testcase2.out
+./tiny ./prev_testing_files/testingStep5Files/output/step4_testcase2.out
 
 ./runme ./prev_testing_files/testingStep5Files/input/test_if.micro ./test/my_output/test_if.out
 ./tiny4 ./test/my_output/test_if.out
+./tiny ./prev_testing_files/testingStep5Files/output/test_if.out
 
 ./runme ./prev_testing_files/testingStep5Files/input/test_adv.micro ./test/my_output/test_adv.out
 ./tiny4 ./test/my_output/test_adv.out
@@ -41,3 +49,4 @@ mca && ./runme ./prev_testing_files/testingStep4Files/input/test_complex.micro .
 
 ./runme ./prev_testing_files/testingStep4Files/input/test_expr.micro ./test/my_output/test_expr.out
 ./tiny4 ./test/my_output/test_expr.out
+./tiny ./prev_testing_files/testingStep4Files/output/test_expr.out

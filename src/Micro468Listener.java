@@ -78,6 +78,8 @@ public class Micro468Listener extends MicroBaseListener {
      * */
     public void pushSymbol(String parameters, SymbolsTable symbolsTable) {
 
+        System.out.println(";" + parameters);
+
        // test1.micro Where there are no Global and Local Variables/Symbols
        if(parameters == null || parameters.equals("")) {
             return;
@@ -462,6 +464,7 @@ public class Micro468Listener extends MicroBaseListener {
 
         String[] words = postfix.split(" ");
         if (words.length == 1) {
+            System.out.println(";AHHHH left: " + left + " " + "right: " + right);
             parseAssign_stmt(left, right);
             return;
         }
@@ -586,7 +589,7 @@ public class Micro468Listener extends MicroBaseListener {
         if (symbolScope.containsKey(left)) {
             left = symbolScope.get(left).register;
         }
-
+        System.out.println(";Print store: c " + c  + " left: " + left);
         irNodeList.addNode(new IRNode(store, c, left));
     }
 
@@ -765,6 +768,12 @@ public class Micro468Listener extends MicroBaseListener {
 
     // TODO: Refactor this fucktard
     private void parseAssign_stmt(String left, String right) {
+        if (left == null) {
+            return;
+        }
+        if (right == null) {
+            return;
+        }
         if (isNumeric(right) == false) {
             // TODO: Might have to check for the GLOBAL Scope and also might have to change parentTree.getCurrentScope()
             if (parentTree.getCurrentScope().variableMap.containsKey(left) && parentTree.getCurrentScope().variableMap.containsKey(right)) {
@@ -782,6 +791,22 @@ public class Micro468Listener extends MicroBaseListener {
                     tinyNodeArrayList.add(new TinyNode("move", right, "r" + randomTiny));
                     tinyNodeArrayList.add(new TinyNode("move", "r" + randomTiny, left));
                     randomTiny += 1;
+                }
+            }
+            else {
+                String currentType = "INT";
+                if (currentScope.variableMap.containsKey(left)) {
+                    currentType = currentScope.variableMap.get(left)[0];
+                }
+                else if (currentScope.variableMap.containsKey(right)) {
+                    currentType = currentScope.variableMap.get(right)[0];
+                }
+
+                if (currentType.equals("INT")) {
+                    printStoreOperation("STOREI", right, left);
+                }
+                else  {
+                    printStoreOperation("STOREF", right, left);
                 }
             }
             return;

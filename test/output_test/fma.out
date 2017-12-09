@@ -1,4 +1,12 @@
+;STRINGintro:="You will be asked for three float numbers\n";STRINGfirst:="Please enter the first float number: ";STRINGsecond:="Please enter the second float number: ";STRINGthird:="Please enter the third float number: ";STRINGeol:="\n";STRINGstar:="*";STRINGplus:="+";STRINGequal:="=";
 ; IR code
+;FLOATresult;
+;Print store: c !T1 left: $-1
+;AHHHH left: null right: result
+;FLOATresult;
+;Print store: c !T2 left: $-1
+;AHHHH left: null right: result
+;FLOATa,b,c;FLOATaddresult,multiplyresult;
 ; PUSH
 ; JSR FUNC_id_main_L
 ; HALT

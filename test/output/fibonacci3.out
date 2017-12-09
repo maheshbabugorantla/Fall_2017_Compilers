@@ -1,0 +1,11 @@
+; IR code
+Entered Call Expression
+No.of children: 4
+Left Expression: ret2
+Right Expression: F(n-2)
+postFix Expression F n 1 - ret2 +
+Val1: n
+Entered Call Expression
+No.of children: 4
+Left Expression: F(n-1)+
+null

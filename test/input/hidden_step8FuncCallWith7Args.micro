@@ -1,0 +1,28 @@
+PROGRAM myProgram
+BEGIN
+	
+	FUNCTION INT myFuncWithManyArgs(INT arg1, INT arg2, INT arg3, INT arg4, INT arg5, INT arg6, INT arg7)
+	BEGIN
+	  	INT returnValue;
+		returnValue := 0;
+		returnValue := arg1+arg2+arg3+arg4+arg5+arg6+arg7;
+		RETURN returnValue;
+	END
+
+	
+	FUNCTION INT main ()
+	BEGIN
+		INT arg1,arg2,arg3,arg4,arg5,arg6,arg7,result;
+		arg1 := 1;
+		arg2 := 1;
+		arg3 := 1;
+		arg4 := 1;
+		arg5 := 1;
+		arg6 := 1;
+		arg7 := 1;
+		result := 0;
+		result := myFuncWithManyArgs(arg1,arg2,arg3,arg4,arg5,arg6,arg7);
+		WRITE(result);
+		RETURN 0;
+	END
+END

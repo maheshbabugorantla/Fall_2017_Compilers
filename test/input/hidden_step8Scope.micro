@@ -1,0 +1,20 @@
+PROGRAM myProgram
+BEGIN	
+	FUNCTION FLOAT myFunction (FLOAT a, FLOAT b)
+	BEGIN
+	  	FLOAT a,b,c;
+		c := a+b;
+		RETURN c;
+	END
+
+	
+	FUNCTION INT main ()
+	BEGIN
+		FLOAT a,b,multiplyresult;
+		a := 1.0;
+		b := 2.0;
+		multiplyresult := myFunction(a,b);
+		WRITE(multiplyresult);
+		RETURN 0;
+	END
+END

@@ -1,4 +1,18 @@
+;STRINGinput:="Please enter an integer number: ";STRINGeol:="\n";
 ; IR code
+;INTret;INTtret;
+;Print store: c 1 left: !T1
+;Print store: c !T6 left: $-1
+;AHHHH left: null right: ret
+;INTnum;INTresult;
+;Print store: c 1 left: !T7
+;AHHHH left: result right: 1
+;Print store: c 1 left: !T8
+;Print store: c !T8 left: $-2
+;Print store: c 1 left: !T9
+;AHHHH left: result right: 0
+;Print store: c 0 left: !T11
+;Print store: c !T11 left: $-2
 ; PUSH
 ; JSR FUNC_id_main_L
 ; HALT

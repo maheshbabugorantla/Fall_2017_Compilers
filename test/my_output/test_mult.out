@@ -1,4 +1,13 @@
+;INTa,b,c,d,e;STRINGnewline:="\n";
 ; IR code
+;
+;AHHHH left: a right: 1
+;Print store: c 1 left: !T1
+;Print store: c !T1 left: a
+;AHHHH left: b right: 2
+;Print store: c 2 left: !T2
+;Print store: c !T2 left: b
+;Print store: c !T5 left: e
 ; PUSH
 ; JSR FUNC_id_main_L
 ; HALT

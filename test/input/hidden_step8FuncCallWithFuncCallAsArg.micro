@@ -1,0 +1,29 @@
+PROGRAM myProgram
+BEGIN
+	
+	FUNCTION INT addArgs(INT arg1, INT arg2)
+	BEGIN
+	  	INT returnValue;
+		returnValue := 0;
+		returnValue := arg1+arg2;
+		RETURN returnValue;
+	END
+
+	FUNCTION INT returnArgument(INT arg)
+	BEGIN
+		RETURN arg;
+	END
+
+	
+	FUNCTION INT main ()
+	BEGIN
+		INT arg1,arg2,result;
+		arg1 := 1;
+		arg2 := 1;
+		result := 0;
+		
+		result := addArgs(returnArgument(arg1), returnArgument(arg2));
+		WRITE(result);
+		RETURN 0;
+	END
+END

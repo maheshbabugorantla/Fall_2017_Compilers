@@ -1,4 +1,36 @@
+;INTcount,enough;FLOATnewapprox,approx,num,tolerance,diff;STRINGeol:="\n";STRINGspace:=" ";
 ; IR code
+;
+;AHHHH left: tolerance right: 0.0001
+;Print store: c 0.0001 left: !T1
+;Print store: c !T1 left: tolerance
+;AHHHH left: approx right: num
+;Print store: c num left: approx
+;AHHHH left: count right: 0
+;Print store: c 0 left: !T2
+;Print store: c !T2 left: count
+;AHHHH left: diff right: 0.0
+;Print store: c 0.0 left: !T3
+;Print store: c !T3 left: diff
+;
+;AHHHH left: enough right: 0
+;Print store: c 0 left: !T4
+;Print store: c !T4 left: enough
+;Print store: c 1 left: !T5
+;Print store: c !T7 left: count
+;Print store: c 0.5 left: !T8
+;Print store: c !T11 left: newapprox
+;Print store: c !T12 left: diff
+;Print store: c 0.0 left: !T13
+;AHHHH left: enough right: 1
+;Print store: c 1 left: !T14
+;Print store: c !T14 left: enough
+;Print store: c 0.0 left: !T15
+;AHHHH left: enough right: 1
+;Print store: c 1 left: !T17
+;Print store: c !T17 left: enough
+;AHHHH left: approx right: newapprox
+;Print store: c newapprox left: approx
 ; PUSH
 ; JSR FUNC_id_main_L
 ; HALT
