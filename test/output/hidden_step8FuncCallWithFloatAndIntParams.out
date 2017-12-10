@@ -1,34 +1,34 @@
-;
+;STRINGeol:="\n";
 ; IR code
 ;FLOATfloatResult;INTintResult;
 ;only one function call with operation: or no function calla+c
 ;Print store: c !T1 left: $-1
 ;only one function call with operation: or no function callb+d
 ;Print store: c !T2 left: $-2
-;FLOATfloat1,float2;INTint1,int2,result;
+;RETURN: No Function;FLOATfloat1,float2;INTint1,int2,result;
 ;only one function call with operation: or no function call4
 ;Print store: c 4 left: !T3
-;Print store: c !T3 left: $-3
+;Print store: c !T3 left: $-5
 ;only one function call with operation: or no function call1
 ;Print store: c 1 left: !T4
 ;Print store: c !T4 left: $-4
 ;only one function call with operation: or no function call1.0
 ;Print store: c 1.0 left: !T5
-;Print store: c !T5 left: $-1
+;Print store: c !T5 left: $-2
 ;only one function call with operation: or no function call1.0
 ;Print store: c 1.0 left: !T6
-;Print store: c !T6 left: $-2
+;Print store: c !T6 left: $-1
 ;=======================
 ;current register = !T7 current call myFunction(float1,int1,float2,int2)
 ;Function name = myFunction
-;-----------------------; PUSH
+;-----------------------;RETURN: No Function; PUSH
 ; JSR FUNC_id_main_L
 ; HALT
 ; LABEL FUNC_id_myFunction_L
 ; LINK 3
-; ADDF $2 $4 !T1
+; ADDF $5 $3 !T1
 ; STOREF !T1 $-1
-; ADDI $3 $5 !T2
+; ADDI $4 $2 !T2
 ; STOREI !T2 $-2
 ; STOREI $-2 $6
 ; UNLINK
@@ -36,21 +36,21 @@
 ; LABEL FUNC_id_main_L
 ; LINK 6
 ; STOREI 4 !T3
-; STOREI !T3 $-3
+; STOREI !T3 $-5
 ; STOREI 1 !T4
 ; STOREI !T4 $-4
 ; STOREF 1.0 !T5
-; STOREF !T5 $-1
+; STOREF !T5 $-2
 ; STOREF 1.0 !T6
-; STOREF !T6 $-2
+; STOREF !T6 $-1
 ; PUSH r0
 ; PUSH r1
 ; PUSH r2
 ; PUSH r3
 ; PUSH ;(return value)
-; PUSH $-1
-; PUSH $-3
 ; PUSH $-2
+; PUSH $-5
+; PUSH $-1
 ; PUSH $-4
 ; JSR FUNC_id_myFunction_L
 ; POP
@@ -58,17 +58,18 @@
 ; POP
 ; POP
 ; POP !T8
-; STOREI !T8 !T7
+; STOREF !T8 !T7
 ; POP r3
 ; POP r2
 ; POP r1
 ; POP r0
-; STOREI !T7 $-5
-; WRITEI $-5
+; STOREF !T7 $-3
+; WRITEI $-3
 ; STOREI 0 !T9
 ; STOREI !T9 $2
 ; UNLINK
 ; RET
+str eol "\n"
 var floatResult
 var intResult
 var float1
@@ -81,59 +82,44 @@ jsr FUNC_id_main_L
 sys halt
 label FUNC_id_myFunction_L
 link 18
-; handled?
-move $2 r0
-; handled2?
-move $4 r1
-addi r0 r1
+move $5 r0
+move $3 r1
+addr r0 r1
 move r1 $-3 ; + STORE_HANDLED
-;$-3 $-1 false false
 move $-3 r0
 move r0 $-1
-; handled?
-move $3 r0
-; handled2?
-move $5 r1
+move $4 r0
+move $2 r1
 addi r0 r1
 move r1 $-5 ; + STORE_HANDLED
-;$-5 $-2 false false
 move $-5 r0
 move r0 $-2
-;$-2 $6 false false
 move $-2 r0
 move r0 $6
 unlnk
 ret
 label FUNC_id_main_L
 link 21
-;4 $-6 false false
 move 4 $-6
-;$-6 $-3 false false
 move $-6 r0
-move r0 $-3
-;1 $-8 false false
+move r0 $-5
 move 1 $-8
-;$-8 $-4 false false
 move $-8 r0
 move r0 $-4
-;1.0 $-10 false false
 move 1.0 $-10
-;$-10 $-1 false false
 move $-10 r0
-move r0 $-1
-;1.0 $-12 false false
-move 1.0 $-12
-;$-12 $-2 false false
-move $-12 r0
 move r0 $-2
+move 1.0 $-12
+move $-12 r0
+move r0 $-1
 push r0
 push r1
 push r2
 push r3
 push ;(return value)
-push $-1
-push $-3
 push $-2
+push $-5
+push $-1
 push $-4
 jsr FUNC_id_myFunction_L
 pop
@@ -141,20 +127,16 @@ pop
 pop
 pop
 pop $-14 ;using temp
-;$-14 $-16 false false
 move $-14 r0
 move r0 $-16
 pop r3
 pop r2
 pop r1
 pop r0
-;$-16 $-5 false false
 move $-16 r0
-move r0 $-5
-sys writei $-5
-;0 $-18 false false
+move r0 $-3
+sys writei $-3
 move 0 $-18
-;$-18 $2 false false
 move $-18 r0
 move r0 $2
 unlnk

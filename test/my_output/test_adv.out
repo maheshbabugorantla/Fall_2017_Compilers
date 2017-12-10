@@ -102,100 +102,66 @@ push
 jsr FUNC_id_main_L
 sys halt
 label FUNC_id_main_L
-link 19
-;0.0001 $-1 false false
+link 24
 move 0.0001 $-1
-;$-1 tolerance false true
 move $-1 r0
 move r0 tolerance
 sys readr num
-;num approx true true
 move num r0
 move r0 approx
-;0 $-3 false false
 move 0 $-3
-;$-3 count false true
 move $-3 r0
 move r0 count
-;0.0 $-5 false false
 move 0.0 $-5
-;$-5 diff false true
 move $-5 r0
 move r0 diff
-;0 $-7 false false
 move 0 $-7
-;$-7 enough false true
 move $-7 r0
 move r0 enough
 label label1
-;1 $-9 false false
 move 1 $-9
-; handled?
 move enough r0
-; handled2?
 move $-9 r1
 cmpi r0 r1
 jeq label2
-;1 $-10 false false
 move 1 $-10
-; handled?
 move count r0
-; handled2?
 move $-10 r1
 addi r0 r1
 move r1 $-11 ; + STORE_HANDLED
-;$-11 count false true
 move $-11 r0
 move r0 count
-;0.5 $-13 false false
 move 0.5 $-13
-; handled?
 move approx r0
-; handled2?
 move num r1
 divr r0 r1
 move r1 $-14 ; / STORE_HANDLED
-; handled?
 move approx r0
-; handled2?
 move $-14 r1
 addr r0 r1
 move r1 $-15 ; + STORE_HANDLED
-; handled?
 move $-13 r0
-; handled2?
 move $-15 r1
 mulr r0 r1
 move r1 $-16 ; * STORE_HANDLED
-;$-16 newapprox false true
 move $-16 r0
 move r0 newapprox
-; handled?
 move newapprox r0
-; handled2?
 move approx r1
 subr r0 r1
 move r1 $-18 ; - STORE_HANDLED
-;$-18 diff false true
 move $-18 r0
 move r0 diff
-;0.0 $-20 false false
 move 0.0 $-20
-; handled?
 move diff r0
-; handled2?
 move $-20 r1
 cmpr r0 r1
 jle label3
-; handled?
 move diff r0
-; handled2?
 move tolerance r1
 cmpr r0 r1
 jge label5
-;1 $-21 false false
 move 1 $-21
-;$-21 enough false true
 move $-21 r0
 move r0 enough
 jmp label6
@@ -203,30 +169,22 @@ label label5
 label label6
 jmp label4
 label label3
-;0.0 $-23 false false
 move 0.0 $-23
-; handled?
 move tolerance r0
-; handled2?
 move $-23 r1
 subr r0 r1
 move r1 $-24 ; - STORE_HANDLED
-; handled?
 move diff r0
-; handled2?
 move $-24 r1
 cmpr r0 r1
 jle label7
-;1 $-25 false false
 move 1 $-25
-;$-25 enough false true
 move $-25 r0
 move r0 enough
 jmp label8
 label label7
 label label8
 label label4
-;newapprox approx true true
 move newapprox r0
 move r0 approx
 jmp label1

@@ -8,20 +8,18 @@
 ;-----------------------;=======================
 ;current register = !T6 current call F(n-2)
 ;Function name = F
-;-----------------------;Print store: c 0 left: !T11
-;Print store: c 1 left: !T13
-;INTi,end,result;
+;-----------------------;RETURN: No Function;Print store: c 0 left: !T11
+;RETURN: No Function;Print store: c 1 left: !T13
+;RETURN: No Function;RETURN: No Function;INTi,end,result;
 ;
 ;Print store: c 0 left: !T16
-;Print store: c !T16 left: $-1
-++++++++++++++++
-;i:=i+1
+;Print store: c !T16 left: $-3
 ;Print store: c $-2 left: !T17
 ;=======================
 ;current register = !T18 current call F(i)
 ;Function name = F
-;-----------------------;Print store: c !T21 left: $-1
-; PUSH
+;-----------------------;Print store: c !T21 left: $-3
+;RETURN: No Function; PUSH
 ; JSR FUNC_id_main_L
 ; HALT
 ; LABEL FUNC_id_F_L
@@ -44,7 +42,7 @@
 ; POP r2
 ; POP r1
 ; POP r0
-; STOREI !T2 $-1
+; STOREI !T2 $-2
 ; PUSH r0
 ; PUSH r1
 ; PUSH r2
@@ -61,8 +59,8 @@
 ; POP r2
 ; POP r1
 ; POP r0
-; STOREI !T6 $-2
-; ADDI $-1 $-2 !T10
+; STOREI !T6 $-1
+; ADDI $-2 $-1 !T10
 ; STOREI !T10 $3
 ; UNLINK
 ; RET
@@ -98,16 +96,16 @@
 ; WRITES input
 ; READI $-2
 ; STOREI 0 !T16
-; STOREI !T16 $-1
+; STOREI !T16 $-3
 ; LABEL label7
 ; STOREI $-2 !T17
-; EQ $-1 !T17 label8
+; EQ $-3 !T17 label8
 ; PUSH r0
 ; PUSH r1
 ; PUSH r2
 ; PUSH r3
 ; PUSH ;(return value)
-; PUSH $-1
+; PUSH $-3
 ; JSR FUNC_id_F_L
 ; POP
 ; POP !T19
@@ -116,14 +114,14 @@
 ; POP r2
 ; POP r1
 ; POP r0
-; STOREI !T18 $-3
-; WRITEI $-1
-; WRITES space
+; STOREI !T18 $-1
 ; WRITEI $-3
+; WRITES space
+; WRITEI $-1
 ; WRITES eol
 ; STOREI 1 !T20
-; ADDI $-1 !T20 !T21
-; STOREI !T21 $-1
+; ADDI $-3 !T20 !T21
+; STOREI !T21 $-3
 ; JUMP label7
 ; LABEL label8
 ; STOREI 0 !T22
@@ -143,11 +141,8 @@ jsr FUNC_id_main_L
 sys halt
 label FUNC_id_F_L
 link 31
-;2 $-3 false false
 move 2 $-3
-; handled?
 move $2 r0
-; handled2?
 move $-3 r1
 cmpi r0 r1
 jle label1
@@ -156,11 +151,8 @@ push r1
 push r2
 push r3
 push ;(return value)
-;1 $-4 false false
 move 1 $-4
-; handled?
 move $-4 r0
-; handled2?
 move $2 r1
 subi r0 r1
 move r1 $-5 ; - STORE_HANDLED
@@ -168,26 +160,21 @@ push $-5 ;using temp
 jsr FUNC_id_F_L
 pop
 pop $-7 ;using temp
-;$-7 $-9 false false
 move $-7 r0
 move r0 $-9
 pop r3
 pop r2
 pop r1
 pop r0
-;$-9 $-1 false false
 move $-9 r0
-move r0 $-1
+move r0 $-2
 push r0
 push r1
 push r2
 push r3
 push ;(return value)
-;2 $-11 false false
 move 2 $-11
-; handled?
 move $-11 r0
-; handled2?
 move $2 r1
 subi r0 r1
 move r1 $-12 ; - STORE_HANDLED
@@ -195,66 +182,49 @@ push $-12 ;using temp
 jsr FUNC_id_F_L
 pop
 pop $-14 ;using temp
-;$-14 $-16 false false
 move $-14 r0
 move r0 $-16
 pop r3
 pop r2
 pop r1
 pop r0
-;$-16 $-2 false false
 move $-16 r0
-move r0 $-2
-; handled?
-move $-1 r0
-; handled2?
-move $-2 r1
+move r0 $-1
+move $-2 r0
+move $-1 r1
 addi r0 r1
 move r1 $-18 ; + STORE_HANDLED
-;$-18 $3 false false
 move $-18 r0
 move r0 $3
 unlnk
 ret
 jmp label2
 label label1
-;0 $-20 false false
 move 0 $-20
-; handled?
 move $2 r0
-; handled2?
 move $-20 r1
 cmpi r0 r1
 jne label3
-;0 $-21 false false
 move 0 $-21
-;$-21 $3 false false
 move $-21 r0
 move r0 $3
 unlnk
 ret
 jmp label4
 label label3
-;1 $-23 false false
 move 1 $-23
-; handled?
 move $2 r0
-; handled2?
 move $-23 r1
 cmpi r0 r1
 jne label5
-;1 $-24 false false
 move 1 $-24
-;$-24 $3 false false
 move $-24 r0
 move r0 $3
 unlnk
 ret
 jmp label6
 label label5
-;1 $-26 false false
 move 1 $-26
-;$-26 $3 false false
 move $-26 r0
 move r0 $3
 unlnk
@@ -268,18 +238,13 @@ label FUNC_id_main_L
 link 32
 sys writes input
 sys readi $-2
-;0 $-4 false false
 move 0 $-4
-;$-4 $-1 false false
 move $-4 r0
-move r0 $-1
+move r0 $-3
 label label7
-;$-2 $-6 false false
 move $-2 r0
 move r0 $-6
-; handled?
-move $-1 r0
-; handled2?
+move $-3 r0
 move $-6 r1
 cmpi r0 r1
 jeq label8
@@ -288,40 +253,32 @@ push r1
 push r2
 push r3
 push ;(return value)
-push $-1
+push $-3
 jsr FUNC_id_F_L
 pop
 pop $-7 ;using temp
-;$-7 $-9 false false
 move $-7 r0
 move r0 $-9
 pop r3
 pop r2
 pop r1
 pop r0
-;$-9 $-3 false false
 move $-9 r0
-move r0 $-3
-sys writei $-1
-sys writes space
+move r0 $-1
 sys writei $-3
+sys writes space
+sys writei $-1
 sys writes eol
-;1 $-11 false false
 move 1 $-11
-; handled?
-move $-1 r0
-; handled2?
+move $-3 r0
 move $-11 r1
 addi r0 r1
 move r1 $-12 ; + STORE_HANDLED
-;$-12 $-1 false false
 move $-12 r0
-move r0 $-1
+move r0 $-3
 jmp label7
 label label8
-;0 $-14 false false
 move 0 $-14
-;$-14 $2 false false
 move $-14 r0
 move r0 $2
 unlnk

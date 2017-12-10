@@ -1,5 +1,7 @@
 PROGRAM myProgram
 BEGIN
+
+	STRING eol := "\n";
 	
 	FUNCTION INT myFunction (FLOAT a, INT b, FLOAT c, INT d)
 	BEGIN

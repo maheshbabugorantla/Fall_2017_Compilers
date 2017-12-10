@@ -42,38 +42,27 @@ push
 jsr FUNC_id_main_L
 sys halt
 label FUNC_id_main_L
-link 7
-;1 $-1 false false
+link 12
 move 1 $-1
-;$-1 a false true
 move $-1 r0
 move r0 a
-;2 $-3 false false
 move 2 $-3
-;$-3 b false true
 move $-3 r0
 move r0 b
 sys readi c
 sys readi d
-; handled?
 move a r0
-; handled2?
 move c r1
 muli r0 r1
 move r1 $-5 ; * STORE_HANDLED
-; handled?
 move b r0
-; handled2?
 move d r1
 muli r0 r1
 move r1 $-6 ; * STORE_HANDLED
-; handled?
 move $-5 r0
-; handled2?
 move $-6 r1
 addi r0 r1
 move r1 $-7 ; + STORE_HANDLED
-;$-7 e false true
 move $-7 r0
 move r0 e
 sys writei c

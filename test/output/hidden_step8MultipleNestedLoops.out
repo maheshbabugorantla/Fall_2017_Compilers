@@ -3,88 +3,82 @@
 ;INTreturnValue,i,j,k;
 ;only one function call with operation: or no function call0
 ;Print store: c 0 left: !T1
-;Print store: c !T1 left: $-1
+;Print store: c !T1 left: $-4
 ;
-;Print store: c $2 left: $-2
-++++++++++++++++
-;i:=i+1
+;Print store: c $2 left: $-3
 ;Print store: c 10 left: !T2
 ;
 ;Print store: c 0 left: !T3
-;Print store: c !T3 left: $-3
-++++++++++++++++
-;j:=j+1
+;Print store: c !T3 left: $-2
 ;Print store: c 10 left: !T4
 ;
 ;Print store: c 0 left: !T5
-;Print store: c !T5 left: $-4
-++++++++++++++++
-;k:=k+1
+;Print store: c !T5 left: $-1
 ;Print store: c 10 left: !T6
 ;only one function call with operation: or no function callreturnValue+1
-;Print store: c !T8 left: $-1
-;Print store: c !T10 left: $-4
-;Print store: c !T12 left: $-3
-;Print store: c !T14 left: $-2
-;INTvalue,result;
+;Print store: c !T8 left: $-4
+;Print store: c !T10 left: $-1
+;Print store: c !T12 left: $-2
+;Print store: c !T14 left: $-3
+;RETURN: No Function;INTvalue,result;
 ;only one function call with operation: or no function call1
 ;Print store: c 1 left: !T15
-;Print store: c !T15 left: $-1
+;Print store: c !T15 left: $-2
 ;=======================
 ;current register = !T16 current call myNestedLoopThatIncrements(value)
 ;Function name = myNestedLoopThatIncrements
-;-----------------------; PUSH
+;-----------------------;RETURN: No Function; PUSH
 ; JSR FUNC_id_main_L
 ; HALT
 ; LABEL FUNC_id_myNestedLoopThatIncrements_L
 ; LINK 5
 ; STOREI 0 !T1
-; STOREI !T1 $-1
-; STOREI $2 $-2
+; STOREI !T1 $-4
+; STOREI $2 $-3
 ; LABEL label1
 ; STOREI 10 !T2
-; GE $-2 !T2 label2
+; GE $-3 !T2 label2
 ; STOREI 0 !T3
-; STOREI !T3 $-3
+; STOREI !T3 $-2
 ; LABEL label3
 ; STOREI 10 !T4
-; GE $-3 !T4 label4
+; GE $-2 !T4 label4
 ; STOREI 0 !T5
-; STOREI !T5 $-4
+; STOREI !T5 $-1
 ; LABEL label5
 ; STOREI 10 !T6
-; GE $-4 !T6 label6
+; GE $-1 !T6 label6
 ; STOREI 1 !T7
-; ADDI $-1 !T7 !T8
-; STOREI !T8 $-1
+; ADDI $-4 !T7 !T8
+; STOREI !T8 $-4
 ; STOREI 1 !T9
-; ADDI $-4 !T9 !T10
-; STOREI !T10 $-4
+; ADDI $-1 !T9 !T10
+; STOREI !T10 $-1
 ; JUMP label5
 ; LABEL label6
 ; STOREI 1 !T11
-; ADDI $-3 !T11 !T12
-; STOREI !T12 $-3
+; ADDI $-2 !T11 !T12
+; STOREI !T12 $-2
 ; JUMP label3
 ; LABEL label4
 ; STOREI 1 !T13
-; ADDI $-2 !T13 !T14
-; STOREI !T14 $-2
+; ADDI $-3 !T13 !T14
+; STOREI !T14 $-3
 ; JUMP label1
 ; LABEL label2
-; STOREI $-1 $3
+; STOREI $-4 $3
 ; UNLINK
 ; RET
 ; LABEL FUNC_id_main_L
 ; LINK 3
 ; STOREI 1 !T15
-; STOREI !T15 $-1
+; STOREI !T15 $-2
 ; PUSH r0
 ; PUSH r1
 ; PUSH r2
 ; PUSH r3
 ; PUSH ;(return value)
-; PUSH $-1
+; PUSH $-2
 ; JSR FUNC_id_myNestedLoopThatIncrements_L
 ; POP
 ; POP !T17
@@ -93,8 +87,8 @@
 ; POP r2
 ; POP r1
 ; POP r0
-; STOREI !T16 $-2
-; WRITEI $-2
+; STOREI !T16 $-1
+; WRITEI $-1
 ; STOREI 0 !T18
 ; STOREI !T18 $2
 ; UNLINK
@@ -110,136 +104,97 @@ jsr FUNC_id_main_L
 sys halt
 label FUNC_id_myNestedLoopThatIncrements_L
 link 29
-;0 $-5 false false
 move 0 $-5
-;$-5 $-1 false false
 move $-5 r0
-move r0 $-1
-;$2 $-2 false false
+move r0 $-4
 move $2 r0
-move r0 $-2
+move r0 $-3
 label label1
-;10 $-7 false false
 move 10 $-7
-; handled?
-move $-2 r0
-; handled2?
+move $-3 r0
 move $-7 r1
 cmpi r0 r1
 jge label2
-;0 $-8 false false
 move 0 $-8
-;$-8 $-3 false false
 move $-8 r0
-move r0 $-3
+move r0 $-2
 label label3
-;10 $-10 false false
 move 10 $-10
-; handled?
-move $-3 r0
-; handled2?
+move $-2 r0
 move $-10 r1
 cmpi r0 r1
 jge label4
-;0 $-11 false false
 move 0 $-11
-;$-11 $-4 false false
 move $-11 r0
-move r0 $-4
+move r0 $-1
 label label5
-;10 $-13 false false
 move 10 $-13
-; handled?
-move $-4 r0
-; handled2?
+move $-1 r0
 move $-13 r1
 cmpi r0 r1
 jge label6
-;1 $-14 false false
 move 1 $-14
-; handled?
-move $-1 r0
-; handled2?
+move $-4 r0
 move $-14 r1
 addi r0 r1
 move r1 $-15 ; + STORE_HANDLED
-;$-15 $-1 false false
 move $-15 r0
-move r0 $-1
-;1 $-17 false false
+move r0 $-4
 move 1 $-17
-; handled?
-move $-4 r0
-; handled2?
+move $-1 r0
 move $-17 r1
 addi r0 r1
 move r1 $-18 ; + STORE_HANDLED
-;$-18 $-4 false false
 move $-18 r0
-move r0 $-4
+move r0 $-1
 jmp label5
 label label6
-;1 $-20 false false
 move 1 $-20
-; handled?
-move $-3 r0
-; handled2?
+move $-2 r0
 move $-20 r1
 addi r0 r1
 move r1 $-21 ; + STORE_HANDLED
-;$-21 $-3 false false
 move $-21 r0
-move r0 $-3
+move r0 $-2
 jmp label3
 label label4
-;1 $-23 false false
 move 1 $-23
-; handled?
-move $-2 r0
-; handled2?
+move $-3 r0
 move $-23 r1
 addi r0 r1
 move r1 $-24 ; + STORE_HANDLED
-;$-24 $-2 false false
 move $-24 r0
-move r0 $-2
+move r0 $-3
 jmp label1
 label label2
-;$-1 $3 false false
-move $-1 r0
+move $-4 r0
 move r0 $3
 unlnk
 ret
 label FUNC_id_main_L
 link 27
-;1 $-3 false false
 move 1 $-3
-;$-3 $-1 false false
 move $-3 r0
-move r0 $-1
+move r0 $-2
 push r0
 push r1
 push r2
 push r3
 push ;(return value)
-push $-1
+push $-2
 jsr FUNC_id_myNestedLoopThatIncrements_L
 pop
 pop $-5 ;using temp
-;$-5 $-7 false false
 move $-5 r0
 move r0 $-7
 pop r3
 pop r2
 pop r1
 pop r0
-;$-7 $-2 false false
 move $-7 r0
-move r0 $-2
-sys writei $-2
-;0 $-9 false false
+move r0 $-1
+sys writei $-1
 move 0 $-9
-;$-9 $2 false false
 move $-9 r0
 move r0 $2
 unlnk

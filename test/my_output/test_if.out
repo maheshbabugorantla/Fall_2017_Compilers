@@ -1,29 +1,23 @@
 ;INTi,a,num;
 ; IR code
 ;
-;In infix to postfix: 7
-;=======================;only one function call with operation: or no function call7
+;only one function call with operation: or no function call7
 ;Print store: c 7 left: !T1
 ;Print store: c !T1 left: num
-;In infix to postfix: 2
-;=======================;only one function call with operation: or no function call2
+;only one function call with operation: or no function call2
 ;Print store: c 2 left: !T2
 ;Print store: c !T2 left: i
-;In infix to postfix: 42
-;=======================;only one function call with operation: or no function call42
+;only one function call with operation: or no function call42
 ;Print store: c 42 left: !T3
 ;Print store: c !T3 left: a
 ;Print store: c 5 left: !T4
-;In infix to postfix: num+a
-;=======================;only one function call with operation: or no function callnum+a
+;only one function call with operation: or no function callnum+a
 ;Print store: c !T5 left: num
 ;Print store: c 3 left: !T6
-;In infix to postfix: num+a
-;=======================;only one function call with operation: or no function callnum+a
+;only one function call with operation: or no function callnum+a
 ;Print store: c !T7 left: num
 ;Print store: c 5 left: !T8
-;In infix to postfix: num-a
-;=======================;only one function call with operation: or no function callnum-a
+;only one function call with operation: or no function callnum-a
 ;Print store: c !T9 left: num
 ; PUSH
 ; JSR FUNC_id_main_L
@@ -67,54 +61,36 @@ push
 jsr FUNC_id_main_L
 sys halt
 label FUNC_id_main_L
-link 11
-;7 $-1 false false
+link 16
 move 7 $-1
-;$-1 num false true
 move $-1 r0
 move r0 num
-;2 $-3 false false
 move 2 $-3
-;$-3 i false true
 move $-3 r0
 move r0 i
-;42 $-5 false false
 move 42 $-5
-;$-5 a false true
 move $-5 r0
 move r0 a
-;5 $-7 false false
 move 5 $-7
-; handled?
 move i r0
-; handled2?
 move $-7 r1
 cmpi r0 r1
 jge label1
-; handled?
 move num r0
-; handled2?
 move a r1
 addi r0 r1
 move r1 $-8 ; + STORE_HANDLED
-;$-8 num false true
 move $-8 r0
 move r0 num
-;3 $-10 false false
 move 3 $-10
-; handled?
 move i r0
-; handled2?
 move $-10 r1
 cmpi r0 r1
 jge label3
-; handled?
 move num r0
-; handled2?
 move a r1
 addi r0 r1
 move r1 $-11 ; + STORE_HANDLED
-;$-11 num false true
 move $-11 r0
 move r0 num
 jmp label4
@@ -122,21 +98,15 @@ label label3
 label label4
 jmp label2
 label label1
-;5 $-13 false false
 move 5 $-13
-; handled?
 move i r0
-; handled2?
 move $-13 r1
 cmpi r0 r1
 jlt label5
-; handled?
 move a r0
-; handled2?
 move num r1
 subi r0 r1
 move r1 $-14 ; - STORE_HANDLED
-;$-14 num false true
 move $-14 r0
 move r0 num
 jmp label6

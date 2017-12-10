@@ -145,8 +145,8 @@ public class Micro468Listener extends MicroBaseListener {
        // Only INT and FLOAT are the datatypes of the Function Parameters
        String[] functionParameters = parameters.split(",");
 
-       for(String parameter: functionParameters) {
-
+       for(int i = functionParameters.length - 1; i >= 0; i--) {
+            String parameter = functionParameters[i];
            // INT
            if(parameter.startsWith("INT")) {
                 symbolsTable.addSymbol(new Symbol(parameter.substring(3), "INT"));
@@ -1369,7 +1369,7 @@ public class Micro468Listener extends MicroBaseListener {
                 boolean check = parentTree.getCurrentScope().variableMap.containsKey(updated);
                 boolean check1 = parentTree.getCurrentScope().variableMap.containsKey(updated1);
 
-                tinyNodes.add(new TinyNode(";" + updated + " " + updated1 + " " + check + " " + check1));
+                //tinyNodes.add(new TinyNode(";" + updated + " " + updated1 + " " + check + " " + check1));
 
                 if ((updated.startsWith("$") && updated1.startsWith("$")) || (check && check1) || (updated.startsWith("$") && check1) || (updated1.startsWith("$") && check) ) {
                     tinyNodes.add(new TinyNode("move", updated, "r0"));
@@ -1403,18 +1403,12 @@ public class Micro468Listener extends MicroBaseListener {
 
             // ADD, SUB, MULT, DIV
             else if (opCode.startsWith("ADD")) {
+                boolean isInteger = true;
+                if (opCode.equals("ADDF")) {
+                    isInteger = false;
+                }
                 // TODO: Check if store handles
-//                tinyNodes.add(new TinyNode("move", firstOp, "r0"));
-//                tinyNodes.add(new TinyNode("move", secondOp, "r1"));
-//                if (opCode.equals("ADDI")) {
-//                    tinyNodes.add(new TinyNode("addi", "r0", "r1"));
-//
-//                }
-//                else if (opCode.equals("ADDF")) {
-//                    tinyNodes.add(new TinyNode("addr", "r0", "r1"));
-//                }
-
-                currentTemporaryLocation = getCompOpTiny(temporaries, currentTemporaryLocation, firstOp, secondOp, "add");
+                currentTemporaryLocation = getCompOpTiny_2(temporaries, currentTemporaryLocation, firstOp, secondOp, "add", isInteger);
 
                 String updated = getTemporary(temporaries, thirdOp, currentTemporaryLocation);
                 currentTemporaryLocation = updateTemporaryCount(thirdOp, updated, currentTemporaryLocation);
@@ -1422,7 +1416,12 @@ public class Micro468Listener extends MicroBaseListener {
                 tinyNodes.add(new TinyNode("move", "r1", updated + " ; + STORE_HANDLED"));
             }
             else if (opCode.startsWith("MULT")) {
-                currentTemporaryLocation = getCompOpTiny(temporaries, currentTemporaryLocation, firstOp, secondOp, "mul");
+                boolean isInteger = true;
+                if (opCode.equals("MULTF")) {
+                    isInteger = false;
+                }
+
+                currentTemporaryLocation = getCompOpTiny_2(temporaries, currentTemporaryLocation, firstOp, secondOp, "mul", isInteger);
 
                 String updated = getTemporary(temporaries, thirdOp, currentTemporaryLocation);
                 currentTemporaryLocation = updateTemporaryCount(thirdOp, updated, currentTemporaryLocation);
@@ -1430,7 +1429,12 @@ public class Micro468Listener extends MicroBaseListener {
                 tinyNodes.add(new TinyNode("move", "r1", updated + " ; * STORE_HANDLED"));
             }
             else if (opCode.startsWith("SUB")) {
-                currentTemporaryLocation = getCompOpTiny(temporaries, currentTemporaryLocation, secondOp, firstOp, "sub");
+                boolean isInteger = true;
+                if (opCode.equals("SUBF")) {
+                    isInteger = false;
+                }
+
+                currentTemporaryLocation = getCompOpTiny_2(temporaries, currentTemporaryLocation, secondOp, firstOp, "sub", isInteger);
 
                 String updated = getTemporary(temporaries, thirdOp, currentTemporaryLocation);
                 currentTemporaryLocation = updateTemporaryCount(thirdOp, updated, currentTemporaryLocation);
@@ -1438,7 +1442,11 @@ public class Micro468Listener extends MicroBaseListener {
                 tinyNodes.add(new TinyNode("move", "r1", updated + " ; - STORE_HANDLED"));
             }
             else if (opCode.startsWith("DIV")) {
-                currentTemporaryLocation = getCompOpTiny(temporaries, currentTemporaryLocation, secondOp, firstOp, "div");
+                boolean isInteger = true;
+                if (opCode.equals("DIVF")) {
+                    isInteger = false;
+                }
+                currentTemporaryLocation = getCompOpTiny_2(temporaries, currentTemporaryLocation, secondOp, firstOp, "div", isInteger);
 
                 String updated = getTemporary(temporaries, thirdOp, currentTemporaryLocation);
                 currentTemporaryLocation = updateTemporaryCount(thirdOp, updated, currentTemporaryLocation);
@@ -1470,6 +1478,46 @@ public class Micro468Listener extends MicroBaseListener {
         return op;
     }
 
+    private int getCompOpTiny_2(HashMap<String, String> temporaries, int currentTemporaryLocation, String firstOp, String secondOp, String operation, boolean isLeftInteger) {
+
+        if(firstOp.startsWith("!T")) {
+            if (temporaries.containsKey(firstOp)) {
+                firstOp = temporaries.get(firstOp);
+            }
+            else {
+                temporaries.put(firstOp, "$-" + currentTemporaryLocation);
+                firstOp = "$-" + currentTemporaryLocation;
+                currentTemporaryLocation += 1;
+            }
+        }
+
+        if (secondOp.startsWith("!T")) {
+            if (temporaries.containsKey(secondOp)) {
+                secondOp = temporaries.get(secondOp);
+            }
+            else {
+                temporaries.put(secondOp, "$-" + currentTemporaryLocation);
+                secondOp = "$-" + currentTemporaryLocation;
+                currentTemporaryLocation += 1;
+            }
+        }
+
+        //tinyNodes.add(new TinyNode("; handled?"));
+        tinyNodes.add(new TinyNode("move", firstOp, "r0")); // check if temp
+        //tinyNodes.add(new TinyNode("; handled2?"));
+        tinyNodes.add(new TinyNode("move", secondOp, "r1")); // check if temp
+
+        if (!isLeftInteger) {
+            tinyNodes.add(new TinyNode(operation + "r", "r0", "r1")); // check if temp
+        }
+        else {
+            tinyNodes.add(new TinyNode(operation + "i", "r0", "r1")); // check if temp
+        }
+
+        return currentTemporaryLocation;
+    }
+
+
     private int getCompOpTiny(HashMap<String, String> temporaries, int currentTemporaryLocation, String firstOp, String secondOp, String operation) {
         boolean f = false;
         if(isVariableinGlobal(firstOp)) {
@@ -1482,6 +1530,14 @@ public class Micro468Listener extends MicroBaseListener {
             if (parentTree.getCurrentScope().variableMap.get(secondOp)[0].equals("FLOAT")) {
                 f = true;
             }
+        }
+
+        if (symbolScope.containsKey(secondOp) && symbolScope.get(secondOp).decl_type.equals("FLOAT")) {
+            f = true;
+        }
+
+        if (symbolScope.containsKey(firstOp) && symbolScope.get(firstOp).decl_type.equals("FLOAT")) {
+            f = true;
         }
 
         if(firstOp.startsWith("!T")) {
@@ -1506,9 +1562,9 @@ public class Micro468Listener extends MicroBaseListener {
             }
        }
 
-        tinyNodes.add(new TinyNode("; handled?"));
+        //tinyNodes.add(new TinyNode("; handled?"));
         tinyNodes.add(new TinyNode("move", firstOp, "r0")); // check if temp
-        tinyNodes.add(new TinyNode("; handled2?"));
+        //tinyNodes.add(new TinyNode("; handled2?"));
         tinyNodes.add(new TinyNode("move", secondOp, "r1")); // check if temp
 
         if (f) {
@@ -1638,7 +1694,8 @@ public class Micro468Listener extends MicroBaseListener {
 
         for(String parameter: functionParameters) {
             String[] variables = parameter.split(",");
-            for (String variable : variables) {
+            for (int i = variables.length - 1; i >= 0; i--) {
+                String variable = variables[i];
                 if(variable.startsWith("INT")) {
                     lastType = "INT";
                     symbolScope.put(variable.substring(3),
@@ -1844,8 +1901,8 @@ public class Micro468Listener extends MicroBaseListener {
          * */
         incr_stmt = ctx.getChild(6).getText();
         increment_statements.push(ctx.getChild(6).getText());
-        System.out.println("++++++++++++++++");
-        System.out.println(";" + incr_stmt);
+        //System.out.println("++++++++++++++++");
+        //System.out.println(";" + incr_stmt);
     }
 
     @Override
@@ -1899,6 +1956,7 @@ public class Micro468Listener extends MicroBaseListener {
                     if (parentTree.getCurrentScope().variableMap.get(leftOp)[0].equals("FLOAT")) {
                         if (symbolScope.containsKey(leftOp)) {
                             leftOp = symbolScope.get(leftOp).register;
+
                         }
 
                         tinyNodeArrayList.add(new TinyNode("cmpr", leftOp, "r" + (this.operationNumber - 2)));

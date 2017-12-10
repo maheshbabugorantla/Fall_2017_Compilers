@@ -3,33 +3,29 @@
 ;FLOATresult;
 ;only one function call with operation: or no function calla+b
 ;Print store: c !T1 left: $-1
-;FLOATresult;
+;RETURN: No Function;FLOATresult;
 ;only one function call with operation: or no function calla*b
 ;Print store: c !T2 left: $-1
-;FLOATa,b,c;FLOATaddresult,multiplyresult;
+;RETURN: No Function;FLOATa,b,c;FLOATaddresult,multiplyresult;
 ;=======================
-;Left: multiplyresult right: multiply(a,b) postfix: !T3
 ;current register = !T3 current call multiply(a,b)
 ;Function name = multiply
-;Function parameters = a b
-;name: multiplyresult;-----------------------;=======================
-;Left: addresult right: add(multiplyresult,c) postfix: !T4
-;current register = !T4 current call add(multiplyresult,c)
+;-----------------------;=======================
+;current register = !T5 current call add(multiplyresult,c)
 ;Function name = add
-;Function parameters = multiplyresult c
-;name: addresult;-----------------------; PUSH
+;-----------------------;RETURN: No Function; PUSH
 ; JSR FUNC_id_main_L
 ; HALT
 ; LABEL FUNC_id_add_L
 ; LINK 2
-; ADDF $2 $3 !T1
+; ADDF $3 $2 !T1
 ; STOREF !T1 $-1
 ; STOREF $-1 $4
 ; UNLINK
 ; RET
 ; LABEL FUNC_id_multiply_L
 ; LINK 2
-; MULTF $2 $3 !T2
+; MULTF $3 $2 !T2
 ; STOREF !T2 $-1
 ; STOREF $-1 $4
 ; UNLINK
@@ -38,53 +34,55 @@
 ; LINK 6
 ; WRITES intro
 ; WRITES first
-; READF $-1
+; READF $-3
 ; WRITES second
 ; READF $-2
 ; WRITES third
-; READF $-3
+; READF $-1
 ; PUSH r0
 ; PUSH r1
 ; PUSH r2
 ; PUSH r3
 ; PUSH ;(return value)
-; PUSH $-1
+; PUSH $-3
 ; PUSH $-2
 ; JSR FUNC_id_multiply_L
 ; POP
 ; POP
-; POP !T3
-; STOREF !T3 $-5
+; POP !T4
+; STOREF !T4 !T3
 ; POP r3
 ; POP r2
 ; POP r1
 ; POP r0
+; STOREF !T3 $-4
 ; PUSH r0
 ; PUSH r1
 ; PUSH r2
 ; PUSH r3
 ; PUSH ;(return value)
-; PUSH $-5
-; PUSH $-3
+; PUSH $-4
+; PUSH $-1
 ; JSR FUNC_id_add_L
 ; POP
 ; POP
-; POP !T4
-; STOREF !T4 $-4
+; POP !T6
+; STOREF !T6 !T5
 ; POP r3
 ; POP r2
 ; POP r1
 ; POP r0
-; WRITEF $-1
+; STOREF !T5 $-5
+; WRITEF $-3
 ; WRITES star
 ; WRITEF $-2
 ; WRITES plus
-; WRITEF $-3
+; WRITEF $-1
 ; WRITES equal
-; WRITEF $-4
+; WRITEF $-5
 ; WRITES eol
-; STOREI 0 !T5
-; STOREI !T5 $2
+; STOREI 0 !T7
+; STOREI !T7 $2
 ; UNLINK
 ; RET
 str intro "You will be asked for three float numbers\n"
@@ -106,94 +104,86 @@ push
 jsr FUNC_id_main_L
 sys halt
 label FUNC_id_add_L
-link 8
-; handled?
-move $2 r0
-; handled2?
-move $3 r1
-addi r0 r1
+link 15
+move $3 r0
+move $2 r1
+addr r0 r1
 move r1 $-2 ; + STORE_HANDLED
-;$-2 $-1 false false
 move $-2 r0
 move r0 $-1
-;$-1 $4 false false
 move $-1 r0
 move r0 $4
 unlnk
 ret
 label FUNC_id_multiply_L
-link 8
-; handled?
-move $2 r0
-; handled2?
-move $3 r1
-muli r0 r1
+link 15
+move $3 r0
+move $2 r1
+mulr r0 r1
 move r1 $-2 ; * STORE_HANDLED
-;$-2 $-1 false false
 move $-2 r0
 move r0 $-1
-;$-1 $4 false false
 move $-1 r0
 move r0 $4
 unlnk
 ret
 label FUNC_id_main_L
-link 12
+link 19
 sys writes intro
 sys writes first
-sys readr $-1
+sys readr $-3
 sys writes second
 sys readr $-2
 sys writes third
-sys readr $-3
+sys readr $-1
 push r0
 push r1
 push r2
 push r3
 push ;(return value)
-push $-1
+push $-3
 push $-2
 jsr FUNC_id_multiply_L
 pop
 pop
 pop $-6 ;using temp
-;$-6 $-5 false false
 move $-6 r0
-move r0 $-5
+move r0 $-8
 pop r3
 pop r2
 pop r1
 pop r0
+move $-8 r0
+move r0 $-4
 push r0
 push r1
 push r2
 push r3
 push ;(return value)
-push $-5
-push $-3
+push $-4
+push $-1
 jsr FUNC_id_add_L
 pop
 pop
-pop $-8 ;using temp
-;$-8 $-4 false false
-move $-8 r0
-move r0 $-4
+pop $-10 ;using temp
+move $-10 r0
+move r0 $-12
 pop r3
 pop r2
 pop r1
 pop r0
-sys writer $-1
+move $-12 r0
+move r0 $-5
+sys writer $-3
 sys writes star
 sys writer $-2
 sys writes plus
-sys writer $-3
+sys writer $-1
 sys writes equal
-sys writer $-4
+sys writer $-5
 sys writes eol
-;0 $-10 false false
-move 0 $-10
-;$-10 $2 false false
-move $-10 r0
+move 0 $-14
+move $-14 r0
 move r0 $2
 unlnk
 ret

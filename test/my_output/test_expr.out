@@ -189,24 +189,16 @@ jsr FUNC_id_main_L
 sys halt
 label FUNC_id_main_L
 link 61
-;1 $-1 false false
 move 1 $-1
-;$-1 a false true
 move $-1 r0
 move r0 a
-;2 $-3 false false
 move 2 $-3
-;$-3 b false true
 move $-3 r0
 move r0 b
-;10 $-5 false false
 move 10 $-5
-;$-5 c false true
 move $-5 r0
 move r0 c
-;20 $-7 false false
 move 20 $-7
-;$-7 d false true
 move $-7 r0
 move r0 d
 sys writei a
@@ -217,173 +209,119 @@ sys writei c
 sys writes newline
 sys writei d
 sys writes newline
-; handled?
 move a r0
-; handled2?
 move b r1
 addi r0 r1
 move r1 $-9 ; + STORE_HANDLED
-;$-9 a false true
 move $-9 r0
 move r0 a
 sys writei a
 sys writes newline
-; handled?
 move a r0
-; handled2?
 move c r1
 muli r0 r1
 move r1 $-11 ; * STORE_HANDLED
-;$-11 b false true
 move $-11 r0
 move r0 b
 sys writei b
 sys writes newline
-;0 $-13 false false
 move 0 $-13
-; handled?
 move a r0
-; handled2?
 move $-13 r1
 subi r0 r1
 move r1 $-14 ; - STORE_HANDLED
-; handled?
 move $-14 r0
-; handled2?
 move b r1
 addi r0 r1
 move r1 $-15 ; + STORE_HANDLED
-;$-15 c false true
 move $-15 r0
 move r0 c
 sys writei c
 sys writes newline
-;0 $-17 false false
 move 0 $-17
-; handled?
 move d r0
-; handled2?
 move $-17 r1
 subi r0 r1
 move r1 $-18 ; - STORE_HANDLED
-;$-18 d false true
 move $-18 r0
 move r0 d
 sys writei d
 sys writes newline
-; handled?
 move a r0
-; handled2?
 move b r1
 addi r0 r1
 move r1 $-20 ; + STORE_HANDLED
-; handled?
 move d r0
-; handled2?
 move c r1
 addi r0 r1
 move r1 $-21 ; + STORE_HANDLED
-; handled?
 move $-20 r0
-; handled2?
 move $-21 r1
 muli r0 r1
 move r1 $-22 ; * STORE_HANDLED
-; handled?
 move a r0
-; handled2?
 move b r1
 addi r0 r1
 move r1 $-23 ; + STORE_HANDLED
-; handled?
 move $-23 r0
-; handled2?
 move c r1
 addi r0 r1
 move r1 $-24 ; + STORE_HANDLED
-; handled?
 move $-24 r0
-; handled2?
 move d r1
 addi r0 r1
 move r1 $-25 ; + STORE_HANDLED
-; handled?
 move a r0
-; handled2?
 move $-25 r1
 divi r0 r1
 move r1 $-26 ; / STORE_HANDLED
-; handled?
 move $-26 r0
-; handled2?
 move $-22 r1
 subi r0 r1
 move r1 $-27 ; - STORE_HANDLED
-;$-27 a false true
 move $-27 r0
 move r0 a
 sys writei a
 sys writes newline
-;10 $-29 false false
 move 10 $-29
-; handled?
 move a r0
-; handled2?
 move $-29 r1
 addi r0 r1
 move r1 $-30 ; + STORE_HANDLED
-;$-30 a false true
 move $-30 r0
 move r0 a
 sys writei a
 sys writes newline
-; handled?
 move b r0
-; handled2?
 move a r1
 addi r0 r1
 move r1 $-32 ; + STORE_HANDLED
-;10 $-33 false false
 move 10 $-33
-; handled?
 move $-32 r0
-; handled2?
 move $-33 r1
 addi r0 r1
 move r1 $-34 ; + STORE_HANDLED
-;$-34 b false true
 move $-34 r0
 move r0 b
 sys writei b
 sys writes newline
-;0 $-36 false false
 move 0 $-36
-;10 $-37 false false
 move 10 $-37
-; handled?
 move $-37 r0
-; handled2?
 move $-36 r1
 subi r0 r1
 move r1 $-38 ; - STORE_HANDLED
-;$-38 c false true
 move $-38 r0
 move r0 c
 sys writei c
 sys writes newline
-;1.0 $-40 false false
 move 1.0 $-40
-;$-40 x false true
 move $-40 r0
 move r0 x
-;2.0 $-42 false false
 move 2.0 $-42
-;$-42 y false true
 move $-42 r0
 move r0 y
-;3.14159 $-44 false false
 move 3.14159 $-44
-;$-44 z false true
 move $-44 r0
 move r0 z
 sys writer x
@@ -392,147 +330,100 @@ sys writer z
 sys writes newline
 sys writer y
 sys writes newline
-;2.0 $-46 false false
 move 2.0 $-46
-; handled?
 move $-46 r0
-; handled2?
 move z r1
 divr r0 r1
 move r1 $-47 ; / STORE_HANDLED
-;$-47 x false true
 move $-47 r0
 move r0 x
-; handled?
 move y r0
-; handled2?
 move z r1
 divr r0 r1
 move r1 $-49 ; / STORE_HANDLED
-;$-49 y false true
 move $-49 r0
 move r0 y
 sys writer x
 sys writes newline
 sys writer y
 sys writes newline
-; handled?
 move x r0
-; handled2?
 move y r1
 addr r0 r1
 move r1 $-51 ; + STORE_HANDLED
-; handled?
 move $-51 r0
-; handled2?
 move z r1
 addr r0 r1
 move r1 $-52 ; + STORE_HANDLED
-; handled?
 move z r0
-; handled2?
 move $-52 r1
 divr r0 r1
 move r1 $-53 ; / STORE_HANDLED
-;$-53 t false true
 move $-53 r0
 move r0 t
 sys writer t
 sys writes newline
-; handled?
 move t r0
-; handled2?
 move t r1
 mulr r0 r1
 move r1 $-55 ; * STORE_HANDLED
-;$-55 t false true
 move $-55 r0
 move r0 t
 sys writer t
 sys writes newline
-; handled?
 move t r0
-; handled2?
 move z r1
 addr r0 r1
 move r1 $-57 ; + STORE_HANDLED
-; handled?
 move $-57 r0
-; handled2?
 move t r1
 addr r0 r1
 move r1 $-58 ; + STORE_HANDLED
-;2.0 $-59 false false
 move 2.0 $-59
-; handled?
 move $-59 r0
-; handled2?
 move t r1
 divr r0 r1
 move r1 $-60 ; / STORE_HANDLED
-; handled?
 move $-58 r0
-; handled2?
 move $-60 r1
 addr r0 r1
 move r1 $-61 ; + STORE_HANDLED
-;4.0 $-62 false false
 move 4.0 $-62
-; handled?
 move $-62 r0
-; handled2?
 move z r1
 divr r0 r1
 move r1 $-63 ; / STORE_HANDLED
-; handled?
 move $-61 r0
-; handled2?
 move $-63 r1
 addr r0 r1
 move r1 $-64 ; + STORE_HANDLED
-;5.0 $-65 false false
 move 5.0 $-65
-; handled?
 move $-65 r0
-; handled2?
 move z r1
 divr r0 r1
 move r1 $-66 ; / STORE_HANDLED
-; handled?
 move $-64 r0
-; handled2?
 move $-66 r1
 addr r0 r1
 move r1 $-67 ; + STORE_HANDLED
-;6.0 $-68 false false
 move 6.0 $-68
-; handled?
 move $-68 r0
-; handled2?
 move z r1
 divr r0 r1
 move r1 $-69 ; / STORE_HANDLED
-; handled?
 move $-67 r0
-; handled2?
 move $-69 r1
 addr r0 r1
 move r1 $-70 ; + STORE_HANDLED
-;7.0 $-71 false false
 move 7.0 $-71
-; handled?
 move $-71 r0
-; handled2?
 move z r1
 divr r0 r1
 move r1 $-72 ; / STORE_HANDLED
-; handled?
 move $-70 r0
-; handled2?
 move $-72 r1
 addr r0 r1
 move r1 $-73 ; + STORE_HANDLED
-;$-73 t false true
 move $-73 r0
 move r0 t
 sys writer t

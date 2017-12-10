@@ -86,96 +86,64 @@ jsr FUNC_id_main_L
 sys halt
 label FUNC_id_main_L
 link 29
-;20 $-1 false false
 move 20 $-1
-;$-1 a false true
 move $-1 r0
 move r0 a
-;30 $-3 false false
 move 30 $-3
-;$-3 b false true
 move $-3 r0
 move r0 b
-;40 $-5 false false
 move 40 $-5
-;$-5 c false true
 move $-5 r0
 move r0 c
-; handled?
 move a r0
-; handled2?
 move b r1
 muli r0 r1
 move r1 $-7 ; * STORE_HANDLED
-; handled?
 move c r0
-; handled2?
 move $-7 r1
 addi r0 r1
 move r1 $-8 ; + STORE_HANDLED
-; handled?
 move a r0
-; handled2?
 move b r1
 muli r0 r1
 move r1 $-9 ; * STORE_HANDLED
-; handled?
 move $-9 r0
-; handled2?
 move c r1
 addi r0 r1
 move r1 $-10 ; + STORE_HANDLED
-; handled?
 move a r0
-; handled2?
 move $-10 r1
 divi r0 r1
 move r1 $-11 ; / STORE_HANDLED
-; handled?
 move $-8 r0
-; handled2?
 move $-11 r1
 addi r0 r1
 move r1 $-12 ; + STORE_HANDLED
-;20 $-13 false false
 move 20 $-13
-; handled?
 move $-12 r0
-; handled2?
 move $-13 r1
 addi r0 r1
 move r1 $-14 ; + STORE_HANDLED
-;$-14 c false true
 move $-14 r0
 move r0 c
-; handled?
 move b r0
-; handled2?
 move b r1
 muli r0 r1
 move r1 $-16 ; * STORE_HANDLED
-; handled?
 move $-16 r0
-; handled2?
 move a r1
 addi r0 r1
 move r1 $-17 ; + STORE_HANDLED
-;$-17 b false true
 move $-17 r0
 move r0 b
-; handled?
 move b r0
-; handled2?
 move a r1
 muli r0 r1
 move r1 $-19 ; * STORE_HANDLED
-; handled?
 move a r0
-; handled2?
 move $-19 r1
 divi r0 r1
 move r1 $-20 ; / STORE_HANDLED
-;$-20 a false true
 move $-20 r0
 move r0 a
 sys writei c
@@ -184,46 +152,31 @@ sys writei b
 sys writes newline
 sys writei a
 sys writes newline
-;2.5 $-22 false false
 move 2.5 $-22
-;$-22 p false true
 move $-22 r0
 move r0 p
-;1.2 $-24 false false
 move 1.2 $-24
-;$-24 s false true
 move $-24 r0
 move r0 s
-;0.7 $-26 false false
 move 0.7 $-26
-;$-26 t false true
 move $-26 r0
 move r0 t
-; handled?
 move t r0
-; handled2?
 move p r1
 mulr r0 r1
 move r1 $-28 ; * STORE_HANDLED
-; handled?
 move s r0
-; handled2?
 move $-28 r1
 subr r0 r1
 move r1 $-29 ; - STORE_HANDLED
-; handled?
 move p r0
-; handled2?
 move s r1
 mulr r0 r1
 move r1 $-30 ; * STORE_HANDLED
-; handled?
 move $-29 r0
-; handled2?
 move $-30 r1
 addr r0 r1
 move r1 $-31 ; + STORE_HANDLED
-;$-31 t false true
 move $-31 r0
 move r0 t
 sys writer t
