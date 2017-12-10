@@ -11,6 +11,8 @@
 ;Print store: c 0 left: !T3
 ;Print store: c !T3 left: b
 ;
+++++++++++++++++
+;i:=i+1
 ;Print store: c 10 left: !T4
 ;Print store: c 10 left: !T5
 ;only one function call with operation: or no function calla+1

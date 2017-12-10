@@ -1,0 +1,248 @@
+;
+; IR code
+;INTreturnValue;
+;only one function call with operation: or no function call0
+;Print store: c 0 left: !T1
+;Print store: c !T1 left: $-1
+;only one function call with operation: or no function callarg1+arg2+arg3+arg4+arg5+arg6+arg7
+;Print store: c !T7 left: $-1
+;INTarg1,arg2,arg3,arg4,arg5,arg6,arg7,result;
+;only one function call with operation: or no function call1
+;Print store: c 1 left: !T8
+;Print store: c !T8 left: $-1
+;only one function call with operation: or no function call1
+;Print store: c 1 left: !T9
+;Print store: c !T9 left: $-2
+;only one function call with operation: or no function call1
+;Print store: c 1 left: !T10
+;Print store: c !T10 left: $-3
+;only one function call with operation: or no function call1
+;Print store: c 1 left: !T11
+;Print store: c !T11 left: $-4
+;only one function call with operation: or no function call1
+;Print store: c 1 left: !T12
+;Print store: c !T12 left: $-5
+;only one function call with operation: or no function call1
+;Print store: c 1 left: !T13
+;Print store: c !T13 left: $-6
+;only one function call with operation: or no function call1
+;Print store: c 1 left: !T14
+;Print store: c !T14 left: $-7
+;only one function call with operation: or no function call0
+;Print store: c 0 left: !T15
+;Print store: c !T15 left: $-8
+;=======================
+;current register = !T16 current call myFuncWithManyArgs(arg1,arg2,arg3,arg4,arg5,arg6,arg7)
+;Function name = myFuncWithManyArgs
+;Function parameters = arg1 arg2 arg3 arg4 arg5 arg6 arg7
+;-----------------------; PUSH
+; JSR FUNC_id_main_L
+; HALT
+; LABEL FUNC_id_myFuncWithManyArgs_L
+; LINK 2
+; STOREI 0 !T1
+; STOREI !T1 $-1
+; ADDI $2 $3 !T2
+; ADDI !T2 $4 !T3
+; ADDI !T3 $5 !T4
+; ADDI !T4 $6 !T5
+; ADDI !T5 $7 !T6
+; ADDI !T6 $8 !T7
+; STOREI !T7 $-1
+; STOREI $-1 $9
+; UNLINK
+; RET
+; LABEL FUNC_id_main_L
+; LINK 9
+; STOREI 1 !T8
+; STOREI !T8 $-1
+; STOREI 1 !T9
+; STOREI !T9 $-2
+; STOREI 1 !T10
+; STOREI !T10 $-3
+; STOREI 1 !T11
+; STOREI !T11 $-4
+; STOREI 1 !T12
+; STOREI !T12 $-5
+; STOREI 1 !T13
+; STOREI !T13 $-6
+; STOREI 1 !T14
+; STOREI !T14 $-7
+; STOREI 0 !T15
+; STOREI !T15 $-8
+; PUSH r0
+; PUSH r1
+; PUSH r2
+; PUSH r3
+; PUSH ;(return value)
+; PUSH $-1
+; PUSH $-2
+; PUSH $-3
+; PUSH $-4
+; PUSH $-5
+; PUSH $-6
+; PUSH $-7
+; JSR FUNC_id_myFuncWithManyArgs_L
+; POP
+; POP
+; POP
+; POP
+; POP
+; POP
+; POP
+; POP !T17
+; STOREI !T17 !T16
+; POP r3
+; POP r2
+; POP r1
+; POP r0
+; STOREI !T16 $-8
+; WRITEI $-8
+; STOREI 0 !T18
+; STOREI !T18 $2
+; UNLINK
+; RET
+var returnValue
+var arg1
+var arg2
+var arg3
+var arg4
+var arg5
+var arg6
+var arg7
+var result
+push
+jsr FUNC_id_main_L
+sys halt
+label FUNC_id_myFuncWithManyArgs_L
+link 21
+;0 $-2 false false
+move 0 $-2
+;$-2 $-1 false false
+move $-2 r0
+move r0 $-1
+; handled?
+move $2 r0
+; handled2?
+move $3 r1
+addi r0 r1
+move r1 $-4 ; + STORE_HANDLED
+; handled?
+move $-4 r0
+; handled2?
+move $4 r1
+addi r0 r1
+move r1 $-5 ; + STORE_HANDLED
+; handled?
+move $-5 r0
+; handled2?
+move $5 r1
+addi r0 r1
+move r1 $-6 ; + STORE_HANDLED
+; handled?
+move $-6 r0
+; handled2?
+move $6 r1
+addi r0 r1
+move r1 $-7 ; + STORE_HANDLED
+; handled?
+move $-7 r0
+; handled2?
+move $7 r1
+addi r0 r1
+move r1 $-8 ; + STORE_HANDLED
+; handled?
+move $-8 r0
+; handled2?
+move $8 r1
+addi r0 r1
+move r1 $-9 ; + STORE_HANDLED
+;$-9 $-1 false false
+move $-9 r0
+move r0 $-1
+;$-1 $9 false false
+move $-1 r0
+move r0 $9
+unlnk
+ret
+label FUNC_id_main_L
+link 28
+;1 $-9 false false
+move 1 $-9
+;$-9 $-1 false false
+move $-9 r0
+move r0 $-1
+;1 $-11 false false
+move 1 $-11
+;$-11 $-2 false false
+move $-11 r0
+move r0 $-2
+;1 $-13 false false
+move 1 $-13
+;$-13 $-3 false false
+move $-13 r0
+move r0 $-3
+;1 $-15 false false
+move 1 $-15
+;$-15 $-4 false false
+move $-15 r0
+move r0 $-4
+;1 $-17 false false
+move 1 $-17
+;$-17 $-5 false false
+move $-17 r0
+move r0 $-5
+;1 $-19 false false
+move 1 $-19
+;$-19 $-6 false false
+move $-19 r0
+move r0 $-6
+;1 $-21 false false
+move 1 $-21
+;$-21 $-7 false false
+move $-21 r0
+move r0 $-7
+;0 $-23 false false
+move 0 $-23
+;$-23 $-8 false false
+move $-23 r0
+move r0 $-8
+push r0
+push r1
+push r2
+push r3
+push ;(return value)
+push $-1
+push $-2
+push $-3
+push $-4
+push $-5
+push $-6
+push $-7
+jsr FUNC_id_myFuncWithManyArgs_L
+pop
+pop
+pop
+pop
+pop
+pop
+pop
+pop $-25 ;using temp
+;$-25 $-27 false false
+move $-25 r0
+move r0 $-27
+pop r3
+pop r2
+pop r1
+pop r0
+;$-27 $-8 false false
+move $-27 r0
+move r0 $-8
+sys writei $-8
+;0 $-29 false false
+move 0 $-29
+;$-29 $2 false false
+move $-29 r0
+move r0 $2
+unlnk
+ret

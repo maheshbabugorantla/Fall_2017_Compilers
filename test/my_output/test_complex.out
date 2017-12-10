@@ -85,7 +85,7 @@ push
 jsr FUNC_id_main_L
 sys halt
 label FUNC_id_main_L
-link 24
+link 29
 ;20 $-1 false false
 move 20 $-1
 ;$-1 a false true

@@ -34,6 +34,7 @@ public class Micro468Listener extends MicroBaseListener {
     private boolean condFlag;
 
     private String incr_stmt;
+    private Stack<String> increment_statements = new Stack<String>();
 
     private int randomTiny = 20; // Used for the some statements where the tinyRegister is no more used in the subsequent Tiny instructions
 
@@ -290,6 +291,7 @@ public class Micro468Listener extends MicroBaseListener {
 
         String postFixFunction = InfixToPostfix.infixToPostfixFunctions(right, this.operationNumber);
         int numberAfter = InfixToPostfix.registerNumber;
+        this.operationNumber = numberAfter;
 
         if (numberAfter - numberBefore == 0) {
 
@@ -298,12 +300,26 @@ public class Micro468Listener extends MicroBaseListener {
         }
         else {
             parsePostfixFunctions(right, left, postFixFunction, numberBefore, numberAfter);
+            if (numberAfter - numberBefore == 1) {
+                String leftReg = symbolScope.get(left).register;
+                if (isSymbolScopeInteger(left)) {
+                    irNodeList.addNode(new IRNode("STOREI", "!T" + numberBefore, leftReg));
+                }
+                else {
+                    irNodeList.addNode(new IRNode("STOREF", "!T" + numberBefore, leftReg));
+                }
+            }
+            else {
+                System.out.println("multiple functions");
+                boolean isInteger =isSymbolScopeInteger(left);
+                parsePostfixForFunction(right, left, postFixFunction, isInteger);
+            }
         }
     }
 
     private void parsePostfixFunctions(String right, String left, String postfix, int numberBefore, int numberAfter) {
         System.out.println(";=======================");
-        System.out.println(";Left: " + left + " right: " + right + " postfix: " + postfix);
+        //System.out.println(";Left: " + left + " right: " + right + " postfix: " + postfix);
         for (int i = numberBefore; i < numberAfter; i++) {
             String currentRegister = "!T" + i;
             String functionCall = InfixToPostfix.tempToFunctionMap.get(currentRegister);
@@ -323,14 +339,138 @@ public class Micro468Listener extends MicroBaseListener {
 
             boolean isInteger = isSymbolScopeInteger(left);
 
-            executeFunctionCall(functionName, left, right, functionParameters, numberBefore, numberAfter, isInteger);
+            executeFunctionCall(functionName, currentRegister, right, functionParameters, numberBefore, numberAfter, isInteger);
         }
         System.out.printf(";-----------------------");
     }
 
+    private void parsePostfixForFunction(String right, String left, String postfix, boolean isLeftInteger) {
+
+        Stack<String> stack = new Stack<String>();
+
+        String[] words = postfix.split(" ");
+        if (words.length == 1) {
+            parseAssign_stmt(left, right);
+            return;
+        }
+
+        for (int i = 0; i < words.length; i++) {
+            String c = words[i];
+
+            boolean foundNumber = false;
+
+            if (isNumeric((c))) {
+
+                foundNumber = true;
+                String location = "!T" + this.operationNumber;
+                this.operationNumber += 1;
+
+                if (isLeftInteger) {
+                    parentTree.getCurrentScope().addRegister(location,  "INT", "r" + Integer.toString(this.operationNumber - 2));
+                    tinyRegisterNumber = this.operationNumber - 2;
+                    stack.push(location);
+
+                    irNodeList.addNode(new IRNode("STOREI", c, location));
+                    //add_reg_operation_stmt_2("move", c, location);
+                }
+                else {
+
+                    parentTree.getCurrentScope().addRegister(location,  "FLOAT", "r" + Integer.toString(this.operationNumber - 2));
+                    tinyRegisterNumber = this.operationNumber - 2;
+                    stack.push(location);
+
+                    printStoreOperation("STOREF", c, location);
+                    // add_reg_operation_stmt_2("move", c, location);
+                }
+            }
+
+            if (isOperator(c)) {
+                String val2 = stack.pop();
+                String val1 = stack.pop();
+                String location = "!T" + this.operationNumber;
+                this.operationNumber += 1;
+                //System.out.println("Error from this: " + val1 + " " + val2);
+
+                String currentType;
+
+                if (isLeftInteger) {
+                    currentType = "INT";
+                }
+                else {
+                    currentType = "FLOAT";
+                }
+
+
+                parentTree.getCurrentScope().addRegister(location, currentType, "r" + Integer.toString(this.operationNumber - 2));
+
+                tinyRegisterNumber = this.operationNumber - 2;
+
+                choose_operation(c, currentType, val1, val2, location);
+
+                stack.push(location);
+            }
+            else if (!foundNumber) {
+                stack.push(c);
+            }
+        }
+
+        while (!stack.isEmpty()) {
+            String c = stack.pop();
+
+            if (isOperator(c)) {
+                String val2 = stack.pop();
+                String val1 = stack.pop();
+                String location = "!T" + this.operationNumber;
+                this.operationNumber += 1;
+
+                String currentType;
+
+
+                if(isVariableinGlobal(val1)) {
+                    currentType = parentTree.getCurrentScope().variableMap.get(val1)[0];
+                }
+                else {
+                    currentType = currentScope.variableMap.get(val1)[0];
+                }
+
+                parentTree.getCurrentScope().addRegister(location, currentType, "r" + Integer.toString(this.operationNumber - 2));
+
+                tinyRegisterNumber = this.operationNumber - 2;
+
+                choose_operation(c, currentType, val1, val2, location);
+
+                stack.push(location);
+            }
+            else {
+
+                String currentType;
+
+                if(isVariableinGlobal(c)) {
+                    currentType = parentTree.getCurrentScope().variableMap.get(c)[0];
+                }
+                else {
+                    currentType = currentScope.variableMap.get(c)[0];
+                }
+
+                if (left == null) {
+                    return;
+                }
+                if (currentType.equals("INT")) {
+                    printStoreOperation("STOREI", c, left);
+                    ///add_reg_operation_stmt_2("move", c, left);
+                }
+                else {
+                    printStoreOperation("STOREF", c, left);
+                    //add_reg_operation_stmt_2("move", c, left);
+                }
+            }
+        }
+    }
+
+
 
     private boolean isSymbolScopeInteger(String name) {
-        System.out.printf(";name: " + name);
+        //System.out.printf(";name: " + name);
         if (symbolScope.get(name).decl_type.equals("INT")) {
             return true;
         }
@@ -374,13 +514,15 @@ public class Micro468Listener extends MicroBaseListener {
             parentTree.getCurrentScope().addRegister(location,  "INT", "r" + Integer.toString(this.operationNumber - 2));
 
             irNodeList.addNode(new IRNode("POP", location));
-            irNodeList.addNode(new IRNode("STOREI", location, symbolScope.get(left).register));
+            irNodeList.addNode(new IRNode("STOREI", location, left));
+            //irNodeList.addNode(new IRNode("STOREI", location, symbolScope.get(left).register));
         }
         else {
             parentTree.getCurrentScope().addRegister(location,  "FLOAT", "r" + Integer.toString(this.operationNumber - 2));
 
             irNodeList.addNode(new IRNode("POP", location));
-            irNodeList.addNode(new IRNode("STOREF", location, symbolScope.get(left).register));
+            irNodeList.addNode(new IRNode("STOREF", location, left));
+            //irNodeList.addNode(new IRNode("STOREF", location, symbolScope.get(left).register));
         }
 
         irNodeList.addNode(new IRNode("POP", "r3"));
@@ -569,6 +711,7 @@ public class Micro468Listener extends MicroBaseListener {
     }
 
 
+
     private void parsePostfix(String right, String left, String postfix) {
 
         Stack<String> stack = new Stack<String>();
@@ -623,6 +766,7 @@ public class Micro468Listener extends MicroBaseListener {
                     currentType = parentTree.getCurrentScope().variableMap.get(val1)[0];
                 }
                 else {
+                    //System.out.println("val1: " + val1);
                     currentType = currentScope.variableMap.get(val1)[0];
                 }
 
@@ -1081,7 +1225,7 @@ public class Micro468Listener extends MicroBaseListener {
                 localVariables = Integer.parseInt(firstOp);
                 currentTemporaryLocation = localVariables;
 
-                int totalSpace = localVariables + this.operationNumber;
+                int totalSpace = localVariables + this.operationNumber + 5;
 
                 tinyNodes.add(new TinyNode("link", Integer.toString(totalSpace)));
             }
@@ -1161,6 +1305,8 @@ public class Micro468Listener extends MicroBaseListener {
                 }
                 else {
                     tinyNodes.add(new TinyNode("move", updated, updated1));
+                    //tinyNodes.add(new TinyNode("move", updated, "r0"));
+                    //tinyNodes.add(new TinyNode("move", "r0", updated1));
                 }
             }
             else if (opCode.startsWith("READ")) {
@@ -1621,11 +1767,16 @@ public class Micro468Listener extends MicroBaseListener {
          * IR Code for incr_stmt
          * */
         incr_stmt = ctx.getChild(6).getText();
+        increment_statements.push(ctx.getChild(6).getText());
+        System.out.println("++++++++++++++++");
+        System.out.println(";" + incr_stmt);
     }
 
     @Override
     public void exitFor_stmt(MicroParser.For_stmtContext ctx) {
 
+        String currentIncrementStatement = increment_statements.pop();
+        incr_stmt = currentIncrementStatement;
         if(!incr_stmt.isEmpty()) {
             String[] operands = incr_stmt.split(":=");
 

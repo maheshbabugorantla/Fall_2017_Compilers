@@ -9,6 +9,8 @@
 ;
 ;Print store: c 100 left: !T2
 ;Print store: c !T2 left: i
+++++++++++++++++
+;i:=i-1
 ;Print store: c 0 left: !T3
 ;only one function call with operation: or no function call0.5*(approx+num/approx)
 ;Print store: c 0.5 left: !T4
@@ -55,7 +57,7 @@ push
 jsr FUNC_id_main_L
 sys halt
 label FUNC_id_main_L
-link 11
+link 16
 sys readr num
 ;1 $-1 false false
 move 1 $-1

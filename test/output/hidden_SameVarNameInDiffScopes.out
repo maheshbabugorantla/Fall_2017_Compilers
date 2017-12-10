@@ -15,11 +15,36 @@
 ;Print store: c 3.0 left: !T3
 ;Print store: c !T3 left: $-2
 ;=======================
-;Left: multiplyresult right: myFunction(a,b) postfix: !T4
 ;current register = !T4 current call myFunction(a,b)
 ;Function name = myFunction
 ;Function parameters = a b
-;name: multiplyresult;-----------------------; PUSH
+;-----------------------;=======================
+;current register = !T6 current call myFunction(a,b)
+;Function name = myFunction
+;Function parameters = a b
+;current register = !T7 current call myFunction(b,a)
+;Function name = myFunction
+;Function parameters = b a
+;current register = !T8 current call myFunction(a,b)
+;Function name = myFunction
+;Function parameters = a b
+;-----------------------multiple functions
+;Print store: c 4 left: !T14
+;Print store: c !T15 left: $-3
+;=======================
+;current register = !T16 current call myFunction(a,b)
+;Function name = myFunction
+;Function parameters = a b
+;current register = !T17 current call myFunction(b,a)
+;Function name = myFunction
+;Function parameters = b a
+;current register = !T18 current call myFunction(a,b)
+;Function name = myFunction
+;Function parameters = a b
+;-----------------------multiple functions
+;Print store: c 4 left: !T24
+;Print store: c !T25 left: $-3
+; PUSH
 ; JSR FUNC_id_main_L
 ; HALT
 ; LABEL FUNC_id_myFunction_L
@@ -47,16 +72,127 @@
 ; JSR FUNC_id_myFunction_L
 ; POP
 ; POP
-; POP !T4
-; STOREF !T4 $-3
+; POP !T5
+; STOREF !T5 !T4
 ; POP r3
 ; POP r2
 ; POP r1
 ; POP r0
+; STOREF !T4 $-3
 ; WRITEF $-3
 ; WRITES eol
-; STOREI 0 !T5
-; STOREI !T5 $2
+; PUSH r0
+; PUSH r1
+; PUSH r2
+; PUSH r3
+; PUSH ;(return value)
+; PUSH $-1
+; PUSH $-2
+; JSR FUNC_id_myFunction_L
+; POP
+; POP
+; POP !T9
+; STOREF !T9 !T6
+; POP r3
+; POP r2
+; POP r1
+; POP r0
+; PUSH r0
+; PUSH r1
+; PUSH r2
+; PUSH r3
+; PUSH ;(return value)
+; PUSH $-2
+; PUSH $-1
+; JSR FUNC_id_myFunction_L
+; POP
+; POP
+; POP !T10
+; STOREF !T10 !T7
+; POP r3
+; POP r2
+; POP r1
+; POP r0
+; PUSH r0
+; PUSH r1
+; PUSH r2
+; PUSH r3
+; PUSH ;(return value)
+; PUSH $-1
+; PUSH $-2
+; JSR FUNC_id_myFunction_L
+; POP
+; POP
+; POP !T11
+; STOREF !T11 !T8
+; POP r3
+; POP r2
+; POP r1
+; POP r0
+; ADDF !T6 !T7 !T12
+; ADDF !T12 !T6 !T13
+; STOREF 4 !T14
+; ADDF !T13 !T14 !T15
+; STOREF !T15 $-3
+; WRITEF $-3
+; WRITES eol
+; PUSH r0
+; PUSH r1
+; PUSH r2
+; PUSH r3
+; PUSH ;(return value)
+; PUSH $-1
+; PUSH $-2
+; JSR FUNC_id_myFunction_L
+; POP
+; POP
+; POP !T19
+; STOREF !T19 !T16
+; POP r3
+; POP r2
+; POP r1
+; POP r0
+; PUSH r0
+; PUSH r1
+; PUSH r2
+; PUSH r3
+; PUSH ;(return value)
+; PUSH $-2
+; PUSH $-1
+; JSR FUNC_id_myFunction_L
+; POP
+; POP
+; POP !T20
+; STOREF !T20 !T17
+; POP r3
+; POP r2
+; POP r1
+; POP r0
+; PUSH r0
+; PUSH r1
+; PUSH r2
+; PUSH r3
+; PUSH ;(return value)
+; PUSH $-1
+; PUSH $-2
+; JSR FUNC_id_myFunction_L
+; POP
+; POP
+; POP !T21
+; STOREF !T21 !T18
+; POP r3
+; POP r2
+; POP r1
+; POP r0
+; ADDF !T16 !T17 !T22
+; ADDF !T22 !T16 !T23
+; STOREF 4 !T24
+; ADDF !T23 !T24 !T25
+; STOREF !T25 $-3
+; WRITEF $-3
+; WRITES eol
+; STOREI 0 !T26
+; STOREI !T26 $2
 ; UNLINK
 ; RET
 str eol "\n"
@@ -73,7 +209,7 @@ push
 jsr FUNC_id_main_L
 sys halt
 label FUNC_id_myFunction_L
-link 10
+link 36
 ;$2 $-1 false false
 move $2 r0
 move r0 $-1
@@ -95,7 +231,7 @@ move r0 $4
 unlnk
 ret
 label FUNC_id_main_L
-link 10
+link 36
 ;2.0 $-4 false false
 move 2.0 $-4
 ;$-4 $-1 false false
@@ -117,19 +253,180 @@ jsr FUNC_id_myFunction_L
 pop
 pop
 pop $-8 ;using temp
-;$-8 $-3 false false
+;$-8 $-10 false false
 move $-8 r0
-move r0 $-3
+move r0 $-10
 pop r3
 pop r2
 pop r1
 pop r0
+;$-10 $-3 false false
+move $-10 r0
+move r0 $-3
 sys writer $-3
 sys writes eol
-;0 $-10 false false
-move 0 $-10
-;$-10 $2 false false
-move $-10 r0
+push r0
+push r1
+push r2
+push r3
+push ;(return value)
+push $-1
+push $-2
+jsr FUNC_id_myFunction_L
+pop
+pop
+pop $-12 ;using temp
+;$-12 $-14 false false
+move $-12 r0
+move r0 $-14
+pop r3
+pop r2
+pop r1
+pop r0
+push r0
+push r1
+push r2
+push r3
+push ;(return value)
+push $-2
+push $-1
+jsr FUNC_id_myFunction_L
+pop
+pop
+pop $-15 ;using temp
+;$-15 $-17 false false
+move $-15 r0
+move r0 $-17
+pop r3
+pop r2
+pop r1
+pop r0
+push r0
+push r1
+push r2
+push r3
+push ;(return value)
+push $-1
+push $-2
+jsr FUNC_id_myFunction_L
+pop
+pop
+pop $-18 ;using temp
+;$-18 $-20 false false
+move $-18 r0
+move r0 $-20
+pop r3
+pop r2
+pop r1
+pop r0
+; handled?
+move $-14 r0
+; handled2?
+move $-17 r1
+addi r0 r1
+move r1 $-21 ; + STORE_HANDLED
+; handled?
+move $-21 r0
+; handled2?
+move $-14 r1
+addr r0 r1
+move r1 $-22 ; + STORE_HANDLED
+;4 $-23 false false
+move 4 $-23
+; handled?
+move $-22 r0
+; handled2?
+move $-23 r1
+addr r0 r1
+move r1 $-24 ; + STORE_HANDLED
+;$-24 $-3 false false
+move $-24 r0
+move r0 $-3
+sys writer $-3
+sys writes eol
+push r0
+push r1
+push r2
+push r3
+push ;(return value)
+push $-1
+push $-2
+jsr FUNC_id_myFunction_L
+pop
+pop
+pop $-26 ;using temp
+;$-26 $-28 false false
+move $-26 r0
+move r0 $-28
+pop r3
+pop r2
+pop r1
+pop r0
+push r0
+push r1
+push r2
+push r3
+push ;(return value)
+push $-2
+push $-1
+jsr FUNC_id_myFunction_L
+pop
+pop
+pop $-29 ;using temp
+;$-29 $-31 false false
+move $-29 r0
+move r0 $-31
+pop r3
+pop r2
+pop r1
+pop r0
+push r0
+push r1
+push r2
+push r3
+push ;(return value)
+push $-1
+push $-2
+jsr FUNC_id_myFunction_L
+pop
+pop
+pop $-32 ;using temp
+;$-32 $-34 false false
+move $-32 r0
+move r0 $-34
+pop r3
+pop r2
+pop r1
+pop r0
+; handled?
+move $-28 r0
+; handled2?
+move $-31 r1
+addi r0 r1
+move r1 $-35 ; + STORE_HANDLED
+; handled?
+move $-35 r0
+; handled2?
+move $-28 r1
+addr r0 r1
+move r1 $-36 ; + STORE_HANDLED
+;4 $-37 false false
+move 4 $-37
+; handled?
+move $-36 r0
+; handled2?
+move $-37 r1
+addr r0 r1
+move r1 $-38 ; + STORE_HANDLED
+;$-38 $-3 false false
+move $-38 r0
+move r0 $-3
+sys writer $-3
+sys writes eol
+;0 $-40 false false
+move 0 $-40
+;$-40 $2 false false
+move $-40 r0
 move r0 $2
 unlnk
 ret

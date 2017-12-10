@@ -10,9 +10,9 @@ BEGIN
 			FOR (j := 0; j < 10; j := j+1)
 				FOR (k := 0; k < 10; k := k+1)
 					returnValue := returnValue + 1;
-        			ROF
         		ROF
         	ROF
+        ROF
 
 
 		RETURN returnValue;

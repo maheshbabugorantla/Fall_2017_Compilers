@@ -1,32 +1,28 @@
 ;INTa,b,k,g,p,u;
 ; IR code
 ;
-;In infix to postfix: 1
-;=======================;only one function call with operation: or no function call1
+;only one function call with operation: or no function call1
 ;Print store: c 1 left: !T1
 ;Print store: c !T1 left: b
 ;
 ;Print store: c 1 left: !T2
 ;Print store: c !T2 left: a
+++++++++++++++++
+;a:=a+20
 ;Print store: c 120 left: !T3
 ;Print store: c 1 left: !T4
-;In infix to postfix: 1*a
-;=======================;only one function call with operation: or no function call1*a
+;only one function call with operation: or no function call1*a
 ;Print store: c !T6 left: g
 ;Print store: c 2 left: !T7
-;In infix to postfix: 2*a
-;=======================;only one function call with operation: or no function call2*a
+;only one function call with operation: or no function call2*a
 ;Print store: c !T9 left: p
 ;Print store: c 3 left: !T10
-;In infix to postfix: 3*a
-;=======================;only one function call with operation: or no function call3*a
+;only one function call with operation: or no function call3*a
 ;Print store: c !T12 left: k
 ;Print store: c 4 left: !T13
-;In infix to postfix: 4*a
-;=======================;only one function call with operation: or no function call4*a
+;only one function call with operation: or no function call4*a
 ;Print store: c !T15 left: u
-;In infix to postfix: b+1
-;=======================;only one function call with operation: or no function callb+1
+;only one function call with operation: or no function callb+1
 ;Print store: c !T17 left: b
 ;Print store: c !T19 left: a
 ; PUSH

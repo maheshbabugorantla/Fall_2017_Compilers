@@ -35,10 +35,13 @@ BEGIN
 		WRITE(multiplyresult);
 		WRITE(eol);
 
-		-- multiplyresult := myFunction(a,b) + myFunction(b,a) + myFunction(b) + 4 + myFunction(b,b + a * c, c*d+e);
-		-- multiplyresult := a + b;
-		-- WRITE(multiplyresult);
-        -- WRITE(eol);
+		multiplyresult := myFunction(a,b) + myFunction(b,a) + myFunction(a,b) + 4;
+        WRITE(multiplyresult);
+        WRITE(eol);
+
+		multiplyresult := myFunction(a,b) + myFunction(b,a) + myFunction(a,b) + 4;
+		WRITE(multiplyresult);
+        WRITE(eol);
 		RETURN 0;
 	END
 END

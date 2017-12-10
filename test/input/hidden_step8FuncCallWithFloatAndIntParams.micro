@@ -15,7 +15,7 @@ BEGIN
 	BEGIN
 		FLOAT float1,float2;
 		INT int1,int2,result;
-		int1 := 1;
+		int1 := 4;
 		int2 := 1;
 		float1 := 1.0;
 		float2 := 1.0;

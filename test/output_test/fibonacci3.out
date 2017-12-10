@@ -1,16 +1,17 @@
 ;STRINGinput:="Please input an integer number: ";STRINGspace:=" ";STRINGeol:="\n";
 ; IR code
-;INTret1,ret2;
+;INTret1;
 ;Print store: c 2 left: !T1
 ;=======================
 ;current register = !T2 current call F(n-1)
 ;Function name = F
 ;Function parameters = n-1
-;-----------------------;=======================
-;current register = !T6 current call F(n-2)
+;current register = !T3 current call F(n-2)
 ;Function name = F
 ;Function parameters = n-2
-;-----------------------;Print store: c 0 left: !T11
+;-----------------------multiple functions
+;Print store: c !T10 left: $-1
+;Print store: c 0 left: !T11
 ;Print store: c 1 left: !T13
 ;INTi,end,result;
 ;
@@ -28,7 +29,7 @@
 ; JSR FUNC_id_main_L
 ; HALT
 ; LABEL FUNC_id_F_L
-; LINK 3
+; LINK 2
 ; STOREI 2 !T1
 ; LE $2 !T1 label1
 ; PUSH r0
@@ -36,18 +37,17 @@
 ; PUSH r2
 ; PUSH r3
 ; PUSH ;(return value)
-; STOREI 1 !T3
-; SUBI $2 !T3 !T4
-; PUSH !T4
+; STOREI 1 !T4
+; SUBI $2 !T4 !T5
+; PUSH !T5
 ; JSR FUNC_id_F_L
 ; POP
-; POP !T5
-; STOREI !T5 !T2
+; POP !T6
+; STOREI !T6 !T2
 ; POP r3
 ; POP r2
 ; POP r1
 ; POP r0
-; STOREI !T2 $-1
 ; PUSH r0
 ; PUSH r1
 ; PUSH r2
@@ -59,14 +59,14 @@
 ; JSR FUNC_id_F_L
 ; POP
 ; POP !T9
-; STOREI !T9 !T6
+; STOREI !T9 !T3
 ; POP r3
 ; POP r2
 ; POP r1
 ; POP r0
-; STOREI !T6 $-2
-; ADDI $-1 $-2 !T10
-; STOREI !T10 $3
+; ADDI !T2 !T3 !T10
+; STOREI !T10 $-1
+; STOREI $-1 $3
 ; UNLINK
 ; RET
 ; JUMP label2
@@ -137,7 +137,6 @@ str input "Please input an integer number: "
 str space " "
 str eol "\n"
 var ret1
-var ret2
 var i
 var end
 var result
@@ -145,13 +144,13 @@ push
 jsr FUNC_id_main_L
 sys halt
 label FUNC_id_F_L
-link 31
-;2 $-3 false false
-move 2 $-3
+link 30
+;2 $-2 false false
+move 2 $-2
 ; handled?
 move $2 r0
 ; handled2?
-move $-3 r1
+move $-2 r1
 cmpi r0 r1
 jle label1
 push r0
@@ -159,106 +158,103 @@ push r1
 push r2
 push r3
 push ;(return value)
-;1 $-4 false false
-move 1 $-4
+;1 $-3 false false
+move 1 $-3
 ; handled?
-move $-4 r0
+move $-3 r0
 ; handled2?
 move $2 r1
 subi r0 r1
-move r1 $-5 ; - STORE_HANDLED
-push $-5 ;using temp
+move r1 $-4 ; - STORE_HANDLED
+push $-4 ;using temp
 jsr FUNC_id_F_L
 pop
-pop $-7 ;using temp
-;$-7 $-9 false false
-move $-7 r0
-move r0 $-9
+pop $-6 ;using temp
+;$-6 $-8 false false
+move $-6 r0
+move r0 $-8
 pop r3
 pop r2
 pop r1
 pop r0
-;$-9 $-1 false false
-move $-9 r0
-move r0 $-1
 push r0
 push r1
 push r2
 push r3
 push ;(return value)
-;2 $-11 false false
-move 2 $-11
+;2 $-9 false false
+move 2 $-9
 ; handled?
-move $-11 r0
+move $-9 r0
 ; handled2?
 move $2 r1
 subi r0 r1
-move r1 $-12 ; - STORE_HANDLED
-push $-12 ;using temp
+move r1 $-10 ; - STORE_HANDLED
+push $-10 ;using temp
 jsr FUNC_id_F_L
 pop
-pop $-14 ;using temp
-;$-14 $-16 false false
-move $-14 r0
-move r0 $-16
+pop $-12 ;using temp
+;$-12 $-14 false false
+move $-12 r0
+move r0 $-14
 pop r3
 pop r2
 pop r1
 pop r0
-;$-16 $-2 false false
-move $-16 r0
-move r0 $-2
 ; handled?
-move $-1 r0
+move $-8 r0
 ; handled2?
-move $-2 r1
+move $-14 r1
 addi r0 r1
-move r1 $-18 ; + STORE_HANDLED
-;$-18 $3 false false
-move $-18 r0
+move r1 $-15 ; + STORE_HANDLED
+;$-15 $-1 false false
+move $-15 r0
+move r0 $-1
+;$-1 $3 false false
+move $-1 r0
 move r0 $3
 unlnk
 ret
 jmp label2
 label label1
-;0 $-20 false false
-move 0 $-20
+;0 $-17 false false
+move 0 $-17
 ; handled?
 move $2 r0
 ; handled2?
-move $-20 r1
+move $-17 r1
 cmpi r0 r1
 jne label3
-;0 $-21 false false
-move 0 $-21
-;$-21 $3 false false
-move $-21 r0
+;0 $-18 false false
+move 0 $-18
+;$-18 $3 false false
+move $-18 r0
 move r0 $3
 unlnk
 ret
 jmp label4
 label label3
-;1 $-23 false false
-move 1 $-23
+;1 $-20 false false
+move 1 $-20
 ; handled?
 move $2 r0
 ; handled2?
-move $-23 r1
+move $-20 r1
 cmpi r0 r1
 jne label5
-;1 $-24 false false
-move 1 $-24
-;$-24 $3 false false
-move $-24 r0
+;1 $-21 false false
+move 1 $-21
+;$-21 $3 false false
+move $-21 r0
 move r0 $3
 unlnk
 ret
 jmp label6
 label label5
-;1 $-26 false false
-move 1 $-26
-;$-26 $3 false false
-move $-26 r0
+;1 $-23 false false
+move 1 $-23
+;$-23 $3 false false
+move $-23 r0
 move r0 $3
 unlnk
 ret
