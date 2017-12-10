@@ -34,7 +34,6 @@
 ;=======================
 ;current register = !T16 current call myFuncWithManyArgs(arg1,arg2,arg3,arg4,arg5,arg6,arg7)
 ;Function name = myFuncWithManyArgs
-;Function parameters = arg1 arg2 arg3 arg4 arg5 arg6 arg7
 ;-----------------------; PUSH
 ; JSR FUNC_id_main_L
 ; HALT
@@ -115,7 +114,7 @@ push
 jsr FUNC_id_main_L
 sys halt
 label FUNC_id_myFuncWithManyArgs_L
-link 21
+link 26
 ;0 $-2 false false
 move 0 $-2
 ;$-2 $-1 false false
@@ -166,7 +165,7 @@ move r0 $9
 unlnk
 ret
 label FUNC_id_main_L
-link 28
+link 33
 ;1 $-9 false false
 move 1 $-9
 ;$-9 $-1 false false

@@ -1,0 +1,192 @@
+;
+; IR code
+;INTreturnValue;
+;only one function call with operation: or no function call0
+;Print store: c 0 left: !T1
+;Print store: c !T1 left: $-1
+;only one function call with operation: or no function callarg1+arg2
+;Print store: c !T2 left: $-1
+;
+;INTarg1,arg2,result;
+;only one function call with operation: or no function call1
+;Print store: c 1 left: !T3
+;Print store: c !T3 left: $-1
+;only one function call with operation: or no function call1
+;Print store: c 1 left: !T4
+;Print store: c !T4 left: $-2
+;only one function call with operation: or no function call0
+;Print store: c 0 left: !T5
+;Print store: c !T5 left: $-3
+;=======================
+;current register = !T6 current call returnArgument(arg1)
+;Function name = returnArgument
++++++++++++++++++++++
+;arg1
+;arg1
+;only one function call with operation: or no function callarg1
+;current register = !T7 current call returnArgument(arg2)
+;Function name = returnArgument
++++++++++++++++++++++
+;arg2
+;arg2
+;only one function call with operation: or no function callarg2
+;-----------------------multiple functions
+;Print store: c !T6,!T7 left: $-3
+;Print store: c addArgs left: $-3
+; PUSH
+; JSR FUNC_id_main_L
+; HALT
+; LABEL FUNC_id_addArgs_L
+; LINK 2
+; STOREI 0 !T1
+; STOREI !T1 $-1
+; ADDI $2 $3 !T2
+; STOREI !T2 $-1
+; STOREI $-1 $4
+; UNLINK
+; RET
+; LABEL FUNC_id_returnArgument_L
+; LINK 1
+; STOREI $2 $3
+; UNLINK
+; RET
+; LABEL FUNC_id_main_L
+; LINK 4
+; STOREI 1 !T3
+; STOREI !T3 $-1
+; STOREI 1 !T4
+; STOREI !T4 $-2
+; STOREI 0 !T5
+; STOREI !T5 $-3
+; PUSH r0
+; PUSH r1
+; PUSH r2
+; PUSH r3
+; PUSH ;(return value)
+; PUSH $-1
+; JSR FUNC_id_returnArgument_L
+; POP
+; POP !T8
+; STOREI !T8 !T6
+; POP r3
+; POP r2
+; POP r1
+; POP r0
+; PUSH r0
+; PUSH r1
+; PUSH r2
+; PUSH r3
+; PUSH ;(return value)
+; PUSH $-2
+; JSR FUNC_id_returnArgument_L
+; POP
+; POP !T9
+; STOREI !T9 !T7
+; POP r3
+; POP r2
+; POP r1
+; POP r0
+; STOREI !T6,!T7 $-3
+; STOREI addArgs $-3
+; WRITEI $-3
+; STOREI 0 !T10
+; STOREI !T10 $2
+; UNLINK
+; RET
+var returnValue
+var arg1
+var arg2
+var result
+push
+jsr FUNC_id_main_L
+sys halt
+label FUNC_id_addArgs_L
+link 18
+;0 $-2 false false
+move 0 $-2
+;$-2 $-1 false false
+move $-2 r0
+move r0 $-1
+; handled?
+move $2 r0
+; handled2?
+move $3 r1
+addi r0 r1
+move r1 $-4 ; + STORE_HANDLED
+;$-4 $-1 false false
+move $-4 r0
+move r0 $-1
+;$-1 $4 false false
+move $-1 r0
+move r0 $4
+unlnk
+ret
+label FUNC_id_returnArgument_L
+link 17
+;$2 $3 false false
+move $2 r0
+move r0 $3
+unlnk
+ret
+label FUNC_id_main_L
+link 20
+;1 $-4 false false
+move 1 $-4
+;$-4 $-1 false false
+move $-4 r0
+move r0 $-1
+;1 $-6 false false
+move 1 $-6
+;$-6 $-2 false false
+move $-6 r0
+move r0 $-2
+;0 $-8 false false
+move 0 $-8
+;$-8 $-3 false false
+move $-8 r0
+move r0 $-3
+push r0
+push r1
+push r2
+push r3
+push ;(return value)
+push $-1
+jsr FUNC_id_returnArgument_L
+pop
+pop $-10 ;using temp
+;$-10 $-12 false false
+move $-10 r0
+move r0 $-12
+pop r3
+pop r2
+pop r1
+pop r0
+push r0
+push r1
+push r2
+push r3
+push ;(return value)
+push $-2
+jsr FUNC_id_returnArgument_L
+pop
+pop $-13 ;using temp
+;$-13 $-15 false false
+move $-13 r0
+move r0 $-15
+pop r3
+pop r2
+pop r1
+pop r0
+;$-16 $-3 false false
+move $-16 r0
+move r0 $-3
+;addArgs $-3 false false
+move addArgs $-3
+sys writei $-3
+;0 $-17 false false
+move 0 $-17
+;$-17 $2 false false
+move $-17 r0
+move r0 $2
+unlnk
+ret

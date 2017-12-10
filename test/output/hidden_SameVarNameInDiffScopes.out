@@ -7,7 +7,7 @@
 ;Print store: c $3 left: $-2
 ;only one function call with operation: or no function calla+b
 ;Print store: c !T1 left: $-3
-;FLOATa,b,multiplyresult;
+;Return Statement is not Function Call;FLOATa,b,multiplyresult;
 ;only one function call with operation: or no function call2.0
 ;Print store: c 2.0 left: !T2
 ;Print store: c !T2 left: $-1
@@ -17,34 +17,27 @@
 ;=======================
 ;current register = !T4 current call myFunction(a,b)
 ;Function name = myFunction
-;Function parameters = a b
 ;-----------------------;=======================
 ;current register = !T6 current call myFunction(a,b)
 ;Function name = myFunction
-;Function parameters = a b
 ;current register = !T7 current call myFunction(b,a)
 ;Function name = myFunction
-;Function parameters = b a
 ;current register = !T8 current call myFunction(a,b)
 ;Function name = myFunction
-;Function parameters = a b
 ;-----------------------multiple functions
 ;Print store: c 4 left: !T14
 ;Print store: c !T15 left: $-3
 ;=======================
 ;current register = !T16 current call myFunction(a,b)
 ;Function name = myFunction
-;Function parameters = a b
 ;current register = !T17 current call myFunction(b,a)
 ;Function name = myFunction
-;Function parameters = b a
 ;current register = !T18 current call myFunction(a,b)
 ;Function name = myFunction
-;Function parameters = a b
 ;-----------------------multiple functions
 ;Print store: c 4 left: !T24
 ;Print store: c !T25 left: $-3
-; PUSH
+;Return Statement is not Function Call; PUSH
 ; JSR FUNC_id_main_L
 ; HALT
 ; LABEL FUNC_id_myFunction_L

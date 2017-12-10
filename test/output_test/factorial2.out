@@ -5,7 +5,6 @@
 ;=======================
 ;current register = !T3 current call factorial(a-1)
 ;Function name = factorial
-;Function parameters = a-1
 ;-----------------------;only one function call with operation: or no function calltret*a
 ;Print store: c !T7 left: $-1
 ;INTnum;INTresult;
@@ -17,7 +16,6 @@
 ;=======================
 ;current register = !T11 current call factorial(num)
 ;Function name = factorial
-;Function parameters = num
 ;-----------------------;only one function call with operation: or no function call0
 ;Print store: c 0 left: !T13
 ;Print store: c !T13 left: $-2

@@ -21,7 +21,6 @@
 ;=======================
 ;current register = !T7 current call myFunction(float1,int1,float2,int2)
 ;Function name = myFunction
-;Function parameters = float1 int1 float2 int2
 ;-----------------------; PUSH
 ; JSR FUNC_id_main_L
 ; HALT
@@ -81,7 +80,7 @@ push
 jsr FUNC_id_main_L
 sys halt
 label FUNC_id_myFunction_L
-link 13
+link 18
 ; handled?
 move $2 r0
 ; handled2?
@@ -106,7 +105,7 @@ move r0 $6
 unlnk
 ret
 label FUNC_id_main_L
-link 16
+link 21
 ;4 $-6 false false
 move 4 $-6
 ;$-6 $-3 false false

@@ -33,7 +33,6 @@
 ;=======================
 ;current register = !T16 current call myNestedLoopThatIncrements(value)
 ;Function name = myNestedLoopThatIncrements
-;Function parameters = value
 ;-----------------------; PUSH
 ; JSR FUNC_id_main_L
 ; HALT
@@ -110,7 +109,7 @@ push
 jsr FUNC_id_main_L
 sys halt
 label FUNC_id_myNestedLoopThatIncrements_L
-link 24
+link 29
 ;0 $-5 false false
 move 0 $-5
 ;$-5 $-1 false false
@@ -212,7 +211,7 @@ move r0 $3
 unlnk
 ret
 label FUNC_id_main_L
-link 22
+link 27
 ;1 $-3 false false
 move 1 $-3
 ;$-3 $-1 false false

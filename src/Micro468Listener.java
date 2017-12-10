@@ -17,6 +17,8 @@ public class Micro468Listener extends MicroBaseListener {
 
     private int returnRegister;
 
+    private String currentFunctionReturnType = "";
+
     private SymbolsTree parentTree;
     private int blockNumber;
     private int operationNumber;
@@ -299,7 +301,8 @@ public class Micro468Listener extends MicroBaseListener {
             parsePostfix(right, left, postFixFunction);
         }
         else {
-            parsePostfixFunctions(right, left, postFixFunction, numberBefore, numberAfter);
+            boolean isInteger = isSymbolScopeInteger(left);
+            parsePostfixFunctions(right, left, postFixFunction, numberBefore, numberAfter, isInteger);
             if (numberAfter - numberBefore == 1) {
                 String leftReg = symbolScope.get(left).register;
                 if (isSymbolScopeInteger(left)) {
@@ -311,13 +314,13 @@ public class Micro468Listener extends MicroBaseListener {
             }
             else {
                 System.out.println("multiple functions");
-                boolean isInteger =isSymbolScopeInteger(left);
+
                 parsePostfixForFunction(right, left, postFixFunction, isInteger);
             }
         }
     }
 
-    private void parsePostfixFunctions(String right, String left, String postfix, int numberBefore, int numberAfter) {
+    private void parsePostfixFunctions(String right, String left, String postfix, int numberBefore, int numberAfter, boolean isLeftInteger) {
         System.out.println(";=======================");
         //System.out.println(";Left: " + left + " right: " + right + " postfix: " + postfix);
         for (int i = numberBefore; i < numberAfter; i++) {
@@ -330,16 +333,16 @@ public class Micro468Listener extends MicroBaseListener {
 
             String[] functionParameters = InfixToPostfix.getFunctionParameters(functionCall);
 
-            String parametersJoined = "";
-            for (String f : functionParameters) {
-                parametersJoined = parametersJoined + " " + f;
-            }
+//            String parametersJoined = "";
+//            for (String f : functionParameters) {
+//                parametersJoined = parametersJoined + " " + f;
+//            }
+//
+//            System.out.println(";Function parameters = " + parametersJoined.trim());
 
-            System.out.println(";Function parameters = " + parametersJoined.trim());
+            //boolean isInteger = isSymbolScopeInteger(left);
 
-            boolean isInteger = isSymbolScopeInteger(left);
-
-            executeFunctionCall(functionName, currentRegister, right, functionParameters, numberBefore, numberAfter, isInteger);
+            executeFunctionCall(functionName, currentRegister, right, functionParameters, numberBefore, numberAfter, isLeftInteger);
         }
         System.out.printf(";-----------------------");
     }
@@ -426,11 +429,11 @@ public class Micro468Listener extends MicroBaseListener {
                 String currentType;
 
 
-                if(isVariableinGlobal(val1)) {
-                    currentType = parentTree.getCurrentScope().variableMap.get(val1)[0];
+                if(isLeftInteger) {
+                    currentType = "INT";
                 }
                 else {
-                    currentType = currentScope.variableMap.get(val1)[0];
+                    currentType = "FLOAT";
                 }
 
                 parentTree.getCurrentScope().addRegister(location, currentType, "r" + Integer.toString(this.operationNumber - 2));
@@ -445,11 +448,11 @@ public class Micro468Listener extends MicroBaseListener {
 
                 String currentType;
 
-                if(isVariableinGlobal(c)) {
-                    currentType = parentTree.getCurrentScope().variableMap.get(c)[0];
+                if(isLeftInteger) {
+                    currentType = "INT";
                 }
                 else {
-                    currentType = currentScope.variableMap.get(c)[0];
+                    currentType = "FLOAT";
                 }
 
                 if (left == null) {
@@ -466,7 +469,6 @@ public class Micro468Listener extends MicroBaseListener {
             }
         }
     }
-
 
 
     private boolean isSymbolScopeInteger(String name) {
@@ -488,12 +490,46 @@ public class Micro468Listener extends MicroBaseListener {
 
 
         for (int i = 0; i < function_parameters.length; i++) {
-            // System.out.println("param: " + function_parameters[i]);
             String postfix = InfixToPostfix.infixToPostfix(function_parameters[i]);
-            // System.out.println("postfix: " + postfix);
+
             //TODO: Where function call comes in
 
-            parsePostfixForPush(right, left, postfix);
+            parsePostfixForPush(right, left, postfix, isInteger);
+
+           /* int nb = this.operationNumber;
+            String postFixFunction = InfixToPostfix.infixToPostfixFunctions(function_parameters[i], this.operationNumber);
+            System.out.println("+++++++++++++++++++++");
+            System.out.println(";" + function_parameters[i]);
+            System.out.println(";" + postFixFunction);
+            int na = InfixToPostfix.registerNumber;
+            this.operationNumber = na;
+
+            if (na - nb == 0) {
+
+                System.out.println(";only one function call with operation: or no function call" + function_parameters[i]);
+                parsePostfixForPush(function_parameters[i], left, postFixFunction, isInteger);
+            }
+            else {
+                parsePostfixFunctions(function_parameters[i], left, postFixFunction, nb, na, isInteger);
+                if (na - nb == 1) {
+                    String leftReg = symbolScope.get(left).register;
+                    if (isSymbolScopeInteger(left)) {
+                        irNodeList.addNode(new IRNode("STOREI", "!T" + nb, leftReg));
+                    }
+                    else {
+                        irNodeList.addNode(new IRNode("STOREF", "!T" + nb, leftReg));
+                    }
+                    irNodeList.addNode(new IRNode("PUSH", leftReg));
+                }
+                else {
+                    System.out.println("multiple functions");
+
+                    parsePostfixForFunction(function_parameters[i], left, postFixFunction, isInteger);
+
+                    irNodeList.addNode(new IRNode("PUSH", left));
+                }
+            }*/
+
         }
 
         irNodeList.addNode(new IRNode("JSR", "FUNC_id_" + function_name + "_L"));
@@ -570,7 +606,7 @@ public class Micro468Listener extends MicroBaseListener {
             String postfix = InfixToPostfix.infixToPostfix(function_parameters[i]);
             // System.out.println("postfix: " + postfix);
 
-            parsePostfixForPush(right, left, postfix);
+            //parsePostfixForPush(right, left, postfix);
         }
 
         irNodeList.addNode(new IRNode("JSR", "FUNC_id_" + function_name + "_L"));
@@ -616,7 +652,7 @@ public class Micro468Listener extends MicroBaseListener {
         irNodeList.addNode(new IRNode("POP", "r0"));
     }
 
-   private void parsePostfixForPush(String right, String left, String postfix) {
+   private void parsePostfixForPush(String right, String left, String postfix, boolean isLeftInteger) {
 
         Stack<String> stack = new Stack<String>();
 
@@ -642,7 +678,7 @@ public class Micro468Listener extends MicroBaseListener {
                 String location = "!T" + this.operationNumber;
                 this.operationNumber += 1;
 
-                if (isInteger(c)) {
+                if (isLeftInteger) {
                     parentTree.getCurrentScope().addRegister(location,  "INT", "r" + Integer.toString(this.operationNumber - 2));
                     tinyRegisterNumber = this.operationNumber - 2;
                     stack.push(location);
@@ -847,12 +883,48 @@ public class Micro468Listener extends MicroBaseListener {
         irNodeList.addNode(new IRNode(store, c, left));
     }
 
+    public void returnParsePostfix(String postfix, String rightExpr, int regReturn, int numberBefore, int numberAfter) {
+        System.out.printf(";Return Statement is Function Call " + rightExpr + " " + regReturn);
+
+        String left = "$" + regReturn;
+
+        boolean isLeftInteger = false;
+
+        if (currentFunctionReturnType == "INT") {
+            isLeftInteger = true;
+        }
+
+        parsePostfixFunctions(rightExpr, left, postfix, numberBefore, numberAfter, isLeftInteger);
+
+        //System.out.printf(";RETURN: Multiple Function");
+
+        parsePostfixForFunction(rightExpr, left, postfix, isLeftInteger);
+
+        irNodeList.addNode(new IRNode("UNLINK"));
+        irNodeList.addNode(new IRNode("RET"));
+    }
+
     @Override public void enterReturn_stmt(MicroParser.Return_stmtContext ctx) {
         if (currentFunction.equals("main")) {
             this.returnRegister = 2;
         }
         String rightExpr = ctx.getChild(1).getText();
-        String postfix = InfixToPostfix.infixToPostfix(rightExpr);
+
+        //String postfix = InfixToPostfix.infixToPostfix(rightExpr);
+
+        int numberBefore = this.operationNumber;
+
+        String postfix = InfixToPostfix.infixToPostfixFunctions(rightExpr, this.operationNumber);
+        int numberAfter = InfixToPostfix.registerNumber;
+        this.operationNumber = numberAfter;
+
+        if (numberAfter - numberBefore != 0) {
+            returnParsePostfix(postfix, rightExpr, this.returnRegister, numberBefore, numberAfter);
+            return;
+        }
+        System.out.printf(";RETURN: No Function");
+
+
 
         if (isNumeric(postfix)) {
 
@@ -1461,6 +1533,10 @@ public class Micro468Listener extends MicroBaseListener {
      */
     @Override
     public void enterFunc_body(MicroParser.Func_bodyContext ctx) { // currentScope
+
+        currentFunctionReturnType = ctx.getParent().getChild(1).getText();
+
+        //System.out.printf("FUNCTION TYPE: " + functionType);
 
         String functionName =  ctx.getParent().getChild(2).getText();
         currentFunction = functionName;

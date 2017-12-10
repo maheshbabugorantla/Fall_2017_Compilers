@@ -5,11 +5,9 @@
 ;=======================
 ;current register = !T2 current call F(n-1)
 ;Function name = F
-;Function parameters = n-1
 ;-----------------------;=======================
 ;current register = !T6 current call F(n-2)
 ;Function name = F
-;Function parameters = n-2
 ;-----------------------;Print store: c 0 left: !T11
 ;Print store: c 1 left: !T13
 ;INTi,end,result;
@@ -22,7 +20,6 @@
 ;=======================
 ;current register = !T18 current call F(i)
 ;Function name = F
-;Function parameters = i
 ;-----------------------;Print store: c !T21 left: $-1
 ; PUSH
 ; JSR FUNC_id_main_L

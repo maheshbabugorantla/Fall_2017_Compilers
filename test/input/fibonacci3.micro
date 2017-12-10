@@ -8,9 +8,9 @@ BEGIN
 	FUNCTION INT F (INT n)
 	BEGIN
 		INT ret1;
-		IF (n > 2)
-		    ret1 := F(n-1)+F(n-2);
-			RETURN ret1;
+		IF (n > 2)	
+			ret1 := F(n-2);
+			RETURN F(n-1)+ret1+1;
 		ELSE
             IF (n = 0)
                 RETURN 0;
