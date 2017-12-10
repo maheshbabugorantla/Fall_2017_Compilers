@@ -14,37 +14,12 @@
 ;only one function call with operation: or no function call3.0
 ;Print store: c 3.0 left: !T3
 ;Print store: c !T3 left: $-2
-myFunction(a,b)
-myFunction(b,a)
-myFunction(b)
-myFunction(b,b+a*c,c*d+e)
 ;=======================
-Left: multiplyresult right: myFunction(a,b)+myFunction(b,a)+myFunction(b)+4+myFunction(b,b+a*c,c*d+e) postfix: !T4 !T5 + !T6 + 4 + !T7 +
+;Left: multiplyresult right: myFunction(a,b) postfix: !T4
 ;current register = !T4 current call myFunction(a,b)
-Function name = myFunction
-length: 2 myFunction(a:b)
-first length: 1
-last length: 1
-Function parameters = a b
-;current register = !T5 current call myFunction(b,a)
-Function name = myFunction
-length: 2 myFunction(b:a)
-first length: 1
-last length: 1
-Function parameters = b a
-;current register = !T6 current call myFunction(b)
-Function name = myFunction
-length: 1 myFunction(b):myFunction(b)
-first length: 1
-last length: 1
-Function parameters = b
-;current register = !T7 current call myFunction(b,b+a*c,c*d+e)
-Function name = myFunction
-length: 3 myFunction(b:c*d+e)
-first length: 1
-last length: 1
-Function parameters = b b+a*c c*d+e
------------------------; PUSH
+;Function name = myFunction
+;Function parameters = a b
+;name: multiplyresult;-----------------------; PUSH
 ; JSR FUNC_id_main_L
 ; HALT
 ; LABEL FUNC_id_myFunction_L
@@ -62,10 +37,26 @@ Function parameters = b b+a*c c*d+e
 ; STOREF !T2 $-1
 ; STOREF 3.0 !T3
 ; STOREF !T3 $-2
+; PUSH r0
+; PUSH r1
+; PUSH r2
+; PUSH r3
+; PUSH ;(return value)
+; PUSH $-1
+; PUSH $-2
+; JSR FUNC_id_myFunction_L
+; POP
+; POP
+; POP !T4
+; STOREF !T4 $-3
+; POP r3
+; POP r2
+; POP r1
+; POP r0
 ; WRITEF $-3
 ; WRITES eol
-; STOREI 0 !T4
-; STOREI !T4 $2
+; STOREI 0 !T5
+; STOREI !T5 $2
 ; UNLINK
 ; RET
 str eol "\n"
@@ -82,7 +73,7 @@ push
 jsr FUNC_id_main_L
 sys halt
 label FUNC_id_myFunction_L
-link 9
+link 10
 ;$2 $-1 false false
 move $2 r0
 move r0 $-1
@@ -104,7 +95,7 @@ move r0 $4
 unlnk
 ret
 label FUNC_id_main_L
-link 9
+link 10
 ;2.0 $-4 false false
 move 2.0 $-4
 ;$-4 $-1 false false
@@ -115,12 +106,30 @@ move 3.0 $-6
 ;$-6 $-2 false false
 move $-6 r0
 move r0 $-2
+push r0
+push r1
+push r2
+push r3
+push ;(return value)
+push $-1
+push $-2
+jsr FUNC_id_myFunction_L
+pop
+pop
+pop $-8 ;using temp
+;$-8 $-3 false false
+move $-8 r0
+move r0 $-3
+pop r3
+pop r2
+pop r1
+pop r0
 sys writer $-3
 sys writes eol
-;0 $-8 false false
-move 0 $-8
-;$-8 $2 false false
-move $-8 r0
+;0 $-10 false false
+move 0 $-10
+;$-10 $2 false false
+move $-10 r0
 move r0 $2
 unlnk
 ret

@@ -82,10 +82,10 @@ public class InfixToPostfix {
 
     public static String[] getFunctionParameters(String functionCall) {
         String[] s = functionCall.split(",");
-        System.out.println("length: " + s.length + " " + s[0] + ":" + s[s.length - 1]);
+        //System.out.println("length: " + s.length + " " + s[0] + ":" + s[s.length - 1]);
         ArrayList<String> first = new ArrayList<String>(Arrays.asList(s[0].split("[(]")));
         first.remove(0);
-        System.out.println("first length: " + first.size());
+        //System.out.println("first length: " + first.size());
         s[0] = "";
         for (String f : first) {
             s[0] = s[0] + f.trim();
@@ -95,7 +95,7 @@ public class InfixToPostfix {
         ArrayList<String> last = new ArrayList<String>(Arrays.asList(s[s.length - 1].trim().split("[)]")));
         //last.remove(last.size() - 1);
 
-        System.out.println("last length: " + last.size());
+        //System.out.println("last length: " + last.size());
 
         s[s.length - 1] = "";
         for (String f : last) {
@@ -126,7 +126,7 @@ public class InfixToPostfix {
             rnum += 1;
             String current = m.group();
             allMatches.add(current);
-            System.out.println(current);
+            //System.out.println(current);
 
             tempToFunctionMap.put(register, current);
             registerNumber = rnum;

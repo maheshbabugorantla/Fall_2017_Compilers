@@ -281,10 +281,10 @@ public class Micro468Listener extends MicroBaseListener {
 
         //System.out.println("left: " + left + "right: " + right);
 
-        if(isOnlyFunctionCall(right)) {
-           // System.out.println("only function call: " + right);
-            return;
-        }
+//        if(isOnlyFunctionCall(right)) {
+//           // System.out.println("only function call: " + right);
+//            return;
+//        }
 
         int numberBefore = this.operationNumber;
 
@@ -303,14 +303,14 @@ public class Micro468Listener extends MicroBaseListener {
 
     private void parsePostfixFunctions(String right, String left, String postfix, int numberBefore, int numberAfter) {
         System.out.println(";=======================");
-        System.out.println("Left: " + left + " right: " + right + " postfix: " + postfix);
+        System.out.println(";Left: " + left + " right: " + right + " postfix: " + postfix);
         for (int i = numberBefore; i < numberAfter; i++) {
             String currentRegister = "!T" + i;
             String functionCall = InfixToPostfix.tempToFunctionMap.get(currentRegister);
 
             System.out.println(";current register = " + currentRegister + " current call " + functionCall);
             String functionName = InfixToPostfix.getFunctionName(functionCall);
-            System.out.println("Function name = " + functionName);
+            System.out.println(";Function name = " + functionName);
 
             String[] functionParameters = InfixToPostfix.getFunctionParameters(functionCall);
 
@@ -319,9 +319,13 @@ public class Micro468Listener extends MicroBaseListener {
                 parametersJoined = parametersJoined + " " + f;
             }
 
-            System.out.println("Function parameters = " + parametersJoined.trim());
+            System.out.println(";Function parameters = " + parametersJoined.trim());
+
+            boolean isInteger = isSymbolScopeInteger(left);
+
+            executeFunctionCall(functionName, left, right, functionParameters, numberBefore, numberAfter, isInteger);
         }
-        System.out.printf("-----------------------");
+        System.out.printf(";-----------------------");
     }
 
 
@@ -331,6 +335,58 @@ public class Micro468Listener extends MicroBaseListener {
             return true;
         }
         return false;
+    }
+
+    public void executeFunctionCall(String function_name, String left, String right, String[] function_parameters, int numberBefore, int numberAfter, boolean isInteger) {
+        irNodeList.addNode(new IRNode("PUSH", "r0"));
+        irNodeList.addNode(new IRNode("PUSH", "r1"));
+        irNodeList.addNode(new IRNode("PUSH", "r2"));
+        irNodeList.addNode(new IRNode("PUSH", "r3"));
+
+        irNodeList.addNode(new IRNode("PUSH", ";(return value)"));
+        tinyNodeArrayList.add(new TinyNode("push"));
+
+
+        for (int i = 0; i < function_parameters.length; i++) {
+            // System.out.println("param: " + function_parameters[i]);
+            String postfix = InfixToPostfix.infixToPostfix(function_parameters[i]);
+            // System.out.println("postfix: " + postfix);
+            //TODO: Where function call comes in
+
+            parsePostfixForPush(right, left, postfix);
+        }
+
+        irNodeList.addNode(new IRNode("JSR", "FUNC_id_" + function_name + "_L"));
+        tinyNodeArrayList.add(new TinyNode("jsr", "FUNC_id_" + function_name + "_L"));
+
+        for (int i = 0; i < function_parameters.length; i++) {
+            irNodeList.addNode(new IRNode("POP"));
+            tinyNodeArrayList.add(new TinyNode("pop"));
+        }
+
+        String location = "!T" + this.operationNumber;
+        this.operationNumber += 1;
+
+        tinyRegisterNumber = this.operationNumber - 2;
+
+        if (isInteger) {
+
+            parentTree.getCurrentScope().addRegister(location,  "INT", "r" + Integer.toString(this.operationNumber - 2));
+
+            irNodeList.addNode(new IRNode("POP", location));
+            irNodeList.addNode(new IRNode("STOREI", location, symbolScope.get(left).register));
+        }
+        else {
+            parentTree.getCurrentScope().addRegister(location,  "FLOAT", "r" + Integer.toString(this.operationNumber - 2));
+
+            irNodeList.addNode(new IRNode("POP", location));
+            irNodeList.addNode(new IRNode("STOREF", location, symbolScope.get(left).register));
+        }
+
+        irNodeList.addNode(new IRNode("POP", "r3"));
+        irNodeList.addNode(new IRNode("POP", "r2"));
+        irNodeList.addNode(new IRNode("POP", "r1"));
+        irNodeList.addNode(new IRNode("POP", "r0"));
     }
 
     @Override public void enterCall_expr(MicroParser.Call_exprContext ctx) {

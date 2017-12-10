@@ -1,47 +1,37 @@
 ;INTcount,enough;FLOATnewapprox,approx,num,tolerance,diff;STRINGeol:="\n";STRINGspace:=" ";
 ; IR code
 ;
-;In infix to postfix: 0.0001
-;=======================;only one function call with operation: or no function call0.0001
+;only one function call with operation: or no function call0.0001
 ;Print store: c 0.0001 left: !T1
 ;Print store: c !T1 left: tolerance
-;In infix to postfix: num
-;=======================;only one function call with operation: or no function callnum
+;only one function call with operation: or no function callnum
 ;Print store: c num left: approx
-;In infix to postfix: 0
-;=======================;only one function call with operation: or no function call0
+;only one function call with operation: or no function call0
 ;Print store: c 0 left: !T2
 ;Print store: c !T2 left: count
-;In infix to postfix: 0.0
-;=======================;only one function call with operation: or no function call0.0
+;only one function call with operation: or no function call0.0
 ;Print store: c 0.0 left: !T3
 ;Print store: c !T3 left: diff
 ;
 ;Print store: c 0 left: !T4
 ;Print store: c !T4 left: enough
 ;Print store: c 1 left: !T5
-;In infix to postfix: count+1
-;=======================;only one function call with operation: or no function callcount+1
+;only one function call with operation: or no function callcount+1
 ;Print store: c !T7 left: count
-;In infix to postfix: 0.5*(approx+num/approx)
-;=======================;only one function call with operation: or no function call0.5*(approx+num/approx)
+;only one function call with operation: or no function call0.5*(approx+num/approx)
 ;Print store: c 0.5 left: !T8
 ;Print store: c !T11 left: newapprox
-;In infix to postfix: approx-newapprox
-;=======================;only one function call with operation: or no function callapprox-newapprox
+;only one function call with operation: or no function callapprox-newapprox
 ;Print store: c !T12 left: diff
 ;Print store: c 0.0 left: !T13
-;In infix to postfix: 1
-;=======================;only one function call with operation: or no function call1
+;only one function call with operation: or no function call1
 ;Print store: c 1 left: !T14
 ;Print store: c !T14 left: enough
 ;Print store: c 0.0 left: !T15
-;In infix to postfix: 1
-;=======================;only one function call with operation: or no function call1
+;only one function call with operation: or no function call1
 ;Print store: c 1 left: !T17
 ;Print store: c !T17 left: enough
-;In infix to postfix: newapprox
-;=======================;only one function call with operation: or no function callnewapprox
+;only one function call with operation: or no function callnewapprox
 ;Print store: c newapprox left: approx
 ; PUSH
 ; JSR FUNC_id_main_L

@@ -2,14 +2,29 @@
 ; IR code
 ;INTret1,ret2;
 ;Print store: c 2 left: !T1
-;Print store: c 0 left: !T9
+;=======================
+;Left: ret1 right: F(n-1) postfix: !T2
+;current register = !T2 current call F(n-1)
+;Function name = F
+;Function parameters = n-1
+;name: ret1;-----------------------;=======================
+;Left: ret2 right: F(n-2) postfix: !T5
+;current register = !T5 current call F(n-2)
+;Function name = F
+;Function parameters = n-2
+;name: ret2;-----------------------;Print store: c 0 left: !T9
 ;Print store: c 1 left: !T11
 ;INTi,end,result;
 ;
 ;Print store: c 0 left: !T14
 ;Print store: c !T14 left: $-1
 ;Print store: c $-2 left: !T15
-;Print store: c !T18 left: $-1
+;=======================
+;Left: result right: F(i) postfix: !T16
+;current register = !T16 current call F(i)
+;Function name = F
+;Function parameters = i
+;name: result;-----------------------;Print store: c !T18 left: $-1
 ; PUSH
 ; JSR FUNC_id_main_L
 ; HALT

@@ -1,15 +1,23 @@
 ;STRINGintro:="You will be asked for three float numbers\n";STRINGfirst:="Please enter the first float number: ";STRINGsecond:="Please enter the second float number: ";STRINGthird:="Please enter the third float number: ";STRINGeol:="\n";STRINGstar:="*";STRINGplus:="+";STRINGequal:="=";
 ; IR code
 ;FLOATresult;
-;In infix to postfix: a+b
-;=======================;only one function call with operation: or no function calla+b
+;only one function call with operation: or no function calla+b
 ;Print store: c !T1 left: $-1
 ;FLOATresult;
-;In infix to postfix: a*b
-;=======================;only one function call with operation: or no function calla*b
+;only one function call with operation: or no function calla*b
 ;Print store: c !T2 left: $-1
 ;FLOATa,b,c;FLOATaddresult,multiplyresult;
-; PUSH
+;=======================
+;Left: multiplyresult right: multiply(a,b) postfix: !T3
+;current register = !T3 current call multiply(a,b)
+;Function name = multiply
+;Function parameters = a b
+;name: multiplyresult;-----------------------;=======================
+;Left: addresult right: add(multiplyresult,c) postfix: !T4
+;current register = !T4 current call add(multiplyresult,c)
+;Function name = add
+;Function parameters = multiplyresult c
+;name: addresult;-----------------------; PUSH
 ; JSR FUNC_id_main_L
 ; HALT
 ; LABEL FUNC_id_add_L
