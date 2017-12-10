@@ -1,40 +1,73 @@
 ;INTa,b,c,d;FLOATx,y,z,t;STRINGnewline:="\n";
 ; IR code
 ;
-;AHHHH left: a right: 1
+;In infix to postfix: 1
+;=======================;only one function call with operation: or no function call1
 ;Print store: c 1 left: !T1
 ;Print store: c !T1 left: a
-;AHHHH left: b right: 2
+;In infix to postfix: 2
+;=======================;only one function call with operation: or no function call2
 ;Print store: c 2 left: !T2
 ;Print store: c !T2 left: b
-;AHHHH left: c right: 10
+;In infix to postfix: 10
+;=======================;only one function call with operation: or no function call10
 ;Print store: c 10 left: !T3
 ;Print store: c !T3 left: c
-;AHHHH left: d right: 20
+;In infix to postfix: 20
+;=======================;only one function call with operation: or no function call20
 ;Print store: c 20 left: !T4
 ;Print store: c !T4 left: d
+;In infix to postfix: a+b
+;=======================;only one function call with operation: or no function calla+b
 ;Print store: c !T5 left: a
+;In infix to postfix: a*c
+;=======================;only one function call with operation: or no function calla*c
 ;Print store: c !T6 left: b
+;In infix to postfix: 0-a+b
+;=======================;only one function call with operation: or no function call0-a+b
 ;Print store: c !T9 left: c
+;In infix to postfix: 0-d
+;=======================;only one function call with operation: or no function call0-d
 ;Print store: c !T11 left: d
+;In infix to postfix: (a+b)*(d+c)-(a+b+c+d)/a
+;=======================;only one function call with operation: or no function call(a+b)*(d+c)-(a+b+c+d)/a
 ;Print store: c !T19 left: a
+;In infix to postfix: a+10
+;=======================;only one function call with operation: or no function calla+10
 ;Print store: c !T21 left: a
+;In infix to postfix: b+a+10
+;=======================;only one function call with operation: or no function callb+a+10
 ;Print store: c !T24 left: b
+;In infix to postfix: 0-10
+;=======================;only one function call with operation: or no function call0-10
 ;Print store: c !T27 left: c
-;AHHHH left: x right: 1.0
+;In infix to postfix: 1.0
+;=======================;only one function call with operation: or no function call1.0
 ;Print store: c 1.0 left: !T28
 ;Print store: c !T28 left: x
-;AHHHH left: y right: 2.0
+;In infix to postfix: 2.0
+;=======================;only one function call with operation: or no function call2.0
 ;Print store: c 2.0 left: !T29
 ;Print store: c !T29 left: y
-;AHHHH left: z right: 3.14159
+;In infix to postfix: 3.14159
+;=======================;only one function call with operation: or no function call3.14159
 ;Print store: c 3.14159 left: !T30
 ;Print store: c !T30 left: z
+;In infix to postfix: z/2.0
+;=======================;only one function call with operation: or no function callz/2.0
 ;Print store: c 2.0 left: !T31
 ;Print store: c !T32 left: x
+;In infix to postfix: z/y
+;=======================;only one function call with operation: or no function callz/y
 ;Print store: c !T33 left: y
+;In infix to postfix: (x+y+z)/z
+;=======================;only one function call with operation: or no function call(x+y+z)/z
 ;Print store: c !T36 left: t
+;In infix to postfix: t*t
+;=======================;only one function call with operation: or no function callt*t
 ;Print store: c !T37 left: t
+;In infix to postfix: (t+z+t+t/2.0+z/4.0+z/5.0+z/6.0+z/7.0)
+;=======================;only one function call with operation: or no function call(t+z+t+t/2.0+z/4.0+z/5.0+z/6.0+z/7.0)
 ;Print store: c 2.0 left: !T40
 ;Print store: c 4.0 left: !T43
 ;Print store: c 5.0 left: !T46

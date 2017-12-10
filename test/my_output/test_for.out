@@ -1,19 +1,23 @@
 ;INTi,j;FLOATnewapprox,approx,num;STRINGeol:="\n";
 ; IR code
 ;
-;AHHHH left: j right: 1
+;In infix to postfix: 1
+;=======================;only one function call with operation: or no function call1
 ;Print store: c 1 left: !T1
 ;Print store: c !T1 left: j
-;AHHHH left: approx right: num
+;In infix to postfix: num
+;=======================;only one function call with operation: or no function callnum
 ;Print store: c num left: approx
 ;
-;AHHHH left: i right: 100
 ;Print store: c 100 left: !T2
 ;Print store: c !T2 left: i
 ;Print store: c 0 left: !T3
+;In infix to postfix: 0.5*(approx+num/approx)
+;=======================;only one function call with operation: or no function call0.5*(approx+num/approx)
 ;Print store: c 0.5 left: !T4
 ;Print store: c !T7 left: newapprox
-;AHHHH left: approx right: newapprox
+;In infix to postfix: newapprox
+;=======================;only one function call with operation: or no function callnewapprox
 ;Print store: c newapprox left: approx
 ;Print store: c !T9 left: i
 ; PUSH

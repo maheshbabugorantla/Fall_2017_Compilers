@@ -6,7 +6,6 @@
 ;Print store: c 1 left: !T11
 ;INTi,end,result;
 ;
-;AHHHH left: i right: 0
 ;Print store: c 0 left: !T14
 ;Print store: c !T14 left: $-1
 ;Print store: c $-2 left: !T15

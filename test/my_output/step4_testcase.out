@@ -1,19 +1,26 @@
 ;INTa,b,i,p;
 ; IR code
 ;
-;AHHHH left: i right: 0
+;In infix to postfix: 0
+;=======================;only one function call with operation: or no function call0
 ;Print store: c 0 left: !T1
 ;Print store: c !T1 left: i
-;AHHHH left: a right: 0
+;In infix to postfix: 0
+;=======================;only one function call with operation: or no function call0
 ;Print store: c 0 left: !T2
 ;Print store: c !T2 left: a
-;AHHHH left: b right: 0
+;In infix to postfix: 0
+;=======================;only one function call with operation: or no function call0
 ;Print store: c 0 left: !T3
 ;Print store: c !T3 left: b
 ;
 ;Print store: c 10 left: !T4
 ;Print store: c 10 left: !T5
+;In infix to postfix: a+1
+;=======================;only one function call with operation: or no function calla+1
 ;Print store: c !T7 left: a
+;In infix to postfix: b+1
+;=======================;only one function call with operation: or no function callb+1
 ;Print store: c !T9 left: b
 ;Print store: c !T11 left: i
 ; PUSH

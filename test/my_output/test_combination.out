@@ -1,17 +1,26 @@
 ;INTa,b,c;
 ; IR code
 ;
-;AHHHH left: a right: 20
+;In infix to postfix: 20
+;=======================;only one function call with operation: or no function call20
 ;Print store: c 20 left: !T1
 ;Print store: c !T1 left: a
-;AHHHH left: b right: 30
+;In infix to postfix: 30
+;=======================;only one function call with operation: or no function call30
 ;Print store: c 30 left: !T2
 ;Print store: c !T2 left: b
-;AHHHH left: c right: 40
+;In infix to postfix: 40
+;=======================;only one function call with operation: or no function call40
 ;Print store: c 40 left: !T3
 ;Print store: c !T3 left: c
+;In infix to postfix: c+a*b+(a*b+c)/a+20
+;=======================;only one function call with operation: or no function callc+a*b+(a*b+c)/a+20
 ;Print store: c !T11 left: c
+;In infix to postfix: b*b+a
+;=======================;only one function call with operation: or no function callb*b+a
 ;Print store: c !T13 left: b
+;In infix to postfix: (b*a)/a
+;=======================;only one function call with operation: or no function call(b*a)/a
 ;Print store: c !T15 left: a
 ; PUSH
 ; JSR FUNC_id_main_L

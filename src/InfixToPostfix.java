@@ -77,19 +77,10 @@ public class InfixToPostfix {
 
     public static String infixToPostfixFunctions(String str, int rnum) {
         System.out.println(";In infix to postfix: " + str);
-        String[] parts = str.split(" ");
 
         String combined = str.replace(" ", "");
 
-//        if (parts.length == 1) {
-//            combined = str;
-//        }
-//        else {
-//            combined = String.join("", parts);
-//        }
-//
-        System.out.println(combined);
-
+        //System.out.println(combined);
 
         List<String> allMatches = new ArrayList<String>();
 
@@ -97,12 +88,14 @@ public class InfixToPostfix {
 
         Matcher m = Pattern.compile(regex).matcher(combined);
 
+        registerNumber = rnum;
+
         while (m.find()) {
             String register = "!T" + rnum;
             rnum += 1;
             String current = m.group();
             allMatches.add(current);
-            System.out.println(current);
+            //System.out.println(current);
 
             tempToFunctionMap.put(register, current);
             registerNumber = rnum;
@@ -110,10 +103,10 @@ public class InfixToPostfix {
             combined = combined.replace(current, register);
         }
 
-        System.out.println(combined);
+        //System.out.println(combined);
 
         String postfix = infixToPostfix(combined);
-        System.out.println(postfix);
+        //System.out.println(postfix);
 
         return postfix.trim();
     }

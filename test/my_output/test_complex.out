@@ -1,27 +1,41 @@
 ;INTa,b,c;FLOATp,s,t;STRINGnewline:="\n";
 ; IR code
 ;
-;AHHHH left: a right: 20
+;In infix to postfix: 20
+;=======================;only one function call with operation: or no function call20
 ;Print store: c 20 left: !T1
 ;Print store: c !T1 left: a
-;AHHHH left: b right: 30
+;In infix to postfix: 30
+;=======================;only one function call with operation: or no function call30
 ;Print store: c 30 left: !T2
 ;Print store: c !T2 left: b
-;AHHHH left: c right: 40
+;In infix to postfix: 40
+;=======================;only one function call with operation: or no function call40
 ;Print store: c 40 left: !T3
 ;Print store: c !T3 left: c
+;In infix to postfix: c+a*b+(a*b+c)/a+20
+;=======================;only one function call with operation: or no function callc+a*b+(a*b+c)/a+20
 ;Print store: c !T11 left: c
+;In infix to postfix: b*b+a
+;=======================;only one function call with operation: or no function callb*b+a
 ;Print store: c !T13 left: b
+;In infix to postfix: (b*a)/a
+;=======================;only one function call with operation: or no function call(b*a)/a
 ;Print store: c !T15 left: a
-;AHHHH left: p right: 2.5
+;In infix to postfix: 2.5
+;=======================;only one function call with operation: or no function call2.5
 ;Print store: c 2.5 left: !T16
 ;Print store: c !T16 left: p
-;AHHHH left: s right: 1.2
+;In infix to postfix: 1.2
+;=======================;only one function call with operation: or no function call1.2
 ;Print store: c 1.2 left: !T17
 ;Print store: c !T17 left: s
-;AHHHH left: t right: 0.7
+;In infix to postfix: 0.7
+;=======================;only one function call with operation: or no function call0.7
 ;Print store: c 0.7 left: !T18
 ;Print store: c !T18 left: t
+;In infix to postfix: t*p-s+p*s
+;=======================;only one function call with operation: or no function callt*p-s+p*s
 ;Print store: c !T22 left: t
 ; PUSH
 ; JSR FUNC_id_main_L

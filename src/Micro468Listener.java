@@ -280,30 +280,24 @@ public class Micro468Listener extends MicroBaseListener {
         String right = ctx.getChild(0).getChild(2).getText();
 
         if(isOnlyFunctionCall(right)) {
-            System.out.println("is only function call: " + right);
             return;
         }
 
         int numberBefore = this.operationNumber;
 
         String postFixFunction = InfixToPostfix.infixToPostfixFunctions(right, this.operationNumber);
-        System.out.println("; post fix function: " + postFixFunction);
         int numberAfter = InfixToPostfix.registerNumber;
 
-        if (numberAfter == numberBefore) {
-            System.out.println("; No function in assign statement");
-        }else {
-            System.out.println("; THIS SHOULD NEVER HIT: Function in assign statement");
-        }
-
-        if (numberAfter - numberBefore == 1) {
-            System.out.println(";only one function call: " + right);
+        if (numberAfter - numberBefore == 1 || numberAfter - numberBefore == 0) {
+            System.out.printf(";=======================");
+            System.out.println(";only one function call with operation: or no function call" + right);
+            parsePostfix(right, left, postFixFunction);
             return;
         }
 
-        String postfix = InfixToPostfix.infixToPostfix(right);
-        System.out.println(";" + postfix);
-        parsePostfix(right, left, postfix);
+//        String postfix = InfixToPostfix.infixToPostfix(right);
+//        System.out.println(";" + postfix);
+//        parsePostfix(right, left, postfix);
     }
 
     private boolean isSymbolScopeInteger(String name) {
@@ -494,7 +488,6 @@ public class Micro468Listener extends MicroBaseListener {
 
         String[] words = postfix.split(" ");
         if (words.length == 1) {
-            System.out.println(";AHHHH left: " + left + " " + "right: " + right);
             parseAssign_stmt(left, right);
             return;
         }

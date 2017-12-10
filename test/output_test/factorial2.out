@@ -2,15 +2,18 @@
 ; IR code
 ;INTret;INTtret;
 ;Print store: c 1 left: !T1
+;In infix to postfix: tret*a
+;=======================;only one function call with operation: or no function calltret*a
 ;Print store: c !T6 left: $-1
-;AHHHH left: null right: ret
 ;INTnum;INTresult;
 ;Print store: c 1 left: !T7
-;AHHHH left: result right: 1
+;In infix to postfix: 1
+;=======================;only one function call with operation: or no function call1
 ;Print store: c 1 left: !T8
 ;Print store: c !T8 left: $-2
 ;Print store: c 1 left: !T9
-;AHHHH left: result right: 0
+;In infix to postfix: 0
+;=======================;only one function call with operation: or no function call0
 ;Print store: c 0 left: !T11
 ;Print store: c !T11 left: $-2
 ; PUSH
