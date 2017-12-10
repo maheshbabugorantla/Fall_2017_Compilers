@@ -279,7 +279,10 @@ public class Micro468Listener extends MicroBaseListener {
         String left = ctx.getChild(0).getChild(0).getText();
         String right = ctx.getChild(0).getChild(2).getText();
 
+        //System.out.println("left: " + left + "right: " + right);
+
         if(isOnlyFunctionCall(right)) {
+           // System.out.println("only function call: " + right);
             return;
         }
 
@@ -288,19 +291,42 @@ public class Micro468Listener extends MicroBaseListener {
         String postFixFunction = InfixToPostfix.infixToPostfixFunctions(right, this.operationNumber);
         int numberAfter = InfixToPostfix.registerNumber;
 
-        if (numberAfter - numberBefore == 1 || numberAfter - numberBefore == 0) {
-            System.out.printf(";=======================");
+        if (numberAfter - numberBefore == 0) {
+
             System.out.println(";only one function call with operation: or no function call" + right);
             parsePostfix(right, left, postFixFunction);
-            return;
         }
-
-//        String postfix = InfixToPostfix.infixToPostfix(right);
-//        System.out.println(";" + postfix);
-//        parsePostfix(right, left, postfix);
+        else {
+            parsePostfixFunctions(right, left, postFixFunction, numberBefore, numberAfter);
+        }
     }
 
+    private void parsePostfixFunctions(String right, String left, String postfix, int numberBefore, int numberAfter) {
+        System.out.println(";=======================");
+        System.out.println("Left: " + left + " right: " + right + " postfix: " + postfix);
+        for (int i = numberBefore; i < numberAfter; i++) {
+            String currentRegister = "!T" + i;
+            String functionCall = InfixToPostfix.tempToFunctionMap.get(currentRegister);
+
+            System.out.println(";current register = " + currentRegister + " current call " + functionCall);
+            String functionName = InfixToPostfix.getFunctionName(functionCall);
+            System.out.println("Function name = " + functionName);
+
+            String[] functionParameters = InfixToPostfix.getFunctionParameters(functionCall);
+
+            String parametersJoined = "";
+            for (String f : functionParameters) {
+                parametersJoined = parametersJoined + " " + f;
+            }
+
+            System.out.println("Function parameters = " + parametersJoined.trim());
+        }
+        System.out.printf("-----------------------");
+    }
+
+
     private boolean isSymbolScopeInteger(String name) {
+        System.out.printf(";name: " + name);
         if (symbolScope.get(name).decl_type.equals("INT")) {
             return true;
         }
@@ -308,16 +334,21 @@ public class Micro468Listener extends MicroBaseListener {
     }
 
     @Override public void enterCall_expr(MicroParser.Call_exprContext ctx) {
+        boolean check = true;
+        if (check) return;
         String function_name = ctx.getChild(0).getText();
 
-        if (ctx.getParent().getParent().getParent().getParent().getChild(0) == null) {
+//        String left = ctx.getParent().getParent().getParent().getParent().getChild(0).getText();
+//        String right = ctx.getParent().getParent().getParent().getParent().getChild(2).getText();
+
+        if (ctx.getParent().getParent().getParent().getParent().getChild(0).getText() == null) {
             //System.out.println(";left function call is wrong");
             return;
         }
 
         String left = ctx.getParent().getParent().getParent().getParent().getChild(0).getText();
 
-        if (ctx.getParent().getParent().getParent().getParent().getChild(2) == null) {
+        if  (ctx.getParent().getParent().getParent().getParent().getChild(2).getText() == null) {
             //System.out.println(";right function call is wrong");
             return;
         }

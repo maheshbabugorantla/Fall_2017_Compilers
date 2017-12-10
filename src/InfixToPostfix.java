@@ -75,8 +75,39 @@ public class InfixToPostfix {
         return -1;
     }
 
+    public static String getFunctionName(String functionCall) {
+        String[] s = functionCall.split("\\(");
+        return s[0];
+    }
+
+    public static String[] getFunctionParameters(String functionCall) {
+        String[] s = functionCall.split(",");
+        System.out.println("length: " + s.length + " " + s[0] + ":" + s[s.length - 1]);
+        ArrayList<String> first = new ArrayList<String>(Arrays.asList(s[0].split("[(]")));
+        first.remove(0);
+        System.out.println("first length: " + first.size());
+        s[0] = "";
+        for (String f : first) {
+            s[0] = s[0] + f.trim();
+        }
+        s[0] = s[0].trim();
+
+        ArrayList<String> last = new ArrayList<String>(Arrays.asList(s[s.length - 1].trim().split("[)]")));
+        //last.remove(last.size() - 1);
+
+        System.out.println("last length: " + last.size());
+
+        s[s.length - 1] = "";
+        for (String f : last) {
+            s[s.length - 1] = s[s.length - 1] + f.trim();
+        }
+        s[s.length - 1] = s[s.length - 1].trim();
+
+        return s;
+    }
+
     public static String infixToPostfixFunctions(String str, int rnum) {
-        System.out.println(";In infix to postfix: " + str);
+        //System.out.println(";In infix to postfix: " + str);
 
         String combined = str.replace(" ", "");
 
@@ -95,7 +126,7 @@ public class InfixToPostfix {
             rnum += 1;
             String current = m.group();
             allMatches.add(current);
-            //System.out.println(current);
+            System.out.println(current);
 
             tempToFunctionMap.put(register, current);
             registerNumber = rnum;
