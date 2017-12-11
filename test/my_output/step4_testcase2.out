@@ -1,26 +1,62 @@
-;INTa,b,k,g,p,u;
+; PUSH SYMBOLINTa,b,k,g,p,u;
 ; IR code
-;
+; PUSH SYMBOL
+;postfix2: 1
+;number rec before: 1
+;number rec after: 1
+;left: b right: 1 true
+;number before: 1 number after: 1
 ;only one function call with operation: or no function call1
+;1
 ;Print store: c 1 left: !T1
 ;Print store: c !T1 left: b
-;
+; PUSH SYMBOL
 ;Print store: c 1 left: !T2
 ;Print store: c !T2 left: a
 ;Print store: c 120 left: !T3
 ;Print store: c 1 left: !T4
+;postfix2: 1*a
+;number rec before: 5
+;number rec after: 5
+;left: g right: 1*a true
+;number before: 5 number after: 5
 ;only one function call with operation: or no function call1*a
+;1 a *
 ;Print store: c !T6 left: g
 ;Print store: c 2 left: !T7
+;postfix2: 2*a
+;number rec before: 8
+;number rec after: 8
+;left: p right: 2*a true
+;number before: 8 number after: 8
 ;only one function call with operation: or no function call2*a
+;2 a *
 ;Print store: c !T9 left: p
 ;Print store: c 3 left: !T10
+;postfix2: 3*a
+;number rec before: 11
+;number rec after: 11
+;left: k right: 3*a true
+;number before: 11 number after: 11
 ;only one function call with operation: or no function call3*a
+;3 a *
 ;Print store: c !T12 left: k
 ;Print store: c 4 left: !T13
+;postfix2: 4*a
+;number rec before: 14
+;number rec after: 14
+;left: u right: 4*a true
+;number before: 14 number after: 14
 ;only one function call with operation: or no function call4*a
+;4 a *
 ;Print store: c !T15 left: u
+;postfix2: b+1
+;number rec before: 16
+;number rec after: 16
+;left: b right: b+1 true
+;number before: 16 number after: 16
 ;only one function call with operation: or no function callb+1
+;b 1 +
 ;Print store: c !T17 left: b
 ;Print store: c !T19 left: a
 ; PUSH
@@ -91,7 +127,7 @@ push
 jsr FUNC_id_main_L
 sys halt
 label FUNC_id_main_L
-link 26
+link 21
 move 1 $-1
 move $-1 r0
 move r0 b

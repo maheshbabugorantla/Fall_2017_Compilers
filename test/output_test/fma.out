@@ -1,19 +1,59 @@
-;STRINGintro:="You will be asked for three float numbers\n";STRINGfirst:="Please enter the first float number: ";STRINGsecond:="Please enter the second float number: ";STRINGthird:="Please enter the third float number: ";STRINGeol:="\n";STRINGstar:="*";STRINGplus:="+";STRINGequal:="=";
+; PUSH SYMBOLSTRINGintro:="You will be asked for three float numbers\n";STRINGfirst:="Please enter the first float number: ";STRINGsecond:="Please enter the second float number: ";STRINGthird:="Please enter the third float number: ";STRINGeol:="\n";STRINGstar:="*";STRINGplus:="+";STRINGequal:="=";
 ; IR code
-;FLOATresult;
+; PUSH SYMBOLFLOATresult;
+;postfix2: a+b
+;number rec before: 1
+;number rec after: 1
+;left: result right: a+b false
+;number before: 1 number after: 1
 ;only one function call with operation: or no function calla+b
+;a b +
 ;Print store: c !T1 left: $-1
-;RETURN: No Function;FLOATresult;
+;RETURN: No Function; PUSH SYMBOLFLOATresult;
+;postfix2: a*b
+;number rec before: 2
+;number rec after: 2
+;left: result right: a*b false
+;number before: 2 number after: 2
 ;only one function call with operation: or no function calla*b
+;a b *
 ;Print store: c !T2 left: $-1
-;RETURN: No Function;FLOATa,b,c;FLOATaddresult,multiplyresult;
+;RETURN: No Function; PUSH SYMBOLFLOATa,b,c;FLOATaddresult,multiplyresult;
+;found: multiply(a,b)
+;postfix2: !T3
+;number rec before: 3
+;number rec after: 4
+;Key: !T3 call: multiply(a,b)
+;left: multiplyresult right: multiply(a,b) false
+;number before: 4 number after: 5
 ;=======================
-;current register = !T3 current call multiply(a,b)
+;current register = !T4 current call multiply(a,b)
 ;Function name = multiply
-;-----------------------;=======================
-;current register = !T5 current call add(multiplyresult,c)
+;Function parameters = a b
+; Postfix: a
+;Error here: a
+; Postfix: b
+;Error here: b
+;-----------------------
+;found: add(multiplyresult,c)
+;postfix2: !T5
+;number rec before: 5
+;number rec after: 6
+;Key: !T3 call: multiply(a,b)
+;Key: !T4 call: multiply(a,b)
+;Key: !T5 call: add(multiplyresult,c)
+;left: addresult right: add(multiplyresult,c) false
+;number before: 6 number after: 7
+;=======================
+;current register = !T6 current call add(multiplyresult,c)
 ;Function name = add
-;-----------------------;RETURN: No Function; PUSH
+;Function parameters = multiplyresult c
+; Postfix: multiplyresult
+;Error here: multiplyresult
+; Postfix: c
+;Error here: c
+;-----------------------
+;RETURN: No Function; PUSH
 ; JSR FUNC_id_main_L
 ; HALT
 ; LABEL FUNC_id_add_L
@@ -50,12 +90,13 @@
 ; POP
 ; POP
 ; POP !T4
-; STOREF !T4 !T3
+; STOREF !T4 !T4
 ; POP r3
 ; POP r2
 ; POP r1
 ; POP r0
-; STOREF !T3 $-4
+; STOREF !T4 !T4 ;snemo
+; STOREF !T4 $-4
 ; PUSH r0
 ; PUSH r1
 ; PUSH r2
@@ -67,12 +108,13 @@
 ; POP
 ; POP
 ; POP !T6
-; STOREF !T6 !T5
+; STOREF !T6 !T6
 ; POP r3
 ; POP r2
 ; POP r1
 ; POP r0
-; STOREF !T5 $-5
+; STOREF !T6 !T6 ;snemo
+; STOREF !T6 $-5
 ; WRITEF $-3
 ; WRITES star
 ; WRITEF $-2
@@ -104,7 +146,7 @@ push
 jsr FUNC_id_main_L
 sys halt
 label FUNC_id_add_L
-link 15
+link 10
 move $3 r0
 move $2 r1
 addr r0 r1
@@ -116,7 +158,7 @@ move r0 $4
 unlnk
 ret
 label FUNC_id_multiply_L
-link 15
+link 10
 move $3 r0
 move $2 r1
 mulr r0 r1
@@ -128,7 +170,7 @@ move r0 $4
 unlnk
 ret
 label FUNC_id_main_L
-link 19
+link 14
 sys writes intro
 sys writes first
 sys readr $-3
@@ -148,12 +190,14 @@ pop
 pop
 pop $-6 ;using temp
 move $-6 r0
-move r0 $-8
+move r0 $-6
 pop r3
 pop r2
 pop r1
 pop r0
-move $-8 r0
+move $-6 r0
+move r0 $-6
+move $-6 r0
 move r0 $-4
 push r0
 push r1
@@ -165,13 +209,15 @@ push $-1
 jsr FUNC_id_add_L
 pop
 pop
-pop $-10 ;using temp
-move $-10 r0
+pop $-12 ;using temp
+move $-12 r0
 move r0 $-12
 pop r3
 pop r2
 pop r1
 pop r0
+move $-12 r0
+move r0 $-12
 move $-12 r0
 move r0 $-5
 sys writer $-3
@@ -182,8 +228,8 @@ sys writer $-1
 sys writes equal
 sys writer $-5
 sys writes eol
-move 0 $-14
-move $-14 r0
+move 0 $-18
+move $-18 r0
 move r0 $2
 unlnk
 ret

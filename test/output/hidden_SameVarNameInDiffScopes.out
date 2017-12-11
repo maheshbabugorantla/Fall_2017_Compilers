@@ -1,25 +1,75 @@
-;STRINGeol:="\n";STRINGstar:="*";STRINGplus:="+";STRINGequal:="=";
+; PUSH SYMBOLSTRINGeol:="\n";STRINGstar:="*";STRINGplus:="+";STRINGequal:="=";
 ; IR code
-;FLOATa,b,c;
+; PUSH SYMBOLFLOATa,b,c;
+;postfix2: arg1
+;number rec before: 1
+;number rec after: 1
+;left: a right: arg1 false
+;number before: 1 number after: 1
 ;only one function call with operation: or no function callarg1
+;arg1
 ;Print store: c $3 left: $-3
+;postfix2: arg2
+;number rec before: 1
+;number rec after: 1
+;left: b right: arg2 true
+;number before: 1 number after: 1
 ;only one function call with operation: or no function callarg2
+;arg2
 ;Print store: c $2 left: $-2
+;postfix2: a/b
+;number rec before: 1
+;number rec after: 1
+;left: c right: a/b true
+;number before: 1 number after: 1
 ;only one function call with operation: or no function calla/b
+;a b /
 ;Print store: c !T1 left: $-1
-;RETURN: No Function;FLOATa,b,multiplyresult;
+;RETURN: No Function; PUSH SYMBOLFLOATa,b,multiplyresult;
+;postfix2: 12.0
+;number rec before: 2
+;number rec after: 2
+;left: a right: 12.0 false
+;number before: 2 number after: 2
 ;only one function call with operation: or no function call12.0
+;12.0
 ;Print store: c 12.0 left: !T2
 ;Print store: c !T2 left: $-3
+;postfix2: 3.0
+;number rec before: 3
+;number rec after: 3
+;left: b right: 3.0 false
+;number before: 3 number after: 3
 ;only one function call with operation: or no function call3.0
+;3.0
 ;Print store: c 3.0 left: !T3
 ;Print store: c !T3 left: $-2
+;found: myFunction(a,b)
+;found: myFunction(b,b)
+;postfix2: !T4 !T5 +
+;number rec before: 4
+;number rec after: 6
+;Key: !T4 call: myFunction(a,b)
+;Key: !T5 call: myFunction(b,b)
+;left: multiplyresult right: myFunction(a,b)+myFunction(b,b) true
+;number before: 6 number after: 8
 ;=======================
 ;current register = !T4 current call myFunction(a,b)
 ;Function name = myFunction
+;Function parameters = a b
+; Postfix: a
+;Error here: a
+; Postfix: b
+;Error here: b
 ;current register = !T5 current call myFunction(b,b)
 ;Function name = myFunction
-;-----------------------multiple functions
+;Function parameters = b b
+; Postfix: b
+;Error here: b
+; Postfix: b
+;Error here: b
+;-----------------------
+;multiple functions
 ;Print store: c !T8 left: $-1
 ;RETURN: No Function; PUSH
 ; JSR FUNC_id_main_L
@@ -32,8 +82,8 @@
 ; WRITES eol
 ; WRITEF $-2
 ; WRITES eol
-; DIVF $-3 $-2 !T1
-; STOREF !T1 $-1
+; DIVI $-3 $-2 !T1
+; STOREI !T1 $-1
 ; STOREI $-1 $4
 ; UNLINK
 ; RET
@@ -59,6 +109,7 @@
 ; POP r2
 ; POP r1
 ; POP r0
+; STOREI !T4 !T4 ;snemo
 ; PUSH r0
 ; PUSH r1
 ; PUSH r2
@@ -75,8 +126,10 @@
 ; POP r2
 ; POP r1
 ; POP r0
+; STOREI !T5 !T5 ;snemo
 ; ADDI !T4 !T5 !T8
 ; STOREI !T8 $-1
+; STOREI !T8 $-1 ;snemo
 ; WRITEF $-1
 ; WRITES eol
 ; STOREI 0 !T9
@@ -97,7 +150,7 @@ push
 jsr FUNC_id_main_L
 sys halt
 label FUNC_id_myFunction_L
-link 19
+link 14
 move $3 r0
 move r0 $-3
 move $2 r0
@@ -108,7 +161,7 @@ sys writer $-2
 sys writes eol
 move $-2 r0
 move $-3 r1
-divr r0 r1
+divi r0 r1
 move r1 $-4 ; / STORE_HANDLED
 move $-4 r0
 move r0 $-1
@@ -117,7 +170,7 @@ move r0 $4
 unlnk
 ret
 label FUNC_id_main_L
-link 19
+link 14
 move 12.0 $-4
 move $-4 r0
 move r0 $-3
@@ -141,6 +194,8 @@ pop r3
 pop r2
 pop r1
 pop r0
+move $-10 r0
+move r0 $-10
 push r0
 push r1
 push r2
@@ -151,23 +206,27 @@ push $-2
 jsr FUNC_id_myFunction_L
 pop
 pop
-pop $-11 ;using temp
-move $-11 r0
-move r0 $-13
+pop $-13 ;using temp
+move $-13 r0
+move r0 $-15
 pop r3
 pop r2
 pop r1
 pop r0
+move $-15 r0
+move r0 $-15
 move $-10 r0
-move $-13 r1
+move $-15 r1
 addi r0 r1
-move r1 $-14 ; + STORE_HANDLED
-move $-14 r0
+move r1 $-18 ; + STORE_HANDLED
+move $-18 r0
+move r0 $-1
+move $-18 r0
 move r0 $-1
 sys writer $-1
 sys writes eol
-move 0 $-16
-move $-16 r0
+move 0 $-21
+move $-21 r0
 move r0 $2
 unlnk
 ret

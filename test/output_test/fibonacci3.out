@@ -1,27 +1,52 @@
-;STRINGinput:="Please input an integer number: ";STRINGspace:=" ";STRINGeol:="\n";
+; PUSH SYMBOLSTRINGinput:="Please input an integer number: ";STRINGspace:=" ";STRINGeol:="\n";
 ; IR code
-;INTret1;
+; PUSH SYMBOLINTret1;
 ;Print store: c 2 left: !T1
+;found: F(n-2)
+;postfix2: !T2
+;number rec before: 2
+;number rec after: 3
+;Key: !T2 call: F(n-2)
+;left: ret1 right: F(n-2) true
+;number before: 3 number after: 4
 ;=======================
-;current register = !T2 current call F(n-2)
+;current register = !T3 current call F(n-2)
 ;Function name = F
-;-----------------------;Return Statement is Function Call F(n-1)+ret1+1 3;=======================
+;Function parameters = n-2
+; Postfix: n 2 -
+;-----------------------
+;Return Statement is Function Call F(n-1)+ret1+1 3;=======================
 ;current register = !T6 current call F(n-1)
 ;Function name = F
-;Print store: c 1 left: !T7
-;-----------------------;Print store: c 1 left: !T11
+;Function parameters = n-1
+; Postfix: n 1 -
+;-----------------------
 ;Print store: c !T12 left: $3
 ;Print store: c 0 left: !T13
 ;RETURN: No Function;Print store: c 1 left: !T15
-;RETURN: No Function;RETURN: No Function;INTi,end,result;
-;
+;RETURN: No Function;RETURN: No Function; PUSH SYMBOLINTi,end,result;
+; PUSH SYMBOL
 ;Print store: c 0 left: !T18
 ;Print store: c !T18 left: $-3
 ;Print store: c $-2 left: !T19
+;found: F(i)
+;postfix2: !T20
+;number rec before: 20
+;number rec after: 21
+;Key: !T2 call: F(n-2)
+;Key: !T20 call: F(i)
+;Key: !T3 call: F(n-2)
+;Key: !T6 call: F(n-1)
+;left: result right: F(i) true
+;number before: 21 number after: 22
 ;=======================
-;current register = !T20 current call F(i)
+;current register = !T21 current call F(i)
 ;Function name = F
-;-----------------------;Print store: c !T23 left: $-3
+;Function parameters = i
+; Postfix: i
+;Error here: i
+;-----------------------
+;Print store: c !T23 left: $-3
 ;RETURN: No Function; PUSH
 ; JSR FUNC_id_main_L
 ; HALT
@@ -40,32 +65,34 @@
 ; JSR FUNC_id_F_L
 ; POP
 ; POP !T5
-; STOREI !T5 !T2
+; STOREI !T5 !T3
 ; POP r3
 ; POP r2
 ; POP r1
 ; POP r0
-; STOREI !T2 $-1
+; STOREI !T3 !T3 ;snemo
+; STOREI !T3 $-1
 ; PUSH r0
 ; PUSH r1
 ; PUSH r2
 ; PUSH r3
 ; PUSH ;(return value)
-; STOREF 1 !T7
+; STOREI 1 !T7
 ; SUBI $2 !T7 !T8
 ; PUSH !T8
 ; JSR FUNC_id_F_L
 ; POP
 ; POP !T9
-; STOREF !T9 !T6
+; STOREI !T9 !T6
 ; POP r3
 ; POP r2
 ; POP r1
 ; POP r0
-; ADDF !T6 $-1 !T10
-; STOREF 1 !T11
-; ADDF !T10 !T11 !T12
-; STOREF !T12 $3
+; STOREI !T6 !T6 ;snemo
+; ADDI !T6 $-1 !T10
+; STOREI 1 !T11
+; ADDI !T10 !T11 !T12
+; STOREI !T12 $3
 ; UNLINK
 ; RET
 ; JUMP label2
@@ -113,12 +140,13 @@
 ; JSR FUNC_id_F_L
 ; POP
 ; POP !T21
-; STOREI !T21 !T20
+; STOREI !T21 !T21
 ; POP r3
 ; POP r2
 ; POP r1
 ; POP r0
-; STOREI !T20 $-1
+; STOREI !T21 !T21 ;snemo
+; STOREI !T21 $-1
 ; WRITEI $-3
 ; WRITES space
 ; WRITEI $-1
@@ -143,7 +171,7 @@ push
 jsr FUNC_id_main_L
 sys halt
 label FUNC_id_F_L
-link 32
+link 27
 move 2 $-2
 move $2 r0
 move $-2 r1
@@ -164,74 +192,78 @@ jsr FUNC_id_F_L
 pop
 pop $-6 ;using temp
 move $-6 r0
-move r0 $-8
+move r0 $-3
 pop r3
 pop r2
 pop r1
 pop r0
-move $-8 r0
+move $-3 r0
+move r0 $-3
+move $-3 r0
 move r0 $-1
 push r0
 push r1
 push r2
 push r3
 push ;(return value)
-move 1 $-10
-move $-10 r0
+move 1 $-12
+move $-12 r0
 move $2 r1
 subi r0 r1
-move r1 $-11 ; - STORE_HANDLED
-push $-11 ;using temp
+move r1 $-13 ; - STORE_HANDLED
+push $-13 ;using temp
 jsr FUNC_id_F_L
 pop
-pop $-13 ;using temp
-move $-13 r0
-move r0 $-15
+pop $-15 ;using temp
+move $-15 r0
+move r0 $-17
 pop r3
 pop r2
 pop r1
 pop r0
-move $-15 r0
+move $-17 r0
+move r0 $-17
+move $-17 r0
 move $-1 r1
-addr r0 r1
-move r1 $-16 ; + STORE_HANDLED
-move 1 $-17
-move $-16 r0
-move $-17 r1
-addr r0 r1
-move r1 $-18 ; + STORE_HANDLED
-move $-18 r0
+addi r0 r1
+move r1 $-20 ; + STORE_HANDLED
+move 1 $-21
+move $-20 r0
+move $-21 r1
+addi r0 r1
+move r1 $-22 ; + STORE_HANDLED
+move $-22 r0
 move r0 $3
 unlnk
 ret
 jmp label2
 label label1
-move 0 $-20
+move 0 $-24
 move $2 r0
-move $-20 r1
+move $-24 r1
 cmpi r0 r1
 jne label3
-move 0 $-21
-move $-21 r0
+move 0 $-25
+move $-25 r0
 move r0 $3
 unlnk
 ret
 jmp label4
 label label3
-move 1 $-23
+move 1 $-27
 move $2 r0
-move $-23 r1
+move $-27 r1
 cmpi r0 r1
 jne label5
-move 1 $-24
-move $-24 r0
+move 1 $-28
+move $-28 r0
 move r0 $3
 unlnk
 ret
 jmp label6
 label label5
-move 1 $-26
-move $-26 r0
+move 1 $-30
+move $-30 r0
 move r0 $3
 unlnk
 ret
@@ -241,7 +273,7 @@ label label2
 unlnk
 ret
 label FUNC_id_main_L
-link 34
+link 29
 sys writes input
 sys readi $-2
 move 0 $-4
@@ -264,28 +296,30 @@ jsr FUNC_id_F_L
 pop
 pop $-7 ;using temp
 move $-7 r0
-move r0 $-9
+move r0 $-7
 pop r3
 pop r2
 pop r1
 pop r0
-move $-9 r0
+move $-7 r0
+move r0 $-7
+move $-7 r0
 move r0 $-1
 sys writei $-3
 sys writes space
 sys writei $-1
 sys writes eol
-move 1 $-11
+move 1 $-13
 move $-3 r0
-move $-11 r1
+move $-13 r1
 addi r0 r1
-move r1 $-12 ; + STORE_HANDLED
-move $-12 r0
+move r1 $-14 ; + STORE_HANDLED
+move $-14 r0
 move r0 $-3
 jmp label7
 label label8
-move 0 $-14
-move $-14 r0
+move 0 $-16
+move $-16 r0
 move r0 $2
 unlnk
 ret

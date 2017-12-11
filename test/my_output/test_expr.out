@@ -1,53 +1,173 @@
-;INTa,b,c,d;FLOATx,y,z,t;STRINGnewline:="\n";
+; PUSH SYMBOLINTa,b,c,d;FLOATx,y,z,t;STRINGnewline:="\n";
 ; IR code
-;
+; PUSH SYMBOL
+;postfix2: 1
+;number rec before: 1
+;number rec after: 1
+;left: a right: 1 true
+;number before: 1 number after: 1
 ;only one function call with operation: or no function call1
+;1
 ;Print store: c 1 left: !T1
 ;Print store: c !T1 left: a
+;postfix2: 2
+;number rec before: 2
+;number rec after: 2
+;left: b right: 2 true
+;number before: 2 number after: 2
 ;only one function call with operation: or no function call2
+;2
 ;Print store: c 2 left: !T2
 ;Print store: c !T2 left: b
+;postfix2: 10
+;number rec before: 3
+;number rec after: 3
+;left: c right: 10 true
+;number before: 3 number after: 3
 ;only one function call with operation: or no function call10
+;10
 ;Print store: c 10 left: !T3
 ;Print store: c !T3 left: c
+;postfix2: 20
+;number rec before: 4
+;number rec after: 4
+;left: d right: 20 true
+;number before: 4 number after: 4
 ;only one function call with operation: or no function call20
+;20
 ;Print store: c 20 left: !T4
 ;Print store: c !T4 left: d
+;postfix2: a+b
+;number rec before: 5
+;number rec after: 5
+;left: a right: a+b true
+;number before: 5 number after: 5
 ;only one function call with operation: or no function calla+b
+;a b +
 ;Print store: c !T5 left: a
+;postfix2: a*c
+;number rec before: 6
+;number rec after: 6
+;left: b right: a*c true
+;number before: 6 number after: 6
 ;only one function call with operation: or no function calla*c
+;a c *
 ;Print store: c !T6 left: b
+;postfix2: 0-a+b
+;number rec before: 7
+;number rec after: 7
+;left: c right: 0-a+b true
+;number before: 7 number after: 7
 ;only one function call with operation: or no function call0-a+b
+;0 a - b +
 ;Print store: c !T9 left: c
+;postfix2: 0-d
+;number rec before: 10
+;number rec after: 10
+;left: d right: 0-d true
+;number before: 10 number after: 10
 ;only one function call with operation: or no function call0-d
+;0 d -
 ;Print store: c !T11 left: d
+;postfix2: (a+b)*(d+c)-(a+b+c+d)/a
+;number rec before: 12
+;number rec after: 12
+;left: a right: (a+b)*(d+c)-(a+b+c+d)/a true
+;number before: 12 number after: 12
 ;only one function call with operation: or no function call(a+b)*(d+c)-(a+b+c+d)/a
+;a b + d c + * a b + c + d + a / -
 ;Print store: c !T19 left: a
+;postfix2: a+10
+;number rec before: 20
+;number rec after: 20
+;left: a right: a+10 true
+;number before: 20 number after: 20
 ;only one function call with operation: or no function calla+10
+;a 10 +
 ;Print store: c !T21 left: a
+;postfix2: b+a+10
+;number rec before: 22
+;number rec after: 22
+;left: b right: b+a+10 true
+;number before: 22 number after: 22
 ;only one function call with operation: or no function callb+a+10
+;b a + 10 +
 ;Print store: c !T24 left: b
+;postfix2: 0-10
+;number rec before: 25
+;number rec after: 25
+;left: c right: 0-10 true
+;number before: 25 number after: 25
 ;only one function call with operation: or no function call0-10
+;0 10 -
 ;Print store: c !T27 left: c
+;postfix2: 1.0
+;number rec before: 28
+;number rec after: 28
+;left: x right: 1.0 false
+;number before: 28 number after: 28
 ;only one function call with operation: or no function call1.0
+;1.0
 ;Print store: c 1.0 left: !T28
 ;Print store: c !T28 left: x
+;postfix2: 2.0
+;number rec before: 29
+;number rec after: 29
+;left: y right: 2.0 false
+;number before: 29 number after: 29
 ;only one function call with operation: or no function call2.0
+;2.0
 ;Print store: c 2.0 left: !T29
 ;Print store: c !T29 left: y
+;postfix2: 3.14159
+;number rec before: 30
+;number rec after: 30
+;left: z right: 3.14159 false
+;number before: 30 number after: 30
 ;only one function call with operation: or no function call3.14159
+;3.14159
 ;Print store: c 3.14159 left: !T30
 ;Print store: c !T30 left: z
+;postfix2: z/2.0
+;number rec before: 31
+;number rec after: 31
+;left: x right: z/2.0 false
+;number before: 31 number after: 31
 ;only one function call with operation: or no function callz/2.0
+;z 2.0 /
 ;Print store: c 2.0 left: !T31
 ;Print store: c !T32 left: x
+;postfix2: z/y
+;number rec before: 33
+;number rec after: 33
+;left: y right: z/y false
+;number before: 33 number after: 33
 ;only one function call with operation: or no function callz/y
+;z y /
 ;Print store: c !T33 left: y
+;postfix2: (x+y+z)/z
+;number rec before: 34
+;number rec after: 34
+;left: t right: (x+y+z)/z false
+;number before: 34 number after: 34
 ;only one function call with operation: or no function call(x+y+z)/z
+;x y + z + z /
 ;Print store: c !T36 left: t
+;postfix2: t*t
+;number rec before: 37
+;number rec after: 37
+;left: t right: t*t false
+;number before: 37 number after: 37
 ;only one function call with operation: or no function callt*t
+;t t *
 ;Print store: c !T37 left: t
+;postfix2: (t+z+t+t/2.0+z/4.0+z/5.0+z/6.0+z/7.0)
+;number rec before: 38
+;number rec after: 38
+;left: t right: (t+z+t+t/2.0+z/4.0+z/5.0+z/6.0+z/7.0) false
+;number before: 38 number after: 38
 ;only one function call with operation: or no function call(t+z+t+t/2.0+z/4.0+z/5.0+z/6.0+z/7.0)
+;t z + t + t 2.0 / + z 4.0 / + z 5.0 / + z 6.0 / + z 7.0 / +
 ;Print store: c 2.0 left: !T40
 ;Print store: c 4.0 left: !T43
 ;Print store: c 5.0 left: !T46
@@ -188,7 +308,7 @@ push
 jsr FUNC_id_main_L
 sys halt
 label FUNC_id_main_L
-link 61
+link 56
 move 1 $-1
 move $-1 r0
 move r0 a

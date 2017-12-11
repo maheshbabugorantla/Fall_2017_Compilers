@@ -69,3 +69,17 @@ mca && ./runme ./test/input/hidden_step8MultipleNestedLoops.micro ./test/output/
 
 mca && ./runme ./test/input/hidden_step8FuncCallWith7Args.micro ./test/output/hidden_step8FuncCallWith7Args.out
 ./tiny4 ./test/output/hidden_step8FuncCallWith7Args.out
+
+mca && ./runme ./Testing/test1.micro ./Testing/test1.out
+./tiny4 ./Testing/test1.out
+
+
+mca && ./runme ./Testing/test2.micro ./Testing/test2.out
+./tiny4 ./Testing/test2.out
+
+
+mca && ./runme ./Testing/test3.micro ./Testing/test3.out
+./tiny4 ./Testing/test3.out
+
+
+mca && ./runme ./Testing/test5.micro ./Testing/test5.out

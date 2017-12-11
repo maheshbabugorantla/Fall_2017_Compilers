@@ -1,13 +1,31 @@
-;INTa,b,c,d,e;STRINGnewline:="\n";
+; PUSH SYMBOLINTa,b,c,d,e;STRINGnewline:="\n";
 ; IR code
-;
+; PUSH SYMBOL
+;postfix2: 1
+;number rec before: 1
+;number rec after: 1
+;left: a right: 1 true
+;number before: 1 number after: 1
 ;only one function call with operation: or no function call1
+;1
 ;Print store: c 1 left: !T1
 ;Print store: c !T1 left: a
+;postfix2: 2
+;number rec before: 2
+;number rec after: 2
+;left: b right: 2 true
+;number before: 2 number after: 2
 ;only one function call with operation: or no function call2
+;2
 ;Print store: c 2 left: !T2
 ;Print store: c !T2 left: b
+;postfix2: a*c+b*d
+;number rec before: 3
+;number rec after: 3
+;left: e right: a*c+b*d true
+;number before: 3 number after: 3
 ;only one function call with operation: or no function calla*c+b*d
+;a c * b d * +
 ;Print store: c !T5 left: e
 ; PUSH
 ; JSR FUNC_id_main_L
@@ -42,7 +60,7 @@ push
 jsr FUNC_id_main_L
 sys halt
 label FUNC_id_main_L
-link 12
+link 7
 move 1 $-1
 move $-1 r0
 move r0 a

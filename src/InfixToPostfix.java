@@ -10,6 +10,7 @@ public class InfixToPostfix {
 
     public static HashMap<String, String> tempToFunctionMap = new HashMap<String, String>();
     public static int registerNumber = 0;
+    public static int registerNumber2 = 1;
 
     private static boolean isOperator(String c) {
         return c.equals("+") || c.equals("-") || c.equals("*") || c.equals("/") || c.equals("^") || c.equals("(") || c.equals(")");
@@ -104,6 +105,199 @@ public class InfixToPostfix {
         s[s.length - 1] = s[s.length - 1].trim();
 
         return s;
+    }
+
+    public static String infixToPostfixFunctionsRec2(String str, int rnum) {
+        String combined = str.replace(" ", "");
+
+        String regex = "[a-zA-Z]+[a-zA-Z0-9_]*\\([!a-zA-Z0-9_+/\\-*.,]*\\)";
+
+        Matcher m = Pattern.compile(regex).matcher(combined);
+
+        //List<String> allMatches = new ArrayList<String>();
+
+        registerNumber2 = rnum;
+        int count = 0;
+
+        while (m.find()) {
+            String current = m.group();
+
+            count += 1;
+
+            String register = "!T" + registerNumber2;
+            registerNumber2 += 1;
+
+            //allMatches.add(current);
+            System.out.println(";found: " + current);
+            tempToFunctionMap.put(register, current);
+
+//            if(!tempToFunctionMap.containsValue(current)) {
+//                tempToFunctionMap.put(register, current);
+//            }
+//            else {
+//                registerNumber2 -= 1;
+//            }
+
+            //registerNumber2 = registerNumber2 + 1;
+
+            combined = combined.replace(current, register);
+        }
+
+        if (count != 0) {
+            infixToPostfixFunctionsRec(combined, registerNumber2);
+
+            Matcher m2 = Pattern.compile(regex).matcher(combined);
+
+            while (m2.find()) {
+                String current = m2.group();
+
+                registerNumber2 = registerNumber2 + 1;
+                String register = "!T" + registerNumber2;
+                //allMatches.add(current);
+                System.out.println(";found: " + current);
+
+                if(!tempToFunctionMap.containsValue(current)) {
+                    tempToFunctionMap.put(register, current);
+                }
+                else {
+                    registerNumber2 -= 1;
+                }
+
+
+                combined = combined.replace(current, register);
+            }
+
+            m2 = Pattern.compile(regex).matcher(combined);
+
+            while (m2.find()) {
+                String current = m2.group();
+
+                registerNumber2 = registerNumber2 + 1;
+
+                String register = "!T" + registerNumber2;
+                //allMatches.add(current);
+                System.out.println(";found: " + current);
+
+                if(!tempToFunctionMap.containsValue(current)) {
+                    tempToFunctionMap.put(register, current);
+                }
+                else {
+                    registerNumber2 -= 1;
+                }
+
+                combined = combined.replace(current, register);
+            }
+
+            //System.out.println(combined);
+
+            String postfix = infixToPostfix(combined);
+            //System.out.println(postfix);
+
+            return postfix.trim();
+        }
+//        else {
+//            return combined;
+//        }
+        //registerNumber2 -=1;
+        return combined;
+//        m = Pattern.compile(regex).matcher(combined);
+//
+//        while (m.find()) {
+//            String register = "!T" + registerNumber2;
+//            String current = m.group();
+//            //allMatches.add(current);
+//            System.out.println("found: " + current);
+//
+//            tempToFunctionMap.put(register, current);
+//            registerNumber2 = registerNumber2 + 1;
+//
+//            combined = combined.replace(current, register);
+//        }
+//
+//        System.out.println(combined);
+//
+//        String postfix = infixToPostfix(combined);
+//        //System.out.println(postfix);
+//
+//        return postfix.trim();
+    }
+
+
+    public static String infixToPostfixFunctionsRec(String str, int rnum) {
+        String combined = str.replace(" ", "");
+
+        String regex = "[a-zA-Z]+[a-zA-Z0-9_]*\\([!a-zA-Z0-9_+/\\-*.,]*\\)";
+
+        Matcher m = Pattern.compile(regex).matcher(combined);
+
+        //List<String> allMatches = new ArrayList<String>();
+
+        registerNumber2 = rnum;
+        int count = 0;
+
+        while (m.find()) {
+            count += 1;
+            String register = "!T" + registerNumber2;
+            String current = m.group();
+            //allMatches.add(current);
+            System.out.println(";found: " + current);
+
+            tempToFunctionMap.put(register, current);
+            registerNumber2 = registerNumber2 + 1;
+
+            combined = combined.replace(current, register);
+        }
+
+
+        if (count != 0) {
+            infixToPostfixFunctionsRec(combined, registerNumber2);
+
+            Matcher m2 = Pattern.compile(regex).matcher(combined);
+
+            while (m2.find()) {
+                String register = "!T" + registerNumber2;
+                String current = m2.group();
+                //allMatches.add(current);
+                System.out.println(";found: " + current);
+
+                tempToFunctionMap.put(register, current);
+                registerNumber2 = registerNumber2 + 1;
+
+                combined = combined.replace(current, register);
+            }
+
+            //System.out.println(combined);
+
+            String postfix = infixToPostfix(combined);
+            //System.out.println(postfix);
+
+            return postfix.trim();
+        }
+//        else {
+//            return combined;
+//        }
+        //registerNumber2 -=1;
+        return combined;
+//        m = Pattern.compile(regex).matcher(combined);
+//
+//        while (m.find()) {
+//            String register = "!T" + registerNumber2;
+//            String current = m.group();
+//            //allMatches.add(current);
+//            System.out.println("found: " + current);
+//
+//            tempToFunctionMap.put(register, current);
+//            registerNumber2 = registerNumber2 + 1;
+//
+//            combined = combined.replace(current, register);
+//        }
+//
+//        System.out.println(combined);
+//
+//        String postfix = infixToPostfix(combined);
+//        //System.out.println(postfix);
+//
+//        return postfix.trim();
     }
 
     public static String infixToPostfixFunctions(String str, int rnum) {

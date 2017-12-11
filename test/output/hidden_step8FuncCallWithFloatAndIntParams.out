@@ -1,27 +1,80 @@
-;STRINGeol:="\n";
+; PUSH SYMBOLSTRINGeol:="\n";
 ; IR code
-;FLOATfloatResult;INTintResult;
+; PUSH SYMBOLFLOATfloatResult;INTintResult;
+;postfix2: a+c
+;number rec before: 1
+;number rec after: 1
+;left: floatResult right: a+c false
+;number before: 1 number after: 1
 ;only one function call with operation: or no function calla+c
+;a c +
 ;Print store: c !T1 left: $-1
+;postfix2: b+d
+;number rec before: 2
+;number rec after: 2
+;left: intResult right: b+d true
+;number before: 2 number after: 2
 ;only one function call with operation: or no function callb+d
+;b d +
 ;Print store: c !T2 left: $-2
-;RETURN: No Function;FLOATfloat1,float2;INTint1,int2,result;
+;RETURN: No Function; PUSH SYMBOLFLOATfloat1,float2;INTint1,int2,result;
+;postfix2: 4
+;number rec before: 3
+;number rec after: 3
+;left: int1 right: 4 true
+;number before: 3 number after: 3
 ;only one function call with operation: or no function call4
+;4
 ;Print store: c 4 left: !T3
 ;Print store: c !T3 left: $-5
+;postfix2: 1
+;number rec before: 4
+;number rec after: 4
+;left: int2 right: 1 false
+;number before: 4 number after: 4
 ;only one function call with operation: or no function call1
+;1
 ;Print store: c 1 left: !T4
 ;Print store: c !T4 left: $-4
+;postfix2: 1.0
+;number rec before: 5
+;number rec after: 5
+;left: float1 right: 1.0 false
+;number before: 5 number after: 5
 ;only one function call with operation: or no function call1.0
+;1.0
 ;Print store: c 1.0 left: !T5
 ;Print store: c !T5 left: $-2
+;postfix2: 1.0
+;number rec before: 6
+;number rec after: 6
+;left: float2 right: 1.0 false
+;number before: 6 number after: 6
 ;only one function call with operation: or no function call1.0
+;1.0
 ;Print store: c 1.0 left: !T6
 ;Print store: c !T6 left: $-1
+;found: myFunction(float1,int1,float2,int2)
+;postfix2: !T7
+;number rec before: 7
+;number rec after: 8
+;Key: !T7 call: myFunction(float1,int1,float2,int2)
+;left: result right: myFunction(float1,int1,float2,int2) false
+;number before: 8 number after: 9
 ;=======================
-;current register = !T7 current call myFunction(float1,int1,float2,int2)
+;current register = !T8 current call myFunction(float1,int1,float2,int2)
 ;Function name = myFunction
-;-----------------------;RETURN: No Function; PUSH
+;Function parameters = float1 int1 float2 int2
+; Postfix: float1
+;Error here: float1
+; Postfix: int1
+;Error here: int1
+; Postfix: float2
+;Error here: float2
+; Postfix: int2
+;Error here: int2
+;-----------------------
+;RETURN: No Function; PUSH
 ; JSR FUNC_id_main_L
 ; HALT
 ; LABEL FUNC_id_myFunction_L
@@ -58,12 +111,13 @@
 ; POP
 ; POP
 ; POP !T8
-; STOREF !T8 !T7
+; STOREF !T8 !T8
 ; POP r3
 ; POP r2
 ; POP r1
 ; POP r0
-; STOREF !T7 $-3
+; STOREF !T8 !T8 ;snemo
+; STOREF !T8 $-3
 ; WRITEI $-3
 ; STOREI 0 !T9
 ; STOREI !T9 $2
@@ -81,7 +135,7 @@ push
 jsr FUNC_id_main_L
 sys halt
 label FUNC_id_myFunction_L
-link 18
+link 13
 move $5 r0
 move $3 r1
 addr r0 r1
@@ -99,7 +153,7 @@ move r0 $6
 unlnk
 ret
 label FUNC_id_main_L
-link 21
+link 16
 move 4 $-6
 move $-6 r0
 move r0 $-5
@@ -128,16 +182,18 @@ pop
 pop
 pop $-14 ;using temp
 move $-14 r0
-move r0 $-16
+move r0 $-14
 pop r3
 pop r2
 pop r1
 pop r0
-move $-16 r0
+move $-14 r0
+move r0 $-14
+move $-14 r0
 move r0 $-3
 sys writei $-3
-move 0 $-18
-move $-18 r0
+move 0 $-20
+move $-20 r0
 move r0 $2
 unlnk
 ret
