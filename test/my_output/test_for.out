@@ -1,19 +1,43 @@
-;INTi,j;FLOATnewapprox,approx,num;STRINGeol:="\n";
+; PUSH SYMBOLINTi,j;FLOATnewapprox,approx,num;STRINGeol:="\n";
 ; IR code
-;
-;AHHHH left: j right: 1
+; PUSH SYMBOL
+;postfix2: 1
+;number rec before: 1
+;number rec after: 1
+;left: j right: 1 true
+;number before: 1 number after: 1
+;only one function call with operation: or no function call1
+;1
 ;Print store: c 1 left: !T1
 ;Print store: c !T1 left: j
-;AHHHH left: approx right: num
+;postfix2: num
+;number rec before: 2
+;number rec after: 2
+;left: approx right: num false
+;number before: 2 number after: 2
+;only one function call with operation: or no function callnum
+;num
 ;Print store: c num left: approx
-;
-;AHHHH left: i right: 100
+; PUSH SYMBOL
 ;Print store: c 100 left: !T2
 ;Print store: c !T2 left: i
 ;Print store: c 0 left: !T3
+;postfix2: 0.5*(approx+num/approx)
+;number rec before: 4
+;number rec after: 4
+;left: newapprox right: 0.5*(approx+num/approx) false
+;number before: 4 number after: 4
+;only one function call with operation: or no function call0.5*(approx+num/approx)
+;0.5 approx num approx / + *
 ;Print store: c 0.5 left: !T4
 ;Print store: c !T7 left: newapprox
-;AHHHH left: approx right: newapprox
+;postfix2: newapprox
+;number rec before: 8
+;number rec after: 8
+;left: approx right: newapprox false
+;number before: 8 number after: 8
+;only one function call with operation: or no function callnewapprox
+;newapprox
 ;Print store: c newapprox left: approx
 ;Print store: c !T9 left: i
 ; PUSH
@@ -57,63 +81,42 @@ sys halt
 label FUNC_id_main_L
 link 11
 sys readr num
-;1 $-1 false false
 move 1 $-1
-;$-1 j false true
 move $-1 r0
 move r0 j
-;num approx true true
 move num r0
 move r0 approx
-;100 $-3 false false
 move 100 $-3
-;$-3 i false true
 move $-3 r0
 move r0 i
 label label1
-;0 $-5 false false
 move 0 $-5
-; handled?
 move i r0
-; handled2?
 move $-5 r1
 cmpi r0 r1
 jeq label2
-;0.5 $-6 false false
 move 0.5 $-6
-; handled?
 move approx r0
-; handled2?
 move num r1
 divr r0 r1
 move r1 $-7 ; / STORE_HANDLED
-; handled?
 move approx r0
-; handled2?
 move $-7 r1
 addr r0 r1
 move r1 $-8 ; + STORE_HANDLED
-; handled?
 move $-6 r0
-; handled2?
 move $-8 r1
 mulr r0 r1
 move r1 $-9 ; * STORE_HANDLED
-;$-9 newapprox false true
 move $-9 r0
 move r0 newapprox
-;newapprox approx true true
 move newapprox r0
 move r0 approx
-;1 $-11 false false
 move 1 $-11
-; handled?
 move $-11 r0
-; handled2?
 move i r1
 subi r0 r1
 move r1 $-12 ; - STORE_HANDLED
-;$-12 i false true
 move $-12 r0
 move r0 i
 jmp label1

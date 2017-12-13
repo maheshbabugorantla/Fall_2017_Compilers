@@ -3,8 +3,14 @@ import java.util.*;
 import java.lang.StringBuilder;
 import java.lang.String;
 import java.lang.Exception;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class InfixToPostfix {
+
+    public static HashMap<String, String> tempToFunctionMap = new HashMap<String, String>();
+    public static int registerNumber = 0;
+    public static int registerNumber2 = 1;
 
     private static boolean isOperator(String c) {
         return c.equals("+") || c.equals("-") || c.equals("*") || c.equals("/") || c.equals("^") || c.equals("(") || c.equals(")");
@@ -50,7 +56,344 @@ public class InfixToPostfix {
         return str.split(regex);
     }
 
-    public static String convertStringToPostfix2(String infix) {
+
+
+    public static int Prec(String ch)
+    {
+        switch (ch)
+        {
+            case "+":
+            case "-":
+                return 1;
+
+            case "*":
+            case "/":
+                return 2;
+
+            case "^":
+                return 3;
+        }
+        return -1;
+    }
+
+    public static String getFunctionName(String functionCall) {
+        String[] s = functionCall.split("\\(");
+        return s[0];
+    }
+
+    public static String[] getFunctionParameters(String functionCall) {
+        String[] s = functionCall.split(",");
+        //System.out.println("length: " + s.length + " " + s[0] + ":" + s[s.length - 1]);
+        ArrayList<String> first = new ArrayList<String>(Arrays.asList(s[0].split("[(]")));
+        first.remove(0);
+        //System.out.println("first length: " + first.size());
+        s[0] = "";
+        for (String f : first) {
+            s[0] = s[0] + f.trim();
+        }
+        s[0] = s[0].trim();
+
+        ArrayList<String> last = new ArrayList<String>(Arrays.asList(s[s.length - 1].trim().split("[)]")));
+        //last.remove(last.size() - 1);
+
+        //System.out.println("last length: " + last.size());
+
+        s[s.length - 1] = "";
+        for (String f : last) {
+            s[s.length - 1] = s[s.length - 1] + f.trim();
+        }
+        s[s.length - 1] = s[s.length - 1].trim();
+
+        return s;
+    }
+
+    public static String infixToPostfixFunctionsRec2(String str, int rnum) {
+        String combined = str.replace(" ", "");
+
+        String regex = "[a-zA-Z]+[a-zA-Z0-9_]*\\([!a-zA-Z0-9_+/\\-*.,]*\\)";
+
+        Matcher m = Pattern.compile(regex).matcher(combined);
+
+        //List<String> allMatches = new ArrayList<String>();
+
+        registerNumber2 = rnum;
+        int count = 0;
+
+        while (m.find()) {
+            String current = m.group();
+
+            count += 1;
+
+            String register = "!T" + registerNumber2;
+            registerNumber2 += 1;
+
+            //allMatches.add(current);
+            System.out.println(";found: " + current);
+            tempToFunctionMap.put(register, current);
+
+//            if(!tempToFunctionMap.containsValue(current)) {
+//                tempToFunctionMap.put(register, current);
+//            }
+//            else {
+//                registerNumber2 -= 1;
+//            }
+
+            //registerNumber2 = registerNumber2 + 1;
+
+            combined = combined.replace(current, register);
+        }
+
+        if (count != 0) {
+            infixToPostfixFunctionsRec(combined, registerNumber2);
+
+            Matcher m2 = Pattern.compile(regex).matcher(combined);
+
+            while (m2.find()) {
+                String current = m2.group();
+
+                registerNumber2 = registerNumber2 + 1;
+                String register = "!T" + registerNumber2;
+                //allMatches.add(current);
+                System.out.println(";found: " + current);
+
+                if(!tempToFunctionMap.containsValue(current)) {
+                    tempToFunctionMap.put(register, current);
+                }
+                else {
+                    registerNumber2 -= 1;
+                }
+
+
+                combined = combined.replace(current, register);
+            }
+
+            m2 = Pattern.compile(regex).matcher(combined);
+
+            while (m2.find()) {
+                String current = m2.group();
+
+                registerNumber2 = registerNumber2 + 1;
+
+                String register = "!T" + registerNumber2;
+                //allMatches.add(current);
+                System.out.println(";found: " + current);
+
+                if(!tempToFunctionMap.containsValue(current)) {
+                    tempToFunctionMap.put(register, current);
+                }
+                else {
+                    registerNumber2 -= 1;
+                }
+
+                combined = combined.replace(current, register);
+            }
+
+            //System.out.println(combined);
+
+            String postfix = infixToPostfix(combined);
+            //System.out.println(postfix);
+
+            return postfix.trim();
+        }
+//        else {
+//            return combined;
+//        }
+        //registerNumber2 -=1;
+        return combined;
+//        m = Pattern.compile(regex).matcher(combined);
+//
+//        while (m.find()) {
+//            String register = "!T" + registerNumber2;
+//            String current = m.group();
+//            //allMatches.add(current);
+//            System.out.println("found: " + current);
+//
+//            tempToFunctionMap.put(register, current);
+//            registerNumber2 = registerNumber2 + 1;
+//
+//            combined = combined.replace(current, register);
+//        }
+//
+//        System.out.println(combined);
+//
+//        String postfix = infixToPostfix(combined);
+//        //System.out.println(postfix);
+//
+//        return postfix.trim();
+    }
+
+
+    public static String infixToPostfixFunctionsRec(String str, int rnum) {
+        String combined = str.replace(" ", "");
+
+        String regex = "[a-zA-Z]+[a-zA-Z0-9_]*\\([!a-zA-Z0-9_+/\\-*.,]*\\)";
+
+        Matcher m = Pattern.compile(regex).matcher(combined);
+
+        //List<String> allMatches = new ArrayList<String>();
+
+        registerNumber2 = rnum;
+        int count = 0;
+
+        while (m.find()) {
+            count += 1;
+            String register = "!T" + registerNumber2;
+            String current = m.group();
+            //allMatches.add(current);
+            System.out.println(";found: " + current);
+
+            tempToFunctionMap.put(register, current);
+            registerNumber2 = registerNumber2 + 1;
+
+            combined = combined.replace(current, register);
+        }
+
+
+        if (count != 0) {
+            infixToPostfixFunctionsRec(combined, registerNumber2);
+
+            Matcher m2 = Pattern.compile(regex).matcher(combined);
+
+            while (m2.find()) {
+                String register = "!T" + registerNumber2;
+                String current = m2.group();
+                //allMatches.add(current);
+                System.out.println(";found: " + current);
+
+                tempToFunctionMap.put(register, current);
+                registerNumber2 = registerNumber2 + 1;
+
+                combined = combined.replace(current, register);
+            }
+
+            //System.out.println(combined);
+
+            String postfix = infixToPostfix(combined);
+            //System.out.println(postfix);
+
+            return postfix.trim();
+        }
+//        else {
+//            return combined;
+//        }
+        //registerNumber2 -=1;
+        return combined;
+//        m = Pattern.compile(regex).matcher(combined);
+//
+//        while (m.find()) {
+//            String register = "!T" + registerNumber2;
+//            String current = m.group();
+//            //allMatches.add(current);
+//            System.out.println("found: " + current);
+//
+//            tempToFunctionMap.put(register, current);
+//            registerNumber2 = registerNumber2 + 1;
+//
+//            combined = combined.replace(current, register);
+//        }
+//
+//        System.out.println(combined);
+//
+//        String postfix = infixToPostfix(combined);
+//        //System.out.println(postfix);
+//
+//        return postfix.trim();
+    }
+
+    public static String infixToPostfixFunctions(String str, int rnum) {
+        //System.out.println(";In infix to postfix: " + str);
+
+        String combined = str.replace(" ", "");
+
+        //System.out.println(combined);
+
+        List<String> allMatches = new ArrayList<String>();
+
+        String regex = "[a-zA-Z]+[a-zA-Z0-9_]*\\([a-zA-Z0-9_+/\\-*.,]*\\)";
+
+        Matcher m = Pattern.compile(regex).matcher(combined);
+
+        registerNumber = rnum;
+
+        while (m.find()) {
+            String register = "!T" + rnum;
+            rnum += 1;
+            String current = m.group();
+            allMatches.add(current);
+            //System.out.println(current);
+
+            tempToFunctionMap.put(register, current);
+            registerNumber = rnum;
+
+            combined = combined.replace(current, register);
+        }
+
+        //System.out.println(combined);
+
+        String postfix = infixToPostfix(combined);
+        //System.out.println(postfix);
+
+        return postfix.trim();
+    }
+
+    static String infixToPostfix(String infix)
+    {
+        // initializing empty String for result
+        String result = new String("");
+
+        String[] words = SplittingInfix(infix);
+        //System.out.println("printing combined " + Arrays.toString(words));
+
+        //System.out.println("what to parse: " + String.join(",", words));
+
+        Stack<String> stack = new Stack<String>();
+        String c = "";
+
+        for (int i = 0; i < words.length; i++)
+        {
+            c = words[i];
+
+            // If the scanned character is an operand, add it to output.
+            if (!isOperator(c))
+                result += c + " ";
+
+                // If the scanned character is an '(', push it to the stack.
+            else if (c.equals("("))
+                stack.push(c);
+
+                //  If the scanned character is an ')', pop and output from the stack
+                // until an '(' is encountered.
+            else if (c.equals(")"))
+            {
+                while (!stack.isEmpty() && !(stack.peek().equals("(")))
+                    result += stack.pop() + " ";
+
+                if (!stack.isEmpty() && !(stack.peek().equals("(")))
+                    return "Invalid Expression"; // invalid expression
+                else
+                    stack.pop();
+            }
+            else // an operator is encountered
+            {
+                while (!stack.isEmpty() && Prec(c) <= Prec(stack.peek()))
+                    result += stack.pop() + " ";
+                stack.push(c);
+            }
+
+        }
+
+        // pop all the operators from the stack
+        while (!stack.isEmpty())
+            result += stack.pop() + " ";
+
+
+        //System.out.println("second result: " + result);
+        return result.trim();
+    }
+}
+
+/*
+public static String convertStringToPostfix2(String infix) {
 
         String[] words = SplittingInfix(infix);
 
@@ -191,78 +534,4 @@ public class InfixToPostfix {
 
         return postfix.toString();
     }
-
-    public static int Prec(String ch)
-    {
-        switch (ch)
-        {
-            case "+":
-            case "-":
-                return 1;
-
-            case "*":
-            case "/":
-                return 2;
-
-            case "^":
-                return 3;
-        }
-        return -1;
-    }
-
-    static String infixToPostfix(String infix)
-    {
-        // initializing empty String for result
-        String result = new String("");
-
-        String[] words = SplittingInfix(infix);
-        //System.out.println("printing combined " + Arrays.toString(words));
-
-        //System.out.println("what to parse: " + String.join(",", words));
-
-        Stack<String> stack = new Stack<String>();
-        String c = "";
-
-        for (int i = 0; i < words.length; i++)
-        {
-            c = words[i];
-
-            // If the scanned character is an operand, add it to output.
-            if (!isOperator(c))
-                result += c + " ";
-
-                // If the scanned character is an '(', push it to the stack.
-            else if (c.equals("("))
-                stack.push(c);
-
-                //  If the scanned character is an ')', pop and output from the stack
-                // until an '(' is encountered.
-            else if (c.equals(")"))
-            {
-                while (!stack.isEmpty() && !(stack.peek().equals("(")))
-                    result += stack.pop() + " ";
-
-                if (!stack.isEmpty() && !(stack.peek().equals("(")))
-                    return "Invalid Expression"; // invalid expression
-                else
-                    stack.pop();
-            }
-            else // an operator is encountered
-            {
-                while (!stack.isEmpty() && Prec(c) <= Prec(stack.peek()))
-                    result += stack.pop() + " ";
-                stack.push(c);
-            }
-
-        }
-
-        // pop all the operators from the stack
-        while (!stack.isEmpty())
-            result += stack.pop() + " ";
-
-
-        //System.out.println("second result: " + result);
-        return result.trim();
-    }
-
-}
+ */

@@ -1,17 +1,56 @@
-;INTa,b,c;
+; PUSH SYMBOLINTa,b,c;
 ; IR code
-;
-;AHHHH left: a right: 20
+; PUSH SYMBOL
+;postfix2: 20
+;number rec before: 1
+;number rec after: 1
+;left: a right: 20 true
+;number before: 1 number after: 1
+;only one function call with operation: or no function call20
+;20
 ;Print store: c 20 left: !T1
 ;Print store: c !T1 left: a
-;AHHHH left: b right: 30
+;postfix2: 30
+;number rec before: 2
+;number rec after: 2
+;left: b right: 30 true
+;number before: 2 number after: 2
+;only one function call with operation: or no function call30
+;30
 ;Print store: c 30 left: !T2
 ;Print store: c !T2 left: b
-;AHHHH left: c right: 40
+;postfix2: 40
+;number rec before: 3
+;number rec after: 3
+;left: c right: 40 true
+;number before: 3 number after: 3
+;only one function call with operation: or no function call40
+;40
 ;Print store: c 40 left: !T3
 ;Print store: c !T3 left: c
+;postfix2: c+a*b+(a*b+c)/a+20
+;number rec before: 4
+;number rec after: 4
+;left: c right: c+a*b+(a*b+c)/a+20 true
+;number before: 4 number after: 4
+;only one function call with operation: or no function callc+a*b+(a*b+c)/a+20
+;c a b * + a b * c + a / + 20 +
 ;Print store: c !T11 left: c
+;postfix2: b*b+a
+;number rec before: 12
+;number rec after: 12
+;left: b right: b*b+a true
+;number before: 12 number after: 12
+;only one function call with operation: or no function callb*b+a
+;b b * a +
 ;Print store: c !T13 left: b
+;postfix2: (b*a)/a
+;number rec before: 14
+;number rec after: 14
+;left: a right: (b*a)/a true
+;number before: 14 number after: 14
+;only one function call with operation: or no function call(b*a)/a
+;b a * a /
 ;Print store: c !T15 left: a
 ; PUSH
 ; JSR FUNC_id_main_L
@@ -52,96 +91,64 @@ jsr FUNC_id_main_L
 sys halt
 label FUNC_id_main_L
 link 17
-;20 $-1 false false
 move 20 $-1
-;$-1 a false true
 move $-1 r0
 move r0 a
-;30 $-3 false false
 move 30 $-3
-;$-3 b false true
 move $-3 r0
 move r0 b
-;40 $-5 false false
 move 40 $-5
-;$-5 c false true
 move $-5 r0
 move r0 c
-; handled?
 move a r0
-; handled2?
 move b r1
 muli r0 r1
 move r1 $-7 ; * STORE_HANDLED
-; handled?
 move c r0
-; handled2?
 move $-7 r1
 addi r0 r1
 move r1 $-8 ; + STORE_HANDLED
-; handled?
 move a r0
-; handled2?
 move b r1
 muli r0 r1
 move r1 $-9 ; * STORE_HANDLED
-; handled?
 move $-9 r0
-; handled2?
 move c r1
 addi r0 r1
 move r1 $-10 ; + STORE_HANDLED
-; handled?
 move a r0
-; handled2?
 move $-10 r1
 divi r0 r1
 move r1 $-11 ; / STORE_HANDLED
-; handled?
 move $-8 r0
-; handled2?
 move $-11 r1
 addi r0 r1
 move r1 $-12 ; + STORE_HANDLED
-;20 $-13 false false
 move 20 $-13
-; handled?
 move $-12 r0
-; handled2?
 move $-13 r1
 addi r0 r1
 move r1 $-14 ; + STORE_HANDLED
-;$-14 c false true
 move $-14 r0
 move r0 c
-; handled?
 move b r0
-; handled2?
 move b r1
 muli r0 r1
 move r1 $-16 ; * STORE_HANDLED
-; handled?
 move $-16 r0
-; handled2?
 move a r1
 addi r0 r1
 move r1 $-17 ; + STORE_HANDLED
-;$-17 b false true
 move $-17 r0
 move r0 b
-; handled?
 move b r0
-; handled2?
 move a r1
 muli r0 r1
 move r1 $-19 ; * STORE_HANDLED
-; handled?
 move a r0
-; handled2?
 move $-19 r1
 divi r0 r1
 move r1 $-20 ; / STORE_HANDLED
-;$-20 a false true
 move $-20 r0
 move r0 a
 sys writei c

@@ -1,40 +1,173 @@
-;INTa,b,c,d;FLOATx,y,z,t;STRINGnewline:="\n";
+; PUSH SYMBOLINTa,b,c,d;FLOATx,y,z,t;STRINGnewline:="\n";
 ; IR code
-;
-;AHHHH left: a right: 1
+; PUSH SYMBOL
+;postfix2: 1
+;number rec before: 1
+;number rec after: 1
+;left: a right: 1 true
+;number before: 1 number after: 1
+;only one function call with operation: or no function call1
+;1
 ;Print store: c 1 left: !T1
 ;Print store: c !T1 left: a
-;AHHHH left: b right: 2
+;postfix2: 2
+;number rec before: 2
+;number rec after: 2
+;left: b right: 2 true
+;number before: 2 number after: 2
+;only one function call with operation: or no function call2
+;2
 ;Print store: c 2 left: !T2
 ;Print store: c !T2 left: b
-;AHHHH left: c right: 10
+;postfix2: 10
+;number rec before: 3
+;number rec after: 3
+;left: c right: 10 true
+;number before: 3 number after: 3
+;only one function call with operation: or no function call10
+;10
 ;Print store: c 10 left: !T3
 ;Print store: c !T3 left: c
-;AHHHH left: d right: 20
+;postfix2: 20
+;number rec before: 4
+;number rec after: 4
+;left: d right: 20 true
+;number before: 4 number after: 4
+;only one function call with operation: or no function call20
+;20
 ;Print store: c 20 left: !T4
 ;Print store: c !T4 left: d
+;postfix2: a+b
+;number rec before: 5
+;number rec after: 5
+;left: a right: a+b true
+;number before: 5 number after: 5
+;only one function call with operation: or no function calla+b
+;a b +
 ;Print store: c !T5 left: a
+;postfix2: a*c
+;number rec before: 6
+;number rec after: 6
+;left: b right: a*c true
+;number before: 6 number after: 6
+;only one function call with operation: or no function calla*c
+;a c *
 ;Print store: c !T6 left: b
+;postfix2: 0-a+b
+;number rec before: 7
+;number rec after: 7
+;left: c right: 0-a+b true
+;number before: 7 number after: 7
+;only one function call with operation: or no function call0-a+b
+;0 a - b +
 ;Print store: c !T9 left: c
+;postfix2: 0-d
+;number rec before: 10
+;number rec after: 10
+;left: d right: 0-d true
+;number before: 10 number after: 10
+;only one function call with operation: or no function call0-d
+;0 d -
 ;Print store: c !T11 left: d
+;postfix2: (a+b)*(d+c)-(a+b+c+d)/a
+;number rec before: 12
+;number rec after: 12
+;left: a right: (a+b)*(d+c)-(a+b+c+d)/a true
+;number before: 12 number after: 12
+;only one function call with operation: or no function call(a+b)*(d+c)-(a+b+c+d)/a
+;a b + d c + * a b + c + d + a / -
 ;Print store: c !T19 left: a
+;postfix2: a+10
+;number rec before: 20
+;number rec after: 20
+;left: a right: a+10 true
+;number before: 20 number after: 20
+;only one function call with operation: or no function calla+10
+;a 10 +
 ;Print store: c !T21 left: a
+;postfix2: b+a+10
+;number rec before: 22
+;number rec after: 22
+;left: b right: b+a+10 true
+;number before: 22 number after: 22
+;only one function call with operation: or no function callb+a+10
+;b a + 10 +
 ;Print store: c !T24 left: b
+;postfix2: 0-10
+;number rec before: 25
+;number rec after: 25
+;left: c right: 0-10 true
+;number before: 25 number after: 25
+;only one function call with operation: or no function call0-10
+;0 10 -
 ;Print store: c !T27 left: c
-;AHHHH left: x right: 1.0
+;postfix2: 1.0
+;number rec before: 28
+;number rec after: 28
+;left: x right: 1.0 false
+;number before: 28 number after: 28
+;only one function call with operation: or no function call1.0
+;1.0
 ;Print store: c 1.0 left: !T28
 ;Print store: c !T28 left: x
-;AHHHH left: y right: 2.0
+;postfix2: 2.0
+;number rec before: 29
+;number rec after: 29
+;left: y right: 2.0 false
+;number before: 29 number after: 29
+;only one function call with operation: or no function call2.0
+;2.0
 ;Print store: c 2.0 left: !T29
 ;Print store: c !T29 left: y
-;AHHHH left: z right: 3.14159
+;postfix2: 3.14159
+;number rec before: 30
+;number rec after: 30
+;left: z right: 3.14159 false
+;number before: 30 number after: 30
+;only one function call with operation: or no function call3.14159
+;3.14159
 ;Print store: c 3.14159 left: !T30
 ;Print store: c !T30 left: z
+;postfix2: z/2.0
+;number rec before: 31
+;number rec after: 31
+;left: x right: z/2.0 false
+;number before: 31 number after: 31
+;only one function call with operation: or no function callz/2.0
+;z 2.0 /
 ;Print store: c 2.0 left: !T31
 ;Print store: c !T32 left: x
+;postfix2: z/y
+;number rec before: 33
+;number rec after: 33
+;left: y right: z/y false
+;number before: 33 number after: 33
+;only one function call with operation: or no function callz/y
+;z y /
 ;Print store: c !T33 left: y
+;postfix2: (x+y+z)/z
+;number rec before: 34
+;number rec after: 34
+;left: t right: (x+y+z)/z false
+;number before: 34 number after: 34
+;only one function call with operation: or no function call(x+y+z)/z
+;x y + z + z /
 ;Print store: c !T36 left: t
+;postfix2: t*t
+;number rec before: 37
+;number rec after: 37
+;left: t right: t*t false
+;number before: 37 number after: 37
+;only one function call with operation: or no function callt*t
+;t t *
 ;Print store: c !T37 left: t
+;postfix2: (t+z+t+t/2.0+z/4.0+z/5.0+z/6.0+z/7.0)
+;number rec before: 38
+;number rec after: 38
+;left: t right: (t+z+t+t/2.0+z/4.0+z/5.0+z/6.0+z/7.0) false
+;number before: 38 number after: 38
+;only one function call with operation: or no function call(t+z+t+t/2.0+z/4.0+z/5.0+z/6.0+z/7.0)
+;t z + t + t 2.0 / + z 4.0 / + z 5.0 / + z 6.0 / + z 7.0 / +
 ;Print store: c 2.0 left: !T40
 ;Print store: c 4.0 left: !T43
 ;Print store: c 5.0 left: !T46
@@ -176,24 +309,16 @@ jsr FUNC_id_main_L
 sys halt
 label FUNC_id_main_L
 link 56
-;1 $-1 false false
 move 1 $-1
-;$-1 a false true
 move $-1 r0
 move r0 a
-;2 $-3 false false
 move 2 $-3
-;$-3 b false true
 move $-3 r0
 move r0 b
-;10 $-5 false false
 move 10 $-5
-;$-5 c false true
 move $-5 r0
 move r0 c
-;20 $-7 false false
 move 20 $-7
-;$-7 d false true
 move $-7 r0
 move r0 d
 sys writei a
@@ -204,173 +329,119 @@ sys writei c
 sys writes newline
 sys writei d
 sys writes newline
-; handled?
 move a r0
-; handled2?
 move b r1
 addi r0 r1
 move r1 $-9 ; + STORE_HANDLED
-;$-9 a false true
 move $-9 r0
 move r0 a
 sys writei a
 sys writes newline
-; handled?
 move a r0
-; handled2?
 move c r1
 muli r0 r1
 move r1 $-11 ; * STORE_HANDLED
-;$-11 b false true
 move $-11 r0
 move r0 b
 sys writei b
 sys writes newline
-;0 $-13 false false
 move 0 $-13
-; handled?
 move a r0
-; handled2?
 move $-13 r1
 subi r0 r1
 move r1 $-14 ; - STORE_HANDLED
-; handled?
 move $-14 r0
-; handled2?
 move b r1
 addi r0 r1
 move r1 $-15 ; + STORE_HANDLED
-;$-15 c false true
 move $-15 r0
 move r0 c
 sys writei c
 sys writes newline
-;0 $-17 false false
 move 0 $-17
-; handled?
 move d r0
-; handled2?
 move $-17 r1
 subi r0 r1
 move r1 $-18 ; - STORE_HANDLED
-;$-18 d false true
 move $-18 r0
 move r0 d
 sys writei d
 sys writes newline
-; handled?
 move a r0
-; handled2?
 move b r1
 addi r0 r1
 move r1 $-20 ; + STORE_HANDLED
-; handled?
 move d r0
-; handled2?
 move c r1
 addi r0 r1
 move r1 $-21 ; + STORE_HANDLED
-; handled?
 move $-20 r0
-; handled2?
 move $-21 r1
 muli r0 r1
 move r1 $-22 ; * STORE_HANDLED
-; handled?
 move a r0
-; handled2?
 move b r1
 addi r0 r1
 move r1 $-23 ; + STORE_HANDLED
-; handled?
 move $-23 r0
-; handled2?
 move c r1
 addi r0 r1
 move r1 $-24 ; + STORE_HANDLED
-; handled?
 move $-24 r0
-; handled2?
 move d r1
 addi r0 r1
 move r1 $-25 ; + STORE_HANDLED
-; handled?
 move a r0
-; handled2?
 move $-25 r1
 divi r0 r1
 move r1 $-26 ; / STORE_HANDLED
-; handled?
 move $-26 r0
-; handled2?
 move $-22 r1
 subi r0 r1
 move r1 $-27 ; - STORE_HANDLED
-;$-27 a false true
 move $-27 r0
 move r0 a
 sys writei a
 sys writes newline
-;10 $-29 false false
 move 10 $-29
-; handled?
 move a r0
-; handled2?
 move $-29 r1
 addi r0 r1
 move r1 $-30 ; + STORE_HANDLED
-;$-30 a false true
 move $-30 r0
 move r0 a
 sys writei a
 sys writes newline
-; handled?
 move b r0
-; handled2?
 move a r1
 addi r0 r1
 move r1 $-32 ; + STORE_HANDLED
-;10 $-33 false false
 move 10 $-33
-; handled?
 move $-32 r0
-; handled2?
 move $-33 r1
 addi r0 r1
 move r1 $-34 ; + STORE_HANDLED
-;$-34 b false true
 move $-34 r0
 move r0 b
 sys writei b
 sys writes newline
-;0 $-36 false false
 move 0 $-36
-;10 $-37 false false
 move 10 $-37
-; handled?
 move $-37 r0
-; handled2?
 move $-36 r1
 subi r0 r1
 move r1 $-38 ; - STORE_HANDLED
-;$-38 c false true
 move $-38 r0
 move r0 c
 sys writei c
 sys writes newline
-;1.0 $-40 false false
 move 1.0 $-40
-;$-40 x false true
 move $-40 r0
 move r0 x
-;2.0 $-42 false false
 move 2.0 $-42
-;$-42 y false true
 move $-42 r0
 move r0 y
-;3.14159 $-44 false false
 move 3.14159 $-44
-;$-44 z false true
 move $-44 r0
 move r0 z
 sys writer x
@@ -379,147 +450,100 @@ sys writer z
 sys writes newline
 sys writer y
 sys writes newline
-;2.0 $-46 false false
 move 2.0 $-46
-; handled?
 move $-46 r0
-; handled2?
 move z r1
 divr r0 r1
 move r1 $-47 ; / STORE_HANDLED
-;$-47 x false true
 move $-47 r0
 move r0 x
-; handled?
 move y r0
-; handled2?
 move z r1
 divr r0 r1
 move r1 $-49 ; / STORE_HANDLED
-;$-49 y false true
 move $-49 r0
 move r0 y
 sys writer x
 sys writes newline
 sys writer y
 sys writes newline
-; handled?
 move x r0
-; handled2?
 move y r1
 addr r0 r1
 move r1 $-51 ; + STORE_HANDLED
-; handled?
 move $-51 r0
-; handled2?
 move z r1
 addr r0 r1
 move r1 $-52 ; + STORE_HANDLED
-; handled?
 move z r0
-; handled2?
 move $-52 r1
 divr r0 r1
 move r1 $-53 ; / STORE_HANDLED
-;$-53 t false true
 move $-53 r0
 move r0 t
 sys writer t
 sys writes newline
-; handled?
 move t r0
-; handled2?
 move t r1
 mulr r0 r1
 move r1 $-55 ; * STORE_HANDLED
-;$-55 t false true
 move $-55 r0
 move r0 t
 sys writer t
 sys writes newline
-; handled?
 move t r0
-; handled2?
 move z r1
 addr r0 r1
 move r1 $-57 ; + STORE_HANDLED
-; handled?
 move $-57 r0
-; handled2?
 move t r1
 addr r0 r1
 move r1 $-58 ; + STORE_HANDLED
-;2.0 $-59 false false
 move 2.0 $-59
-; handled?
 move $-59 r0
-; handled2?
 move t r1
 divr r0 r1
 move r1 $-60 ; / STORE_HANDLED
-; handled?
 move $-58 r0
-; handled2?
 move $-60 r1
 addr r0 r1
 move r1 $-61 ; + STORE_HANDLED
-;4.0 $-62 false false
 move 4.0 $-62
-; handled?
 move $-62 r0
-; handled2?
 move z r1
 divr r0 r1
 move r1 $-63 ; / STORE_HANDLED
-; handled?
 move $-61 r0
-; handled2?
 move $-63 r1
 addr r0 r1
 move r1 $-64 ; + STORE_HANDLED
-;5.0 $-65 false false
 move 5.0 $-65
-; handled?
 move $-65 r0
-; handled2?
 move z r1
 divr r0 r1
 move r1 $-66 ; / STORE_HANDLED
-; handled?
 move $-64 r0
-; handled2?
 move $-66 r1
 addr r0 r1
 move r1 $-67 ; + STORE_HANDLED
-;6.0 $-68 false false
 move 6.0 $-68
-; handled?
 move $-68 r0
-; handled2?
 move z r1
 divr r0 r1
 move r1 $-69 ; / STORE_HANDLED
-; handled?
 move $-67 r0
-; handled2?
 move $-69 r1
 addr r0 r1
 move r1 $-70 ; + STORE_HANDLED
-;7.0 $-71 false false
 move 7.0 $-71
-; handled?
 move $-71 r0
-; handled2?
 move z r1
 divr r0 r1
 move r1 $-72 ; / STORE_HANDLED
-; handled?
 move $-70 r0
-; handled2?
 move $-72 r1
 addr r0 r1
 move r1 $-73 ; + STORE_HANDLED
-;$-73 t false true
 move $-73 r0
 move r0 t
 sys writer t

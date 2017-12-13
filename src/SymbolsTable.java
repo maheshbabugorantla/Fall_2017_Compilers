@@ -54,7 +54,7 @@ public class SymbolsTable {
      * Helper Function to add the Symbol to the SymbolTable
      * @param symbol: This is the symbol that needs to be added to the SymbolTable
      * */
-    public void addSymbol(Symbol symbol) throws IllegalArgumentException {
+    public void addSymbol(Symbol symbol) { //throws IllegalArgumentException {
 
 
         // If the symbol already exists in the symbolSet then it is illegal to declare the variable again
@@ -64,7 +64,8 @@ public class SymbolsTable {
 
         // Checks to see if the symbol already exists in the current Scope
         if(symbolSet.contains(variableName)) {
-            throw new IllegalArgumentException("DECLARATION ERROR " + variableName);
+            //throw new IllegalArgumentException("DECLARATION ERROR " + variableName);
+            return;
         }
         else {
             // First Checks if the symbol exists in the Parent(s) scope.

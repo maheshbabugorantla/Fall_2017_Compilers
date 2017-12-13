@@ -1,0 +1,297 @@
+; PUSH SYMBOL
+; IR code
+; PUSH SYMBOLINTreturnValue;
+;postfix2: 0
+;number rec before: 1
+;number rec after: 1
+;left: returnValue right: 0 true
+;number before: 1 number after: 1
+;only one function call with operation: or no function call0
+;0
+;Print store: c 0 left: !T1
+;Print store: c !T1 left: $-1
+;postfix2: arg1+arg2+arg3+arg4+arg5+arg6+arg7
+;number rec before: 2
+;number rec after: 2
+;left: returnValue right: arg1+arg2+arg3+arg4+arg5+arg6+arg7 true
+;number before: 2 number after: 2
+;only one function call with operation: or no function callarg1+arg2+arg3+arg4+arg5+arg6+arg7
+;arg1 arg2 + arg3 + arg4 + arg5 + arg6 + arg7 +
+;Print store: c !T7 left: $-1
+;RETURN: No Function; PUSH SYMBOLINTarg1,arg2,arg3,arg4,arg5,arg6,arg7,result;
+;postfix2: 1
+;number rec before: 8
+;number rec after: 8
+;left: arg1 right: 1 true
+;number before: 8 number after: 8
+;only one function call with operation: or no function call1
+;1
+;Print store: c 1 left: !T8
+;Print store: c !T8 left: $-8
+;postfix2: 1
+;number rec before: 9
+;number rec after: 9
+;left: arg2 right: 1 true
+;number before: 9 number after: 9
+;only one function call with operation: or no function call1
+;1
+;Print store: c 1 left: !T9
+;Print store: c !T9 left: $-7
+;postfix2: 1
+;number rec before: 10
+;number rec after: 10
+;left: arg3 right: 1 true
+;number before: 10 number after: 10
+;only one function call with operation: or no function call1
+;1
+;Print store: c 1 left: !T10
+;Print store: c !T10 left: $-6
+;postfix2: 1
+;number rec before: 11
+;number rec after: 11
+;left: arg4 right: 1 true
+;number before: 11 number after: 11
+;only one function call with operation: or no function call1
+;1
+;Print store: c 1 left: !T11
+;Print store: c !T11 left: $-5
+;postfix2: 1
+;number rec before: 12
+;number rec after: 12
+;left: arg5 right: 1 true
+;number before: 12 number after: 12
+;only one function call with operation: or no function call1
+;1
+;Print store: c 1 left: !T12
+;Print store: c !T12 left: $-4
+;postfix2: 1
+;number rec before: 13
+;number rec after: 13
+;left: arg6 right: 1 true
+;number before: 13 number after: 13
+;only one function call with operation: or no function call1
+;1
+;Print store: c 1 left: !T13
+;Print store: c !T13 left: $-3
+;postfix2: 1
+;number rec before: 14
+;number rec after: 14
+;left: arg7 right: 1 true
+;number before: 14 number after: 14
+;only one function call with operation: or no function call1
+;1
+;Print store: c 1 left: !T14
+;Print store: c !T14 left: $-2
+;postfix2: 0
+;number rec before: 15
+;number rec after: 15
+;left: result right: 0 true
+;number before: 15 number after: 15
+;only one function call with operation: or no function call0
+;0
+;Print store: c 0 left: !T15
+;Print store: c !T15 left: $-1
+;found: myFuncWithManyArgs(arg1,arg2,arg3,arg4,arg5,arg6,arg7)
+;postfix2: !T16
+;number rec before: 16
+;number rec after: 17
+;Key: !T16 call: myFuncWithManyArgs(arg1,arg2,arg3,arg4,arg5,arg6,arg7)
+;left: result right: myFuncWithManyArgs(arg1,arg2,arg3,arg4,arg5,arg6,arg7) true
+;number before: 17 number after: 18
+;=======================
+;current register = !T17 current call myFuncWithManyArgs(arg1,arg2,arg3,arg4,arg5,arg6,arg7)
+;Function name = myFuncWithManyArgs
+;Function parameters = arg1 arg2 arg3 arg4 arg5 arg6 arg7
+; Postfix: arg1
+;Error here: arg1
+; Postfix: arg2
+;Error here: arg2
+; Postfix: arg3
+;Error here: arg3
+; Postfix: arg4
+;Error here: arg4
+; Postfix: arg5
+;Error here: arg5
+; Postfix: arg6
+;Error here: arg6
+; Postfix: arg7
+;Error here: arg7
+;-----------------------
+;RETURN: No Function; PUSH
+; JSR FUNC_id_main_L
+; HALT
+; LABEL FUNC_id_myFuncWithManyArgs_L
+; LINK 2
+; STOREI 0 !T1
+; STOREI !T1 $-1
+; ADDI $8 $7 !T2
+; ADDI !T2 $6 !T3
+; ADDI !T3 $5 !T4
+; ADDI !T4 $4 !T5
+; ADDI !T5 $3 !T6
+; ADDI !T6 $2 !T7
+; STOREI !T7 $-1
+; STOREI $-1 $9
+; UNLINK
+; RET
+; LABEL FUNC_id_main_L
+; LINK 9
+; STOREI 1 !T8
+; STOREI !T8 $-8
+; STOREI 1 !T9
+; STOREI !T9 $-7
+; STOREI 1 !T10
+; STOREI !T10 $-6
+; STOREI 1 !T11
+; STOREI !T11 $-5
+; STOREI 1 !T12
+; STOREI !T12 $-4
+; STOREI 1 !T13
+; STOREI !T13 $-3
+; STOREI 1 !T14
+; STOREI !T14 $-2
+; STOREI 0 !T15
+; STOREI !T15 $-1
+; PUSH r0
+; PUSH r1
+; PUSH r2
+; PUSH r3
+; PUSH ;(return value)
+; PUSH $-8
+; PUSH $-7
+; PUSH $-6
+; PUSH $-5
+; PUSH $-4
+; PUSH $-3
+; PUSH $-2
+; JSR FUNC_id_myFuncWithManyArgs_L
+; POP
+; POP
+; POP
+; POP
+; POP
+; POP
+; POP
+; POP !T17
+; STOREI !T17 !T17
+; POP r3
+; POP r2
+; POP r1
+; POP r0
+; STOREI !T17 !T17 ;snemo
+; STOREI !T17 $-1
+; WRITEI $-1
+; STOREI 0 !T18
+; STOREI !T18 $2
+; UNLINK
+; RET
+var returnValue
+var arg1
+var arg2
+var arg3
+var arg4
+var arg5
+var arg6
+var arg7
+var result
+push
+jsr FUNC_id_main_L
+sys halt
+label FUNC_id_myFuncWithManyArgs_L
+link 21
+move 0 $-2
+move $-2 r0
+move r0 $-1
+move $8 r0
+move $7 r1
+addi r0 r1
+move r1 $-4 ; + STORE_HANDLED
+move $-4 r0
+move $6 r1
+addi r0 r1
+move r1 $-5 ; + STORE_HANDLED
+move $-5 r0
+move $5 r1
+addi r0 r1
+move r1 $-6 ; + STORE_HANDLED
+move $-6 r0
+move $4 r1
+addi r0 r1
+move r1 $-7 ; + STORE_HANDLED
+move $-7 r0
+move $3 r1
+addi r0 r1
+move r1 $-8 ; + STORE_HANDLED
+move $-8 r0
+move $2 r1
+addi r0 r1
+move r1 $-9 ; + STORE_HANDLED
+move $-9 r0
+move r0 $-1
+move $-1 r0
+move r0 $9
+unlnk
+ret
+label FUNC_id_main_L
+link 28
+move 1 $-9
+move $-9 r0
+move r0 $-8
+move 1 $-11
+move $-11 r0
+move r0 $-7
+move 1 $-13
+move $-13 r0
+move r0 $-6
+move 1 $-15
+move $-15 r0
+move r0 $-5
+move 1 $-17
+move $-17 r0
+move r0 $-4
+move 1 $-19
+move $-19 r0
+move r0 $-3
+move 1 $-21
+move $-21 r0
+move r0 $-2
+move 0 $-23
+move $-23 r0
+move r0 $-1
+push r0
+push r1
+push r2
+push r3
+push ;(return value)
+push $-8
+push $-7
+push $-6
+push $-5
+push $-4
+push $-3
+push $-2
+jsr FUNC_id_myFuncWithManyArgs_L
+pop
+pop
+pop
+pop
+pop
+pop
+pop
+pop $-25 ;using temp
+move $-25 r0
+move r0 $-25
+pop r3
+pop r2
+pop r1
+pop r0
+move $-25 r0
+move r0 $-25
+move $-25 r0
+move r0 $-1
+sys writei $-1
+move 0 $-31
+move $-31 r0
+move r0 $2
+unlnk
+ret

@@ -22,6 +22,7 @@ BEGIN
 		arg2 := 1;
 		result := 0;
 		
+		-- result := addArgs(returnArgument(arg1), addArgs(returnArgument(arg1), returnArgument(arg2)));
 		result := addArgs(returnArgument(arg1), returnArgument(arg2));
 		WRITE(result);
 		RETURN 0;

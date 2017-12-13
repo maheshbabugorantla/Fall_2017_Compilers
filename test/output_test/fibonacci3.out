@@ -1,66 +1,57 @@
 ; PUSH SYMBOLSTRINGinput:="Please input an integer number: ";STRINGspace:=" ";STRINGeol:="\n";
 ; IR code
-; PUSH SYMBOLINTret1,ret2;
+; PUSH SYMBOLINTret1;
 ;Print store: c 2 left: !T1
-;found: F(n-1)
+;found: F(n-2)
 ;postfix2: !T2
 ;number rec before: 2
 ;number rec after: 3
-;Key: !T2 call: F(n-1)
-;left: ret1 right: F(n-1) true
+;Key: !T2 call: F(n-2)
+;left: ret1 right: F(n-2) true
 ;number before: 3 number after: 4
 ;=======================
-;current register = !T3 current call F(n-1)
-;Function name = F
-;Function parameters = n-1
-; Postfix: n 1 -
-;-----------------------
-;found: F(n-2)
-;postfix2: !T6
-;number rec before: 6
-;number rec after: 7
-;Key: !T2 call: F(n-1)
-;Key: !T3 call: F(n-1)
-;Key: !T6 call: F(n-2)
-;left: ret2 right: F(n-2) true
-;number before: 7 number after: 8
-;=======================
-;current register = !T7 current call F(n-2)
+;current register = !T3 current call F(n-2)
 ;Function name = F
 ;Function parameters = n-2
 ; Postfix: n 2 -
 ;-----------------------
-;RETURN: No Function;Print store: c 0 left: !T11
-;RETURN: No Function;Print store: c 1 left: !T13
+;Return Statement is Function Call F(n-1)+ret1+1 3;=======================
+;current register = !T6 current call F(n-1)
+;Function name = F
+;Function parameters = n-1
+; Postfix: n 1 -
+;-----------------------
+;Print store: c !T12 left: $3
+;Print store: c 0 left: !T13
+;RETURN: No Function;Print store: c 1 left: !T15
 ;RETURN: No Function;RETURN: No Function; PUSH SYMBOLINTi,end,result;
 ; PUSH SYMBOL
-;Print store: c 0 left: !T16
-;Print store: c !T16 left: $-3
-;Print store: c $-2 left: !T17
+;Print store: c 0 left: !T18
+;Print store: c !T18 left: $-3
+;Print store: c $-2 left: !T19
 ;found: F(i)
-;postfix2: !T18
-;number rec before: 18
-;number rec after: 19
-;Key: !T18 call: F(i)
-;Key: !T2 call: F(n-1)
-;Key: !T3 call: F(n-1)
-;Key: !T6 call: F(n-2)
-;Key: !T7 call: F(n-2)
+;postfix2: !T20
+;number rec before: 20
+;number rec after: 21
+;Key: !T2 call: F(n-2)
+;Key: !T20 call: F(i)
+;Key: !T3 call: F(n-2)
+;Key: !T6 call: F(n-1)
 ;left: result right: F(i) true
-;number before: 19 number after: 20
+;number before: 21 number after: 22
 ;=======================
-;current register = !T19 current call F(i)
+;current register = !T21 current call F(i)
 ;Function name = F
 ;Function parameters = i
 ; Postfix: i
 ;Error here: i
 ;-----------------------
-;Print store: c !T21 left: $-3
+;Print store: c !T23 left: $-3
 ;RETURN: No Function; PUSH
 ; JSR FUNC_id_main_L
 ; HALT
 ; LABEL FUNC_id_F_L
-; LINK 3
+; LINK 2
 ; STOREI 2 !T1
 ; LE $2 !T1 label1
 ; PUSH r0
@@ -68,7 +59,7 @@
 ; PUSH r2
 ; PUSH r3
 ; PUSH ;(return value)
-; STOREI 1 !T3
+; STOREI 2 !T3
 ; SUBI $2 !T3 !T4
 ; PUSH !T4
 ; JSR FUNC_id_F_L
@@ -80,49 +71,50 @@
 ; POP r1
 ; POP r0
 ; STOREI !T3 !T3 ;snemo
-; STOREI !T3 $-2
+; STOREI !T3 $-1
 ; PUSH r0
 ; PUSH r1
 ; PUSH r2
 ; PUSH r3
 ; PUSH ;(return value)
-; STOREI 2 !T7
+; STOREI 1 !T7
 ; SUBI $2 !T7 !T8
 ; PUSH !T8
 ; JSR FUNC_id_F_L
 ; POP
 ; POP !T9
-; STOREI !T9 !T7
+; STOREI !T9 !T6
 ; POP r3
 ; POP r2
 ; POP r1
 ; POP r0
-; STOREI !T7 !T7 ;snemo
-; STOREI !T7 $-1
-; ADDI $-2 $-1 !T10
-; STOREI !T10 $3
+; STOREI !T6 !T6 ;snemo
+; ADDI !T6 $-1 !T10
+; STOREI 1 !T11
+; ADDI !T10 !T11 !T12
+; STOREI !T12 $3
 ; UNLINK
 ; RET
 ; JUMP label2
 ; LABEL label1
-; STOREI 0 !T11
-; NE $2 !T11 label3
-; STOREI 0 !T12
-; STOREI !T12 $3
+; STOREI 0 !T13
+; NE $2 !T13 label3
+; STOREI 0 !T14
+; STOREI !T14 $3
 ; UNLINK
 ; RET
 ; JUMP label4
 ; LABEL label3
-; STOREI 1 !T13
-; NE $2 !T13 label5
-; STOREI 1 !T14
-; STOREI !T14 $3
+; STOREI 1 !T15
+; NE $2 !T15 label5
+; STOREI 1 !T16
+; STOREI !T16 $3
 ; UNLINK
 ; RET
 ; JUMP label6
 ; LABEL label5
-; STOREI 1 !T15
-; STOREI !T15 $3
+; STOREI 1 !T17
+; STOREI !T17 $3
 ; UNLINK
 ; RET
 ; LABEL label6
@@ -134,11 +126,11 @@
 ; LINK 4
 ; WRITES input
 ; READI $-2
-; STOREI 0 !T16
-; STOREI !T16 $-3
+; STOREI 0 !T18
+; STOREI !T18 $-3
 ; LABEL label7
-; STOREI $-2 !T17
-; EQ $-3 !T17 label8
+; STOREI $-2 !T19
+; EQ $-3 !T19 label8
 ; PUSH r0
 ; PUSH r1
 ; PUSH r2
@@ -147,32 +139,31 @@
 ; PUSH $-3
 ; JSR FUNC_id_F_L
 ; POP
-; POP !T19
-; STOREI !T19 !T19
+; POP !T21
+; STOREI !T21 !T21
 ; POP r3
 ; POP r2
 ; POP r1
 ; POP r0
-; STOREI !T19 !T19 ;snemo
-; STOREI !T19 $-1
+; STOREI !T21 !T21 ;snemo
+; STOREI !T21 $-1
 ; WRITEI $-3
 ; WRITES space
 ; WRITEI $-1
 ; WRITES eol
-; STOREI 1 !T20
-; ADDI $-3 !T20 !T21
-; STOREI !T21 $-3
+; STOREI 1 !T22
+; ADDI $-3 !T22 !T23
+; STOREI !T23 $-3
 ; JUMP label7
 ; LABEL label8
-; STOREI 0 !T22
-; STOREI !T22 $2
+; STOREI 0 !T24
+; STOREI !T24 $2
 ; UNLINK
 ; RET
 str input "Please input an integer number: "
 str space " "
 str eol "\n"
 var ret1
-var ret2
 var i
 var end
 var result
@@ -180,10 +171,10 @@ push
 jsr FUNC_id_main_L
 sys halt
 label FUNC_id_F_L
-link 26
-move 2 $-3
+link 27
+move 2 $-2
 move $2 r0
-move $-3 r1
+move $-2 r1
 cmpi r0 r1
 jle label1
 push r0
@@ -191,51 +182,54 @@ push r1
 push r2
 push r3
 push ;(return value)
-move 1 $-4
-move $-4 r0
+move 2 $-3
+move $-3 r0
 move $2 r1
 subi r0 r1
-move r1 $-5 ; - STORE_HANDLED
-push $-5 ;using temp
+move r1 $-4 ; - STORE_HANDLED
+push $-4 ;using temp
 jsr FUNC_id_F_L
 pop
-pop $-7 ;using temp
-move $-7 r0
-move r0 $-4
+pop $-6 ;using temp
+move $-6 r0
+move r0 $-3
 pop r3
 pop r2
 pop r1
 pop r0
-move $-4 r0
-move r0 $-4
-move $-4 r0
-move r0 $-2
+move $-3 r0
+move r0 $-3
+move $-3 r0
+move r0 $-1
 push r0
 push r1
 push r2
 push r3
 push ;(return value)
-move 2 $-13
-move $-13 r0
+move 1 $-12
+move $-12 r0
 move $2 r1
 subi r0 r1
-move r1 $-14 ; - STORE_HANDLED
-push $-14 ;using temp
+move r1 $-13 ; - STORE_HANDLED
+push $-13 ;using temp
 jsr FUNC_id_F_L
 pop
-pop $-16 ;using temp
-move $-16 r0
-move r0 $-13
+pop $-15 ;using temp
+move $-15 r0
+move r0 $-17
 pop r3
 pop r2
 pop r1
 pop r0
-move $-13 r0
-move r0 $-13
-move $-13 r0
-move r0 $-1
-move $-2 r0
+move $-17 r0
+move r0 $-17
+move $-17 r0
 move $-1 r1
+addi r0 r1
+move r1 $-20 ; + STORE_HANDLED
+move 1 $-21
+move $-20 r0
+move $-21 r1
 addi r0 r1
 move r1 $-22 ; + STORE_HANDLED
 move $-22 r0
@@ -279,7 +273,7 @@ label label2
 unlnk
 ret
 label FUNC_id_main_L
-link 27
+link 29
 sys writes input
 sys readi $-2
 move 0 $-4

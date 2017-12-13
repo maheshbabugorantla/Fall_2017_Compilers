@@ -2,6 +2,10 @@ mca && ./runme ./test/input/fibonacci2.micro ./test/output_test/fibonacci2.out
 ./tiny4 ./test/output_test/fibonacci2.out
 Input: 15
 
+mca && ./runme ./test/input/fibonacci3.micro ./test/output_test/fibonacci3.out
+./tiny4 ./test/output_test/fibonacci3.out
+Input: 15
+
 mca && ./runme ./test/input/factorial2.micro ./test/output_test/factorial2.out
 ./tiny4 ./test/output_test/factorial2.out
 Input: 12
@@ -50,3 +54,32 @@ mca && ./runme ./prev_testing_files/testingStep4Files/input/test_complex.micro .
 ./runme ./prev_testing_files/testingStep4Files/input/test_expr.micro ./test/my_output/test_expr.out
 ./tiny4 ./test/my_output/test_expr.out
 ./tiny ./prev_testing_files/testingStep4Files/output/test_expr.out
+
+mca && ./runme ./test/input/hidden_SameVarNameInDiffScopes.micro ./test/output/hidden_SameVarNameInDiffScopes.out
+./tiny4 ./test/output/hidden_SameVarNameInDiffScopes.out
+
+mca && ./runme ./test/input/hidden_step8FuncCallWithFuncCallAsArg.micro ./test/output/hidden_FuncCallWithFuncCallAsArg.out
+./tiny4 ./test/output/hidden_FuncCallWithFuncCallAsArg.out
+
+mca && ./runme ./test/input/hidden_step8FuncCallWithFloatAndIntParams.micro ./test/output/hidden_step8FuncCallWithFloatAndIntParams.out
+./tiny4 ./test/output/hidden_step8FuncCallWithFloatAndIntParams.out
+
+mca && ./runme ./test/input/hidden_step8MultipleNestedLoops.micro ./test/output/hidden_step8MultipleNestedLoops.out
+./tiny4 ./test/output/hidden_step8MultipleNestedLoops.out
+
+mca && ./runme ./test/input/hidden_step8FuncCallWith7Args.micro ./test/output/hidden_step8FuncCallWith7Args.out
+./tiny4 ./test/output/hidden_step8FuncCallWith7Args.out
+
+mca && ./runme ./Testing/test1.micro ./Testing/test1.out
+./tiny4 ./Testing/test1.out
+
+
+mca && ./runme ./Testing/test2.micro ./Testing/test2.out
+./tiny4 ./Testing/test2.out
+
+
+mca && ./runme ./Testing/test3.micro ./Testing/test3.out
+./tiny4 ./Testing/test3.out
+
+
+mca && ./runme ./Testing/test5.micro ./Testing/test5.out

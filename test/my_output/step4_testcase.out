@@ -1,19 +1,51 @@
-;INTa,b,i,p;
+; PUSH SYMBOLINTa,b,i,p;
 ; IR code
-;
-;AHHHH left: i right: 0
+; PUSH SYMBOL
+;postfix2: 0
+;number rec before: 1
+;number rec after: 1
+;left: i right: 0 true
+;number before: 1 number after: 1
+;only one function call with operation: or no function call0
+;0
 ;Print store: c 0 left: !T1
 ;Print store: c !T1 left: i
-;AHHHH left: a right: 0
+;postfix2: 0
+;number rec before: 2
+;number rec after: 2
+;left: a right: 0 true
+;number before: 2 number after: 2
+;only one function call with operation: or no function call0
+;0
 ;Print store: c 0 left: !T2
 ;Print store: c !T2 left: a
-;AHHHH left: b right: 0
+;postfix2: 0
+;number rec before: 3
+;number rec after: 3
+;left: b right: 0 true
+;number before: 3 number after: 3
+;only one function call with operation: or no function call0
+;0
 ;Print store: c 0 left: !T3
 ;Print store: c !T3 left: b
-;
+; PUSH SYMBOL
 ;Print store: c 10 left: !T4
 ;Print store: c 10 left: !T5
+;postfix2: a+1
+;number rec before: 6
+;number rec after: 6
+;left: a right: a+1 true
+;number before: 6 number after: 6
+;only one function call with operation: or no function calla+1
+;a 1 +
 ;Print store: c !T7 left: a
+;postfix2: b+1
+;number rec before: 8
+;number rec after: 8
+;left: b right: b+1 true
+;number before: 8 number after: 8
+;only one function call with operation: or no function callb+1
+;b 1 +
 ;Print store: c !T9 left: b
 ;Print store: c !T11 left: i
 ; PUSH
@@ -60,73 +92,49 @@ jsr FUNC_id_main_L
 sys halt
 label FUNC_id_main_L
 link 13
-;0 $-1 false false
 move 0 $-1
-;$-1 i false true
 move $-1 r0
 move r0 i
-;0 $-3 false false
 move 0 $-3
-;$-3 a false true
 move $-3 r0
 move r0 a
-;0 $-5 false false
 move 0 $-5
-;$-5 b false true
 move $-5 r0
 move r0 b
 label label1
-;10 $-7 false false
 move 10 $-7
-; handled?
 move i r0
-; handled2?
 move $-7 r1
 cmpi r0 r1
 jeq label2
 sys readi p
-;10 $-8 false false
 move 10 $-8
-; handled?
 move p r0
-; handled2?
 move $-8 r1
 cmpi r0 r1
 jle label3
-;1 $-9 false false
 move 1 $-9
-; handled?
 move a r0
-; handled2?
 move $-9 r1
 addi r0 r1
 move r1 $-10 ; + STORE_HANDLED
-;$-10 a false true
 move $-10 r0
 move r0 a
 jmp label4
 label label3
-;1 $-12 false false
 move 1 $-12
-; handled?
 move b r0
-; handled2?
 move $-12 r1
 addi r0 r1
 move r1 $-13 ; + STORE_HANDLED
-;$-13 b false true
 move $-13 r0
 move r0 b
 label label4
-;1 $-15 false false
 move 1 $-15
-; handled?
 move i r0
-; handled2?
 move $-15 r1
 addi r0 r1
 move r1 $-16 ; + STORE_HANDLED
-;$-16 i false true
 move $-16 r0
 move r0 i
 jmp label1
