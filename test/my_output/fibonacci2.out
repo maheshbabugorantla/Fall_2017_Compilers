@@ -1,173 +1,435 @@
-; IR code
-; PUSH
-; JSR FUNC_id_main_L
-; HALT
-; LABEL FUNC_id_F_L
-; LINK 3
-; STOREI 2 !T1
-;LE $2 !T1 label1
-; PUSH (return value)
-;STOREI 1 !T2
-;SUBI $2 !T2 !T3
-; PUSH !T3
-; JSR FUNC_id_F_L
-; POP
-; POP !T4
-; STOREI !T4 $-1
-; PUSH (return value)
-;STOREI 2 !T5
-;SUBI $2 !T5 !T6
-; PUSH !T6
-; JSR FUNC_id_F_L
-; POP
-; POP !T7
-; STOREI !T7 $-2
-;ADDI $-1 $-2 !T8
-; STOREI !T8 $3
-; UNLINK
-; RET
-;JUMP label2
-;LABEL label1
-; STOREI 0 !T9
-;NE $2 !T9 label3
-;STOREI 0 !T10
-; STOREI !T10 $3
-; UNLINK
-; RET
-;JUMP label4
-;LABEL label3
-; STOREI 1 !T11
-;NE $2 !T11 label5
-;STOREI 1 !T12
-; STOREI !T12 $3
-; UNLINK
-; RET
-;JUMP label6
-;LABEL label5
-;STOREI 1 !T13
-; STOREI !T13 $3
-; UNLINK
-; RET
-;LABEL label6
-;LABEL label4
-;LABEL label2
-; LABEL FUNC_id_main_L
-; LINK 4
-;WRITES input
-; READI $-2
-; STOREI 0 !T14
-; STOREI !T14 $-1
-;LABEL label7
-; STOREI $-2 !T15
-;EQ $-1 !T15 label8
-; PUSH (return value)
-; PUSH $-1
-; JSR FUNC_id_F_L
-; POP
-; POP !T16
-; STOREI !T16 $-3
-; WRITEI $-1
-;WRITES space
-; WRITEI $-3
-;WRITES eol
-;STOREI 1 !T17
-;ADDI $-1 !T17 !T18
-; STOREI !T18 $-1
-;JUMP label7
-;LABEL label8
-;STOREI 0 !T19
-; STOREI !T19 $6
-; UNLINK
-; RET
-;tiny code
-str input "Please input an integer number: "
-str space " "
-str eol "\n"
+;*****IR Start Unoptimized*****
+;0>> PUSH
+;5>> JSR FUNC_id_main_L
+;6>> HALT
+;7>> LABEL FUNC_id_F_L
+;8>> LINK 3
+;9>> STOREI 2 !T0
+;10>> LE $2 !T0 label1
+;11>> STOREI 1 !T1
+;12>> SUBI $2 !T1 !T2
+;13>> PUSH
+;15>> PUSH !T2
+;16>> JSR FUNC_id_F_L
+;17>> POP
+;19>> POP !T3
+;20>> STOREI !T3 $-1
+;21>> STOREI 2 !T4
+;22>> SUBI $2 !T4 !T5
+;23>> PUSH
+;25>> PUSH !T5
+;26>> JSR FUNC_id_F_L
+;27>> POP
+;29>> POP !T6
+;30>> STOREI !T6 $-2
+;31>> ADDI $-1 $-2 !T7
+;32>> STOREI !T7 $7
+;33>> UNLINK
+;34>> RET
+;35>> JUMP label2
+;36>> LABEL label1
+;37>> STOREI 0 !T8
+;38>> NE $2 !T8 label3
+;39>> STOREI 0 !T9
+;40>> STOREI !T9 $7
+;41>> UNLINK
+;42>> RET
+;43>> JUMP label4
+;44>> LABEL label3
+;45>> STOREI 1 !T10
+;46>> NE $2 !T10 label5
+;47>> STOREI 1 !T11
+;48>> STOREI !T11 $7
+;49>> UNLINK
+;50>> RET
+;51>> JUMP label6
+;52>> LABEL label5
+;53>> STOREI 1 !T12
+;54>> STOREI !T12 $7
+;55>> UNLINK
+;56>> RET
+;57>> LABEL label6
+;58>> LABEL label4
+;59>> LABEL label2
+;60>> UNLINK
+;61>> RET
+;62>> LABEL FUNC_id_main_L
+;63>> LINK 4
+;64>> WRITES id_input
+;65>> READI $-2
+;66>> STOREI 0 !T13
+;67>> STOREI !T13 $-1
+;68>> LABEL label7
+;69>> EQ $-1 $-2 label8
+;70>> PUSH
+;72>> PUSH $-1
+;73>> JSR FUNC_id_F_L
+;74>> POP
+;76>> POP !T16
+;77>> STOREI !T16 $-3
+;78>> WRITEI $-1
+;79>> WRITES id_space
+;80>> WRITEI $-3
+;81>> WRITES id_eol
+;82>> LABEL FOR_INC_L0
+;83>> STOREI 1 !T14
+;84>> ADDI $-1 !T14 !T15
+;85>> STOREI !T15 $-1
+;86>> JUMP label7
+;87>> LABEL label8
+;88>> STOREI 0 !T17
+;89>> STOREI !T17 $6
+;90>> UNLINK
+;91>> RET
+;*****IR End Unoptimized*****
+;*****Start Tiny Code Unoptimized*****
+;str id_input "Please input an integer number: "
+;str id_space " "
+;str id_eol "\n"
+;push
+;push
+;push
+;push
+;push
+;jsr FUNC_id_main_L
+;sys halt
+;label FUNC_id_F_L
+;link 3
+;move 2 r0
+;move $2 r1
+;cmpi r1 r0
+;jle label1
+;move 1 r0
+;move $2 r1
+;move r1 r2
+;subi r0 r2
+;push
+;push r0
+;push r1
+;push r2
+;push r3
+;push r2
+;jsr FUNC_id_F_L
+;pop
+;pop r3
+;pop r2
+;pop r1
+;pop r0
+;pop r0
+;move r0 r2
+;move 2 r0
+;move r1 r3
+;subi r0 r3
+;push
+;push r0
+;push r1
+;push r2
+;push r3
+;push r3
+;jsr FUNC_id_F_L
+;pop
+;pop r3
+;pop r2
+;pop r1
+;pop r0
+;pop r0
+;move r0 r1
+;move r2 r0
+;addi r1 r0
+;move r0 $7
+;unlnk
+;ret
+;jmp label2
+;label label1
+;move 0 r0
+;move $2 r1
+;cmpi r1 r0
+;jne label3
+;move 0 r0
+;move r0 $7
+;unlnk
+;ret
+;jmp label4
+;label label3
+;move 1 r0
+;move $2 r1
+;cmpi r1 r0
+;jne label5
+;move 1 r0
+;move r0 $7
+;unlnk
+;ret
+;jmp label6
+;label label5
+;move 1 r0
+;move r0 $7
+;unlnk
+;ret
+;label label6
+;label label4
+;label label2
+;unlnk
+;ret
+;label FUNC_id_main_L
+;link 4
+;sys writes id_input
+;sys readi r0
+;move 0 r1
+;move r1 r2
+;move r0 $-2
+;move r2 $-1
+;label label7
+;move $-1 r0
+;move $-2 r1
+;cmpi r0 r1
+;jeq label8
+;push
+;push r0
+;push r1
+;push r2
+;push r3
+;push $-1
+;jsr FUNC_id_F_L
+;pop
+;pop r3
+;pop r2
+;pop r1
+;pop r0
+;pop r0
+;move r0 r1
+;sys writei $-1
+;sys writes id_space
+;sys writei r1
+;sys writes id_eol
+;label FOR_INC_L0
+;move 1 r0
+;move $-1 r1
+;move r1 r2
+;addi r0 r2
+;move r2 r0
+;move r0 $-1
+;jmp label7
+;label label8
+;move 0 r0
+;move r0 $6
+;unlnk
+;ret
+;*****End Tiny Code Unoptimized*****
+
+;*****IR Start Optimized*****
+;0>> PUSH
+;1>> PUSH
+;2>> PUSH
+;3>> PUSH
+;4>> PUSH
+;5>> JSR FUNC_id_main_L
+;6>> HALT
+;7>> LABEL FUNC_id_F_L
+;8>> LINK 3
+;9>> STOREI 2 !T0
+;10>> LE $2 !T0 label1
+;11>> STOREI 1 !T1
+;12>> SUBI $2 !T1 !T2
+;13>> PUSH
+;14>> PUSHREG
+;15>> PUSH !T2
+;16>> JSR FUNC_id_F_L
+;17>> POP
+;18>> POPREG
+;19>> POP !T3
+;20>> STOREI !T3 $-1
+;21>> STOREI 2 !T4
+;22>> SUBI $2 !T4 !T5
+;23>> PUSH
+;24>> PUSHREG
+;25>> PUSH !T5
+;26>> JSR FUNC_id_F_L
+;27>> POP
+;28>> POPREG
+;29>> POP !T6
+;30>> STOREI !T6 $-2
+;31>> ADDI $-1 $-2 !T7
+;32>> STOREI !T7 $7
+;33>> UNLINK
+;34>> RET
+;35>> JUMP label2
+;36>> LABEL label1
+;37>> STOREI 0 !T8
+;38>> NE $2 !T8 label3
+;39>> STOREI 0 !T9
+;40>> STOREI !T9 $7
+;41>> UNLINK
+;42>> RET
+;43>> JUMP label4
+;44>> LABEL label3
+;45>> STOREI 1 !T10
+;46>> NE $2 !T10 label5
+;47>> STOREI 1 !T11
+;48>> STOREI !T11 $7
+;49>> UNLINK
+;50>> RET
+;51>> JUMP label6
+;52>> LABEL label5
+;53>> STOREI 1 !T12
+;54>> STOREI !T12 $7
+;55>> UNLINK
+;56>> RET
+;57>> LABEL label6
+;58>> LABEL label4
+;59>> LABEL label2
+;60>> UNLINK
+;61>> RET
+;62>> LABEL FUNC_id_main_L
+;63>> LINK 4
+;64>> WRITES id_input
+;65>> READI $-2
+;66>> STOREI 0 !T13
+;67>> STOREI !T13 $-1
+;68>> LABEL label7
+;69>> EQ $-1 $-2 label8
+;70>> PUSH
+;71>> PUSHREG
+;72>> PUSH $-1
+;73>> JSR FUNC_id_F_L
+;74>> POP
+;75>> POPREG
+;76>> POP !T16
+;77>> STOREI !T16 $-3
+;78>> WRITEI $-1
+;79>> WRITES id_space
+;80>> WRITEI $-3
+;81>> WRITES id_eol
+;82>> LABEL FOR_INC_L0
+;83>> STOREI 1 !T14
+;84>> ADDI $-1 !T14 !T15
+;85>> STOREI !T15 $-1
+;86>> JUMP label7
+;87>> LABEL label8
+;88>> STOREI 0 !T17
+;89>> STOREI !T17 $6
+;90>> UNLINK
+;91>> RET
+;*****IR End Optimized*****
+;*****Start Tiny Code Optimized*****
+str id_input "Please input an integer number: "
+str id_space " "
+str id_eol "\n"
+push
+push
+push
+push
 push
 jsr FUNC_id_main_L
 sys halt
 label FUNC_id_F_L
 link 3
-move 2 r0
-cmpi $2 r0
+move $2 r0
+move 2 r1
+cmpi r0 r1
 jle label1
+move $2 r0
+move r0 r1
+subi 1 r1
 push
-move 1 r1
-move $2 r2
-subi r1 r2
+push r0
+push r1
+push r2
+push r3
+push r1
+jsr FUNC_id_F_L
+pop
+pop r3
+pop r2
+pop r1
+pop r0
+pop r1
+move r0 r2
+subi 2 r2
+push
+push r0
+push r1
+push r2
+push r3
 push r2
 jsr FUNC_id_F_L
 pop
 pop r3
-move r3 $-1
-push
-move 2 r4
-move $2 r5
-subi r4 r5
-push r5
-jsr FUNC_id_F_L
-pop
-pop r6
-move r6 $-2
-move $-1 r7
-addi $-2 r7
-move r7  $3
+pop r2
+pop r1
+pop r0
+pop r0
+move r1 r2
+addi r0 r2
+move r2 $7
 unlnk
 ret
 jmp label2
 label label1
-move 0 r8
-cmpi $2 r8
+move $2 r0
+move 0 r1
+cmpi r0 r1
 jne label3
-move 0 r9
-move r9 $3
+move 0 $7
 unlnk
 ret
 jmp label4
 label label3
-move 1 r10
-cmpi $2 r10
+move $2 r0
+move 1 r1
+cmpi r0 r1
 jne label5
-move 1 r11
-move r11 $3
+move 1 $7
 unlnk
 ret
 jmp label6
 label label5
-move 1 r12
-move r12 $3
+move 1 $7
 unlnk
 ret
 label label6
 label label4
 label label2
+unlnk
+ret
 label FUNC_id_main_L
 link 4
-sys writes input
-sys readi $-2
-move 0 r13
-move r13 $-1
+sys writes id_input
+sys readi r0
+move 0 r1
+move r0 $-2
+move r1 $-1
 label label7
-move $-2 r14
-cmpi $-1 r14
+move $-1 r0
+move $-2 r1
+cmpi r0 r1
 jeq label8
 push
+push r0
+push r1
+push r2
+push r3
 push $-1
 jsr FUNC_id_F_L
 pop
-pop r15
-move r15 $-3
+pop r3
+pop r2
+pop r1
+pop r0
+pop r0
+move r0 r1
 sys writei $-1
-sys writes space
-sys writei $-3
-sys writes eol
-move 1 r16
-move $-1 r17
-addi r16 r17
-move r17 $-1
+sys writes id_space
+sys writei r1
+sys writes id_eol
+move $-1 r0
+move r0 r1
+addi 1 r1
+move r1 r0
+move r0 $-1
 jmp label7
 label label8
-move 0 r18
-move r18 $6
+move 0 $6
 unlnk
 ret
+;*****End Tiny Code Optimized*****
+
